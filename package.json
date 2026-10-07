@@ -1,0 +1,19 @@
+{
+  "name": "seqshow",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Step-by-step Mermaid sequence presentations — M0 validation",
+  "license": "MIT",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "test:m0": "node scripts/m0.mjs",
+    "m0:preview": "node scripts/m0.mjs --serve"
+  },
+  "dependencies": { "mermaid": "12.1.0" },
+  "overrides": { "katex": "0.18.2" },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "esbuild": "0.28.2"
+  }
+}

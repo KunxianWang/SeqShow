@@ -23,7 +23,7 @@
 | 浏览器验收 | Playwright | 真实 SVG 布局、键盘、响应式与离线导出 |
 | 包管理 | npm + package-lock.json | 一个包，不建 monorepo；版本在 M0/M1 实际安装时核验并记录 |
 
-这里不是安装命令或已存在依赖清单。Node、npm、Mermaid 等具体版本由 M0/M1 选择满足官方支持范围的组合，并写入执行计划、package.json 与 lockfile。Mermaid 使用精确版本，不通过远程 latest CDN 加载。
+正式工具链表包含 M1 尚待配置的工具。M0 已锁定 Mermaid 12.1.0、Playwright 1.63.0、esbuild 0.28.2，实测 Node 22.14.0 / npm 10.9.2；环境要求 >=22.12.0。版本写入 package.json 与 lockfile，不使用远程 latest CDN。Vite、Vitest、typecheck 与 lint 在 M1 建立。
 
 ## 3. 总体数据流
 
@@ -188,7 +188,9 @@ Mermaid 的 SVG 不是稳定业务数据 API。若必须依赖内部 class 或�
 
 ### 路线决策
 
-M0 通过：采用固定版本的 Mermaid + 薄适配层。
+M0 已通过：采用 Mermaid 12.1.0 + 薄适配层。具体事件 ID、相邻标签、Note、参与者与 case 的结构假设，以及安全边界和浏览器限制见 [M0 验证记录](validation/M0.md)。播放器读取 SeqShow 自己的 data 属性。
+
+实测 Mermaid 自动折行可能拆开数值字符实体。因此适配层先按纯文本测量、折行，再编码特殊字符并生成受控换行；关闭 Mermaid 自动折行，参与者高度根据最长别名行数设置。这不改变 Parser 对用户 HTML / 富文本的拒绝规则。所有文本仍为 SVG text/tspan，整图几何只在 Render 时计算。
 
 M0 失败：记录失败输入、失败原因与可重现证据，评估“对子集自有 SVG 渲染”是否更小且可完成 P01–P10；更新本文件与计划后再推进。既有产品范围内的例行实现取舍不需要每次询问用户，但不能悄悄删除分支、中文或离线导出承诺。
 
@@ -246,7 +248,7 @@ player.ts 消费 SequenceDocument、规范化 SVG、语义绑定和初始分支�
 
 ## 13. 官方资料与已核验边界
 
-核验日期：2026-10-06。具体安装版本仍待 M0。
+核验日期：2026-10-06。实际安装版本与结构验证已记录于 M0；以下链接用于了解公开 API，不取代固定版本实测。
 
 - Mermaid 的公开 parse 返回语法检查结果，内部 mermaidAPI 标为 Internal/Deprecated，不能把其数据库当稳定 AST 接口：[官方 API](https://mermaid.js.org/config/setup/mermaid/interfaces/Mermaid.html)。
 - Mermaid 支持隐式参与者、别名、自调用和备选路径；SeqShow 只承诺 PRODUCT 的子集：[官方时序图语法](https://mermaid.js.org/syntax/sequenceDiagram.html)。
@@ -255,7 +257,7 @@ player.ts 消费 SequenceDocument、规范化 SVG、语义绑定和初始分支�
 
 ## 14. 尚未完成的技术验证
 
-- Mermaid 具体版本、SVG 元素结构、稳定映射和长文本表现。
+- 用户 Parser 输出接入 M0 适配后的完整子集覆盖与资源上限表现。
 - strict 设置与纯 SVG 文本配置能否满足全部范围。
 - 单文件运行包在 file://、Chromium、Firefox、WebKit 的兼容性。
 

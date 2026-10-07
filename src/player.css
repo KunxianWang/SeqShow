@@ -1,0 +1,23 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #f4f6fa; color: #172338; font: 15px Arial, sans-serif; }
+main { margin: 24px auto; max-width: 1120px; padding: 0 20px; }
+h1 { margin: 0 0 8px; font-size: 28px; }
+p { color: #53627a; line-height: 1.6; }
+[data-controls] { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 18px 0; }
+button, select { font: inherit; padding: 8px 12px; border: 1px solid #bac5d7; border-radius: 6px; background: white; color: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, select:focus-visible { outline: 3px solid #377fe8; outline-offset: 2px; }
+button[aria-pressed="true"] { background: #e7f0ff; border-color: #377fe8; }
+[data-status] { min-height: 46px; margin: 12px 0; font-weight: 600; overflow-wrap: anywhere; }
+[data-diagram] { background: white; padding: 24px; border: 1px solid #dce3ed; border-radius: 12px; overflow: auto; }
+[data-diagram] > svg { display: block; min-width: 600px; width: 100%; height: auto; }
+svg [data-phase="current"] { opacity: 1; }
+svg text[data-phase="current"], svg [data-phase="current"] text { fill: #0755c7 !important; }
+svg line[data-phase="current"], svg path[data-phase="current"] { stroke: #0755c7 !important; }
+svg[data-focus="true"] [data-phase="future"] { opacity: .85; }
+svg [data-phase="inactive"] { opacity: .8; }
+svg [data-seq-case][data-selected="false"] { opacity: .8; }
+svg[data-focus="true"] [data-seq-participant][data-active="false"] { opacity: .85; }
+svg [data-seq-participant][data-active="true"] rect { stroke: #0755c7 !important; }
+@media (max-width: 600px) { main { padding: 0 12px; } [data-diagram] { padding: 12px; } }

@@ -1,0 +1,8 @@
+sequenceDiagram
+actor User as 用户浏览器
+participant API as 身份认证服务
+participant Store as 数据库
+User->>API: 提交登录请求：验证用户名、密码以及本次请求携带的设备信息，确保每个步骤都能清楚地展示给观众
+API->>Store: Query: user_id = 42#59; status #60; 500 #38; retries #62; 0 #91;safe#93; #35;tag #36;#36;literal#36;#36;
+Note over API,Store: 这是一条比较长的中文说明，用于验证纯 SVG 的文本换行、Note 背景和导出后的显示效果。
+Store-->>API: 结果：成功 ✅

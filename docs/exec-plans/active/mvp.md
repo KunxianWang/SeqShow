@@ -1,6 +1,6 @@
 # SeqShow MVP 执行计划
 
-状态：D0 文档基线已完成；M0–M5 应用实现尚未开始。
+状态：D0 文档基线与 M0 技术路线验证已完成；M1–M5 尚未开始。
 
 日期：2026-10-06。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-本轮授权的准备工作是先建立上述规格和执行计划，不在文档准备阶段创建应用空壳、安装依赖或声称已有可用 MVP。后续开始应用实现时从 M0 执行。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后明确授权开始 M0，当前已建立最小验证环境与手写模型原型，不声称完整 MVP 已实现，也不提前推进 M1–M5。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -47,7 +47,7 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 | 阶段 | 状态 | 主要交付 | 关联需求 |
 | --- | --- | --- | --- |
 | D0 | COMPLETE | 六份文档、交叉链接、统一语义 | 产品与工程基线 |
-| M0 | NOT STARTED | 固定版本、映射与布局可行性证据 | P02、P03、P05、P07、P09 |
+| M0 | COMPLETE | Mermaid 12.1.0、集中映射、稳定布局、离线证明与证据 | P02、P03、P05、P07、P09 |
 | M1 | NOT STARTED | 工具链、npm scripts、构建与运行说明 | 工程基础 |
 | M2 | NOT STARTED | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
 | M3 | NOT STARTED | 编辑器与共享播放器、案例、响应式 | P01、P04、P05、P06、P08、P10 |
@@ -79,14 +79,16 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 
 ### 任务
 
-- [ ] 核验 Node/npm 与候选 Mermaid 的实际支持范围，记录具体版本。
-- [ ] 只建立验证必要的最小环境；M0 可用手写语义模型，不先实现完整 Parser 或产品 UI。
-- [ ] 渲染线性、登录分支、重复消息、自调用、Note、actor/alias、中文长文本与两个顶层 alt。
-- [ ] 为每个语义 ID 绑定箭头/标签/Note/参与者/case，验证数量和角色；无法确认时拒绝播放。
-- [ ] 验证 strict 配置、纯 SVG 文本、必要 defs/marker 与导出资源边界。
-- [ ] 点击或程序化切步、换分支、切 Focus，确认全图坐标与 viewBox 不变。
-- [ ] 验证最少播放器运行代码可内联，在 file:// 与断网状态下操作一个真实导出样例。
-- [ ] 保存具体 fixture、截图/报告位置与失败输入，记录路线决定。
+- [x] 核验 Node/npm 与候选 Mermaid 的实际支持范围，记录具体版本。
+- [x] 只建立验证必要的最小环境；M0 使用手写语义模型，没有完整 Parser 或产品 UI。
+- [x] 渲染线性、登录分支、重复消息、自调用、Note、actor/alias、中文长文本与两个顶层 alt。
+- [x] 为每个语义 ID 绑定箭头/标签/Note/参与者/case，验证数量和角色；无法确认时拒绝播放。
+- [x] 验证 strict 配置、纯 SVG 文本、必要 defs/marker 与导出资源边界。
+- [x] 点击或程序化切步、换分支、切 Focus，确认全图坐标与 viewBox 不变。
+- [x] 验证最少播放器运行代码内联，在全新上下文 file:// 与断网状态下操作真实导出样例。
+- [x] 保存 fixture、截图/报告与原始失败输入，记录采用 Mermaid + 集中适配的路线。
+
+结果、版本、代码入口、适配假设与浏览器差异见 [M0 验证记录](../../validation/M0.md)。默认准入检查为 Chromium；WebKit 使用远程请求拦截，Firefox 测试浏览器不能启动，未标通过。跨浏览器完整发布验收仍属于 M5。
 
 ### 退出条件
 
@@ -205,6 +207,7 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | DEC07 | 2026-10-06 | 原生 DOM/CSS、纯 Playback、共享 player | 控件有限；Web/导出语义保持一致 |
 | DEC08 | 2026-10-06 | 测试进入真实 file:// 与断网新上下文 | 避免将在线可用误当作独立导出 |
 | DEC09 | 2026-10-06 | 当前内容首次上传 main；后续 ffang 工作分支，每次合并先问用户 | 用户指定的仓库与工作流，见 AGENTS |
+| DEC10 | 2026-10-06 | M0 采用 Mermaid 12.1.0 + 集中 SVG 适配；关闭 Mermaid 自动折行，先折行纯文本再编码 | 语义属性可校验映射；实测自动折行会拆开字符实体，见 M0 失败 fixture |
 
 新增决定只记录改变实现路线、范围或验收的事项，不将每次普通编辑写成架构决策。
 
@@ -229,14 +232,23 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-06 | D0 | 创建六份规格与执行计划 | PASS | 文档路径如第 1 节，保留 docs/research |
 | 2026-10-06 | D0 | Python 文档检查：UTF-8、文件与绝对链接、代码块、P01–P10、E01–E12、M0–M5、graphify 规则 | PASS | 六文件存在、链接目标存在、覆盖完整；确认未创建 package.json |
 | 2026-10-06 | D0 | 人工核对范围、步骤、Note 引用、模型/渲染顺序与离线规则 | PASS | 补充整文档 Note 引用定义、从模型生成标准渲染输入；统一一层分支与离线播放承诺 |
-| 2026-10-06 | M0–M5 | 应用、依赖与所有 npm 检查 | NOT RUN | 本轮仅搭文档框架，尚无 package.json |
+| 2026-10-06 | D0 | 当时应用、依赖与 npm 检查 | NOT RUN | D0 只搭文档框架；该记录不代表后续 M0 状态 |
+| 2026-10-06 | M0 | Node/npm 与 registry 版本核验；npm install；安装 Chromium/Firefox/WebKit | PASS | Node 22.14.0、npm 10.9.2、Mermaid 12.1.0、Playwright 1.63.0、esbuild 0.28.2；安装成功不等于浏览器启动成功 |
+| 2026-10-06 | M0 | 初次 npm run test:m0 | FAIL → FIXED | 补充允许安全同文件引用的 symbol/use；检测到长文本实体拆分，保存原始失败输入并修复折行顺序 |
+| 2026-10-06 | M0 | npm run test:m0 | PASS | 8 个 fixture、独立期望路径、全图稳定、共享播放、真实 file:// 断网与 14 个负向检查，见报告 |
+| 2026-10-06 | M0 | node scripts/m0.mjs '--browsers=chromium,webkit' | PASS，WebKit 方法有差异 | WebKit 的 setOffline 阻断 file://；改为拒绝 HTTP(S)/WS(S)，观察请求尝试为 0，不声称 setOffline 模式通过 |
+| 2026-10-06 | M0 | Firefox 启动、Windows SideBySide 日志、重新安装官方同版本包 | NOT RUN | mozglue 从属程序集缺失，重新安装后仍无法启动；M5 兼容验收保留此缺口 |
+| 2026-10-06 | M0 | npm audit --json | PASS | KaTeX override 0.18.2 后 0 个已知漏洞；没有强制降级 Mermaid |
+| 2026-10-06 | M0 | npm ci --no-fund --no-audit；npm run test:m0 | PASS | 从 lockfile 重装 122 个包；最后 Chromium 复验通过，固定报告为 m0-clean-install-report.json |
+| 2026-10-06 | M0 | 人工查看登录、中文长文本、390px Note 截图 | PASS | 文字/箭头/Note/self-call 可读；窄屏图内滚动，固定证据在 docs/validation/ |
+| 2026-10-06 | M1–M5 | typecheck、lint、Vitest、production build、完整 E01–E12 | NOT RUN | 本轮仅 M0；esbuild 验证包不代替正式工具链或 MVP 验收 |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：D0 已完成，文档框架可作为后续实现基线。
+当前：M0 已完成，工作分支为 ffang/m0-renderer-validation；不合并 main，合并须另行取得用户批准。
 
-下一实现任务：M0 选择并固定 Mermaid 版本，以登录分支、自调用和重复消息验证 SVG 绑定，随后补中文、Note 与离线样例。
+下一实现任务：M1，在当前目录建立正式 Vite / TypeScript 工具链和规定 scripts，复用 M0 已验证的模型、适配层及共享播放器。
 
-剩余：M0–M5 全部应用实现与验收；U0 的用户采用和 GitHub 传播验证。当前没有安装失败或其他已确认阻碍；Mermaid 映射与导出兼容属于尚待验证的风险，不能提前标 BLOCKED。
+剩余：M1–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 测试浏览器启动失败和 WebKit setOffline/file:// 差异已经记录；不阻断 Chromium 的 M0 准入，也不允许将 M5 发布验收提前标 COMPLETE。

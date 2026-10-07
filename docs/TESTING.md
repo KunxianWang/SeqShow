@@ -134,7 +134,7 @@ E12 不能只阻断请求后忽略错误；还要记录是否尝试发起网络�
 
 ## 10. 未来必须提供的 npm scripts
 
-M1 建立 package.json 后才可执行。以下是命令契约，目前均尚不存在：
+以下是 M1 必须实现的正式命令契约，目前均尚不存在。M0 已提供独立 `npm run test:m0` 与 `npm run m0:preview`，具体检查范围见 [M0 记录](validation/M0.md)，不能代替完整验收：
 
 | 命令 | 必须实现的行为 |
 | --- | --- |
@@ -146,7 +146,7 @@ M1 建立 package.json 后才可执行。以下是命令契约，目前均尚不
 | npm run build | production 静态产物及可内联的离线播放器运行包 |
 | npm run preview | 对已构建产物启动本地 preview |
 
-环境初始化命令、Node/npm 版本及浏览器安装步骤在 M1 核验后写入 README。不要现在声称 npm ci 能成功。
+M0 的 npm ci、版本与浏览器初始化步骤已写入 README。M1 追加正式工具链后重新核验安装与命令契约。
 
 最终顺序：typecheck → lint → npm test → build → production preview 的 E2E → 人工查看关键截图与导出文件。修复后重跑受影响检查；最终状态有新改动时再补必要完整门槛。
 
