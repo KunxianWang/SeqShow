@@ -1,6 +1,6 @@
 # SeqShow 技术架构
 
-状态：v0.1 架构基线；M0/M1 已完成，Parser 与正式编辑器尚待实现。更新：2026-10-07。
+状态：v0.1 架构基线；M0/M1 已完成；M2 Parser、纯 Playback 已实现并通过阶段验收，正式编辑器属于 M3。更新：2026-10-07。
 
 产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/active/mvp.md)。
 
@@ -48,7 +48,7 @@ Export：SVG + 最少语义数据 + 共享播放器 + 内联 CSS/JS
 
 ## 4. 计划目录
 
-下列为最终目标目录；部分已由 M0/M1 建立，Parser、正式编辑器与完整案例仍待实现，不创建空实现文件。
+下列为最终目标目录；Parser 与纯 Playback 已在 M2 建立，正式编辑器与完整案例仍待实现，不创建空实现文件。
 
 ```text
 AGENTS.md
@@ -63,8 +63,8 @@ src/
   main.ts                    Web 编辑、Render、案例选择、下载
   styles.css                 唯一默认主题与响应式布局
   core/
-    model.ts                 数据类型、诊断、输入限额
-    parser.ts                明确语法子集 → 模型
+    model.ts                 语义模型与源位置类型
+    parser.ts                明确语法子集 → 模型、诊断、输入限额
     playback.ts              路径派生与纯状态转换
   renderer/
     mermaid-adapter.ts       固定版本布局、绑定、SVG 规范化
@@ -88,7 +88,7 @@ player.ts 若为了导出打包需要一个很小的入口，可增加 export-pl
 
 ### 输出
 
-成功返回一个 SequenceDocument；失败返回有源位置的 diagnostics。诊断最低包括 code、message、line、column、可选 hint。line/column 面向用户从 1 开始，列按 UTF-16 code units 计数；跨行范围仅在确有必要时提供。
+parseSequence(source) 返回判别联合：成功为 { ok: true, document }，失败为 { ok: false, diagnostics }。当前遇到首个错误即返回，不尝试恢复或渲染部分模型。诊断最低包括 code、message、line、column、可选 hint。line/column 面向用户从 1 开始，列按 UTF-16 code units 计数；跨行范围仅在确有必要时提供。
 
 诊断分类：空输入、非时序图、语法错误、支持范围外、未知参与者、重复声明、分支结构错误、超限。Renderer 的映射失败和 Export 的导出失败是不同阶段的诊断，不假装成用户语法错误。
 
@@ -97,7 +97,7 @@ player.ts 若为了导出打包需要一个很小的入口，可增加 export-pl
 - 先核对长度与图类型；识别整行注释并拒绝配置指令/frontmatter。
 - 声明和消息形成参与者表；显式声明以声明顺序登记，其他消息 ID 按首次出现补充。Note 引用必须能在整个文档的参与者表中解析。
 - 将 Message、Note 和顶层 Alternative 分开建模；禁止嵌套 block、第二个 else 和不闭合 block。
-- 普通文本在消息/Note 的第一个语法冒号后整体保留，不全局 split 冒号，不以消息文字作为唯一标识。
+- 消息/Note 的第一个语法冒号可带一个格式空格；消费这一个分隔空格后，剩余文本原样保存，包括额外前后空格、URL、冒号和标点。不全局 split 或 trim 文本，不以消息文字作为唯一标识。
 - 对不识别的非空语句报错。Mermaid 接受不等于 SeqShow 支持，不能先渲染再忽略缺失步骤。
 - 可用 Mermaid 公开 parse/render 检查一致性；业务事件模型来自明确子集，不宣称 parse() 返回了可复用 AST。
 
@@ -147,20 +147,20 @@ type SequenceDocument = {
 };
 ```
 
-数据约束：ID 在一次编译内唯一；重复文字生成不同步骤 ID；每个引用都指向已登记参与者；一个 Alternative 只有两条 case；steps 不允许再嵌套 Alternative。ID 可使用按源顺序生成的 m1/n1/b1 等，无需 UUID 或持久化数据库。
+数据约束：ID 在一次编译内唯一；重复文字生成不同步骤 ID；每个引用都指向已登记参与者；一个 Alternative 只有两条 case；steps 不允许再嵌套 Alternative。M2 按源顺序生成 step:1、alt:1 与 alt:1:first/second；冒号不属于合法参与者 ID 字符，因此语义节点 ID 与参与者 ID 不会相撞，无需 UUID 或持久化数据库。
 
 原始源码、SVG DOM、计时器、按钮和浏览器元素不进入这个模型。结构控制符不作为播放步骤，避免把 alt/else/end 算进 Step X/N。
 
 ## 7. Playback
 
-纯逻辑输入：SequenceDocument、branchChoices、当前状态和 action。纯逻辑输出：下一状态、派生步骤和当前步骤；不访问 DOM、Date、网络或全局计时器。
+initialPlayback 建立 index/playing/choices；transition 接受 SequenceDocument、当前状态和 action。纯逻辑输出：下一状态、派生步骤和当前步骤；不访问 DOM、Date、网络或全局计时器。
 
 最低状态：index、playing、branchChoices。Focus 是显示选项，由播放器控制，不影响纯播放顺序。
 
-- branchChoices 为每个 Alternative 指定一个合法 case，缺省选第一条。
+- choices 为每个 Alternative 指定一个合法 case，初始化时缺省选第一条；未知 Alternative/case 与不完整的 deriveSteps 选择均明确抛错，不猜测替代路径。
 - deriveSteps 按源顺序展开共同步骤和所选 case；其他 case 保留在全图模型，不进入播放路径。
 - index=0 为总览，index=k 对应 steps[k-1]。index 始终在 0..N。
-- NEXT / PREVIOUS / RESET / PLAY / PAUSE / TICK / CHOOSE_BRANCH 的规则见 PRODUCT；越界动作保持合法状态。
+- NEXT / PREVIOUS / RESET / PLAY / PAUSE / TICK / CHOOSE_BRANCH 的规则见 PRODUCT；越界导航保持合法状态。SEEK 用于定位合法的 0..N 步，不接受小数、NaN 或越界值。
 - PLAY 在总览或末尾立即进入 Step 1 并开始计时；中途 PAUSE 后 PLAY 在当前步恢复，下一次 tick 推进一步。
 - NEXT/PREVIOUS/RESET/CHOOSE_BRANCH 都暂停。到末尾停播。Focus 切换不重置状态。
 
@@ -172,7 +172,7 @@ type SequenceDocument = {
 
 一次渲染返回全图 SVG、步骤及参与者的语义绑定、可读取的布局边界。绑定只包含可序列化 ID/token，不返回 CSS 的第 N 个选择器作为产品契约。
 
-适配模块根据已验证模型生成受限的标准 Mermaid 输入，先输出模型顺序中的参与者声明，再按节点顺序输出消息、Note 和分支；不把用户的原始配置或未识别语句直接传入渲染器。这样布局顺序与模型一致，原始源位置仍由 Parser 保存。标签转义在此处集中处理并验证，不通过文本替换向消息内容插入跟踪标记。
+适配模块根据已验证模型生成受限的标准 Mermaid 输入，先输出模型顺序中的参与者声明，再按节点顺序输出消息、Note 和分支；不把用户的原始配置或未识别语句直接传入渲染器。这样布局顺序与模型一致，原始源位置仍由 Parser 保存。参与者在布局源码中统一改为 seqParticipant1 等安全 ID，避免 end、尾部连字符等合法用户 ID 被 Mermaid lexer 当成语法；绑定时校验内部端点，data-seq-* 仍保存原始参与者 ID。标签转义在此处集中处理并验证，不通过文本替换向消息内容插入跟踪标记。
 
 Message 的绑定覆盖完整箭头、标签和自调用所需的线段；Note 覆盖文字与背景；参与者覆盖 actor 图形/标签；Alternative/case 保留分支标签和框架。defs/marker 等图形资源不能错误计为步骤或被透明度处理破坏。
 
@@ -259,8 +259,8 @@ M1 使用一个 Vite 虚拟模块加载 `scripts/build-player.mjs` 的 esbuild �
 
 ## 14. 尚未完成的技术验证
 
-- 用户 Parser 输出接入 M0 适配后的完整子集覆盖与资源上限表现。
-- strict 设置与纯 SVG 文本配置能否满足全部范围。
+- 接近输入上限时的真实浏览器性能；M2 已覆盖语义限额与 Parser→SVG 常规/边界 fixture，不把限额当作性能承诺。
+- 编辑器的异步错误、旧结果、快速连续 Render 与完整案例体验（M3）；当前 strict/纯 SVG 与 M2 fixture 已通过 Chromium。
 - 单文件运行包在 file://、Chromium、Firefox、WebKit 的兼容性。
 
 这些待验证项不等于产品范围待定。M0 与后续真实检查必须把结果、截图路径和取舍写入执行计划。

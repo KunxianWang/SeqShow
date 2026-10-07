@@ -1,13 +1,12 @@
 import { allSteps, alternatives, type BranchChoices, type SequenceDocument } from './core/model';
-import { defaultChoices, deriveSteps } from './core/playback';
+import { deriveSteps, initialPlayback, transition, type PlaybackAction } from './core/playback';
 
 export function mountPlayer(root: HTMLElement, document: SequenceDocument, initialChoices?: BranchChoices) {
   const svg = root.querySelector('svg')!;
   const controls = root.querySelector<HTMLElement>('[data-controls]')!;
   const status = root.querySelector<HTMLElement>('[data-status]')!;
-  let choices = { ...defaultChoices(document), ...initialChoices };
-  let steps = deriveSteps(document, choices);
-  let index = 0;
+  let state = initialPlayback(document, initialChoices);
+  let steps = deriveSteps(document, state.choices);
   let focus = true;
   let timer: ReturnType<typeof setInterval> | undefined;
   controls.replaceChildren();
@@ -18,25 +17,14 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     element.dataset.action = name.toLowerCase(); element.onclick = action;
     controls.append(element); return element;
   };
-  const previous = button('Previous', () => seek(Math.max(0, index - 1)));
-  const play = button('Play', () => {
-    if (timer) { pause(); update(); return; }
-    if (!steps.length) return;
-    if (index === 0 || index === steps.length) index = 1;
-    timer = setInterval(() => {
-      index = Math.min(index + 1, steps.length);
-      if (index === steps.length) pause();
-      update();
-    }, 1500);
-    if (index === steps.length) pause();
-    update();
-  });
-  const next = button('Next', () => seek(Math.min(steps.length, index + 1)));
-  button('Reset', () => seek(0));
+  const previous = button('Previous', () => dispatch({ type: 'PREVIOUS' }));
+  const play = button('Play', () => dispatch({ type: state.playing ? 'PAUSE' : 'PLAY' }));
+  const next = button('Next', () => dispatch({ type: 'NEXT' }));
+  button('Reset', () => dispatch({ type: 'RESET' }));
   const focusButton = button('Focus', () => { focus = !focus; update(); });
-  for (const alternative of alternatives(document)) {
+  for (const [ordinal, alternative] of alternatives(document).entries()) {
     const label = window.document.createElement('label');
-    label.append(`Path ${alternative.id}: `);
+    label.append(`Path ${ordinal + 1}: `);
     const select = window.document.createElement('select');
     select.dataset.branch = alternative.id;
     for (const branch of alternative.cases) {
@@ -44,15 +32,19 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
       option.value = branch.id; option.textContent = branch.label;
       select.append(option);
     }
-    select.value = choices[alternative.id];
-    select.onchange = () => {
-      pause(); choices = { ...choices, [alternative.id]: select.value };
-      steps = deriveSteps(document, choices); index = 0; update();
-    };
+    select.value = state.choices[alternative.id];
+    select.onchange = () => dispatch({ type: 'CHOOSE_BRANCH', id: alternative.id, caseId: select.value });
     label.append(select); controls.append(label);
   }
-  function seek(value: number) { pause(); index = value; update(); }
+  function dispatch(action: PlaybackAction) {
+    state = transition(document, state, action);
+    steps = deriveSteps(document, state.choices);
+    if (!state.playing) pause();
+    else if (timer === undefined) timer = setInterval(() => dispatch({ type: 'TICK' }), 1500);
+    update();
+  }
   function update() {
+    const { index, choices } = state;
     const current = steps[index - 1];
     const selected = new Set(steps.map(step => step.id));
     const past = new Set(steps.slice(0, Math.max(0, index - 1)).map(step => step.id));
@@ -76,18 +68,16 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     svg.setAttribute('data-focus', String(focus && index > 0));
     status.textContent = current ? `${index} / ${steps.length} — ${current.text}` : `Overview · 0 / ${steps.length}`;
     previous.disabled = index === 0; next.disabled = index === steps.length;
-    play.textContent = timer ? 'Pause' : 'Play';
+    play.textContent = state.playing ? 'Pause' : 'Play';
+    play.disabled = steps.length === 0;
     focusButton.setAttribute('aria-pressed', String(focus));
   }
-  const visibility = () => { if (window.document.hidden) { pause(); update(); } };
+  const visibility = () => { if (window.document.hidden) dispatch({ type: 'PAUSE' }); };
   window.document.addEventListener('visibilitychange', visibility);
   update();
   return {
-    snapshot: () => ({ index, total: steps.length, playing: Boolean(timer), focus, choices: { ...choices }, stepIds: steps.map(step => step.id) }),
-    seek: (value: number) => {
-      if (!Number.isInteger(value) || value < 0 || value > steps.length) throw new Error('Invalid step index');
-      seek(value);
-    },
-    destroy: () => { pause(); window.document.removeEventListener('visibilitychange', visibility); controls.replaceChildren(); },
+    snapshot: () => ({ ...state, total: steps.length, focus, choices: { ...state.choices }, stepIds: steps.map(step => step.id) }),
+    seek: (index: number) => dispatch({ type: 'SEEK', index }),
+    destroy: () => { pause(); state = { ...state, playing: false }; window.document.removeEventListener('visibilitychange', visibility); controls.replaceChildren(); },
   };
 }

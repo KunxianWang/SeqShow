@@ -1,6 +1,6 @@
 # SeqShow MVP 执行计划
 
-状态：D0、M0 技术路线与 M1 工具链已完成；M2–M5 尚未开始。
+状态：D0、M0–M2 已完成；M3–M5 尚未开始。
 
 更新日期：2026-10-07。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0，并在 2026-10-07 授权下一步 M1。当前已完成技术路线与正式工具链，保留手写模型原型，不声称完整 MVP 已实现，本轮不提前推进 M2–M5。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。当前已完成技术路线、正式工具链、受限 Parser 与纯 Playback；登录页面使用真实解析模型。本轮完成 M2，不提前推进 M3–M5，不声称完整 MVP 已实现。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -49,7 +49,7 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 | D0 | COMPLETE | 六份文档、交叉链接、统一语义 | 产品与工程基线 |
 | M0 | COMPLETE | Mermaid 12.1.0、集中映射、稳定布局、离线证明与证据 | P02、P03、P05、P07、P09 |
 | M1 | COMPLETE | Vite/TS、完整工程 scripts、单元/集成/E2E 基础检查、运行说明 | 工程基础 |
-| M2 | NOT STARTED | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
+| M2 | COMPLETE | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
 | M3 | NOT STARTED | 编辑器与共享播放器、案例、响应式 | P01、P04、P05、P06、P08、P10 |
 | M4 | NOT STARTED | 单文件导出与 file:// 离线验收 | P07、P09 |
 | M5 | NOT STARTED | 完整检查、真实视觉核验、README | P01–P10 |
@@ -121,13 +121,15 @@ M0 通过不代表整个 MVP 已完成；其示例可能尚未连接用户 Parse
 
 ### 任务
 
-- [ ] 实现 PRODUCT 的受限语法与 UTF-16 输入限额；保留诊断源位置。
-- [ ] 支持隐式参与者、as、actor、自调用、中文、重复消息和 Note。
-- [ ] 支持两个 case 的单层 alt/else，允许多个顶层 block；拒绝嵌套和其他后置语法。
-- [ ] 建立唯一语义 ID、引用检查与整图无可播放步骤错误。
-- [ ] 实现 deriveSteps 和 0..N 的纯状态转换，选择改变时重置与暂停。
-- [ ] 对长度不同的路径、多个分支组合、末尾/暂停/回退边界运行 TESTING 规定的测试。
-- [ ] 使用 M0 的渲染适配连接真实 Parser 结果，消除手写模型与实际模型的差异。
+- [x] 实现 PRODUCT 的受限语法与 UTF-16 输入限额；保留诊断源位置。
+- [x] 支持隐式参与者、as、actor、自调用、中文、重复消息和 Note。
+- [x] 支持两个 case 的单层 alt/else，允许多个顶层 block；拒绝嵌套和其他后置语法。
+- [x] 建立唯一语义 ID、引用检查与整图无可播放步骤错误。
+- [x] 实现 deriveSteps 和 0..N 的纯状态转换，选择改变时重置与暂停。
+- [x] 对长度不同的路径、多个分支组合、末尾/暂停/回退边界运行 TESTING 规定的测试。
+- [x] 使用 M0 的渲染适配连接真实 Parser 结果，消除手写模型与实际模型的差异。
+
+结果见 [M2 验证记录](../../validation/M2.md)：97 项单元/集成，Chromium/WebKit 各 16 场景 / 24 路径 / 119 状态，以及 production 和真实 file:// 下载检查。
 
 ### 退出条件
 
@@ -211,6 +213,7 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | DEC09 | 2026-10-06 | 当前内容首次上传 main；后续 ffang 工作分支，每次合并先问用户 | 用户指定的仓库与工作流，见 AGENTS |
 | DEC10 | 2026-10-06 | M0 采用 Mermaid 12.1.0 + 集中 SVG 适配；关闭 Mermaid 自动折行，先折行纯文本再编码 | 语义属性可校验映射；实测自动折行会拆开字符实体，见 M0 失败 fixture |
 | DEC11 | 2026-10-07 | Web、M0 与生产导出复用一个 esbuild 运行包构建函数；Vite 虚拟模块跟踪实际源码依赖 | 防止开发修改播放器后导出仍使用旧脚本；无需 CDN 或额外生成目录 |
+| DEC12 | 2026-10-07 | Mermaid 布局使用内部参与者 ID，语义模型与绑定保留原始 ID | 实测 end 与尾部连字符存在 lexer 冲突；不缩减产品 ID 范围，见 M2 |
 
 新增决定只记录改变实现路线、范围或验收的事项，不将每次普通编辑写成架构决策。
 
@@ -255,14 +258,22 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-07 | M1 | Firefox 启动复核 | NOT RUN | 官方测试二进制仍 spawn UNKNOWN；应用用例未运行，保留项目 |
 | 2026-10-07 | M1 | npm audit | PASS | 0 个已知漏洞，保留 KaTeX 0.18.2 override |
 | 2026-10-07 | M1 | 查看 production 登录页、共享播放器脚本与截图 | PASS | 4173 正式预览可操作；固定截图 docs/validation/m1-login.png |
-| 2026-10-07 | M2–M5 | Parser、完整编辑器、完整 E01–E12、发布验收 | NOT RUN | 本轮仅完成 M1 工程基础 |
+| 2026-10-07 | M1 时点 | 当时 Parser、完整编辑器和完整 E01–E12 | NOT RUN | 历史记录；后续 M2 已实现 Parser/Playback |
+| 2026-10-07 | M2 | 首次 Parser 单元检查 | FAIL → FIXED | 检出贪婪 ID 将虚线箭头解析为连字符 ID；新增独立模型/连字符用例 |
+| 2026-10-07 | M2 | 特殊 ID → Mermaid → SVG | FAIL → FIXED | end 触发 Mermaid 关键字错误；改用内部布局 ID 并校验端点，不禁用合法 ID |
+| 2026-10-07 | M2 | typecheck、lint、Vitest | PASS | 4 文件 / 97 项；限额、UTF-16 源位置、四种分支组合与状态边界 |
+| 2026-10-07 | M2 | production build 与 Chromium/WebKit 基础 E2E | PASS | 两浏览器各 2 项；真实下载文件在全新 file:// 离线上下文可操作 |
+| 2026-10-07 | M2 | M0 + 真实 Parser fixture 回归 | PASS | 两浏览器各 16 场景 / 24 路径 / 119 状态，14 负向检查；远程请求 0 |
+| 2026-10-07 | M2 | Play/Pause、RESET、页面隐藏、重新 Render、destroy | PASS | 可控时钟验证不会累积计时器或推进新图 |
+| 2026-10-07 | M2 | 查看 production、中文长文本与特殊 ID 离线截图 | PASS | 固定证据在 docs/validation；4173 预览初始 0/6 |
+| 2026-10-07 | M3–M5 | 编辑器、完整 E01–E12、浏览器/发布验收 | NOT RUN | 当前固定示例原型；Firefox 环境限制仍保留 |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0/M1 已完成；ffang/m1-toolchain 从未合并的 M0 分支继续开发。不合并 main，合并仍须用户批准。
+当前：M0–M2 已完成；ffang/m2-parser-playback 从未合并的 M1 分支继续开发。不合并 main，合并仍须用户批准。
 
-下一实现任务：M2，实现 PRODUCT 的受限 Parser、诊断、引用和限额，再完善纯 Playback 状态转换并接入适配层。
+下一实现任务：M3，建立源码编辑器与 Render，接入诊断定位、dirty/stale、异步过期保护、示例替换、键盘和响应式体验。
 
-剩余：M2–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M1 基础通过不代表完整 MVP 或 M5 发布验收完成。
+剩余：M3–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M2 核心通过不代表完整 MVP 或 M5 发布验收完成。

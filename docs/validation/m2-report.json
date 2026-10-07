@@ -1,0 +1,60 @@
+{
+  "stage": "M2",
+  "status": "passed",
+  "node": "v22.14.0",
+  "mermaid": "12.1.0",
+  "unitIntegration": {
+    "files": 4,
+    "tests": 97,
+    "passed": 97,
+    "failed": 0
+  },
+  "checks": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "productionBuild": "passed",
+    "visualInspection": "passed"
+  },
+  "productionE2E": [
+    {
+      "browser": "chromium",
+      "passed": 2,
+      "failed": 0,
+      "startedAt": "2026-10-07T19:51:55.954Z"
+    },
+    {
+      "browser": "webkit",
+      "passed": 2,
+      "failed": 0,
+      "startedAt": "2026-10-07T19:53:33.536Z"
+    }
+  ],
+  "browserIntegration": [
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "fixtures": 16,
+      "paths": 24,
+      "checkedStates": 119,
+      "remoteAttempts": 0,
+      "negativeChecks": 14,
+      "playbackLifecycle": "passed"
+    },
+    {
+      "browser": "webkit",
+      "version": "26.6",
+      "fixtures": 16,
+      "paths": 24,
+      "checkedStates": 119,
+      "remoteAttempts": 0,
+      "negativeChecks": 14,
+      "playbackLifecycle": "passed"
+    }
+  ],
+  "limitations": [
+    "Editor and full E01-E12 are M3-M5 work.",
+    "Firefox not run: known Windows test binary launch failure.",
+    "WebKit file contexts use HTTP/WS blocking rather than setOffline.",
+    "Input limits are not a performance benchmark."
+  ]
+}

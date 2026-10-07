@@ -32,16 +32,24 @@ export function serialize(document: SequenceDocument) {
   const lines = ['sequenceDiagram'];
   const events: { ordinal: number; step: Step }[] = [];
   const controls: { ordinal: number; alternative: Alternative }[] = [];
+  // Valid user IDs (e.g. "end" or a trailing hyphen) can collide with Mermaid's
+  // lexer. Keep user identity in the model/data-seq-* and use safe layout IDs.
+  const participantIds = new Map(document.participants.map((actor, index) => [actor.id, `seqParticipant${index + 1}`]));
+  const reference = (id: string) => {
+    const rendered = participantIds.get(id);
+    if (!rendered) throw new Error(`Unknown participant: ${id}`);
+    return rendered;
+  };
   let ordinal = 0;
   for (const actor of document.participants) {
     if (!/^[A-Za-z_][A-Za-z0-9_-]*$/u.test(actor.id)) throw new Error('Invalid participant ID');
-    lines.push(`${actor.kind} ${actor.id} as nowrap:${label(actor.label)}`);
+    lines.push(`${actor.kind} ${reference(actor.id)} as nowrap:${label(actor.label)}`);
   }
   const addStep = (step: Step) => {
     events.push({ ordinal: ordinal++, step });
     lines.push(step.kind === 'message'
-      ? `${step.from}${step.arrow === 'solid' ? '->>' : '-->>'}${step.to}: ${label(step.text)}`
-      : `Note ${step.placement === 'over' ? 'over' : `${step.placement} of`} ${step.participants.join(',')}: ${label(step.text)}`);
+      ? `${reference(step.from)}${step.arrow === 'solid' ? '->>' : '-->>'}${reference(step.to)}: ${label(step.text)}`
+      : `Note ${step.placement === 'over' ? 'over' : `${step.placement} of`} ${step.participants.map(reference).join(',')}: ${label(step.text)}`);
   };
   for (const node of document.nodes) {
     if (node.kind !== 'alternative') { addStep(node); continue; }
@@ -52,7 +60,7 @@ export function serialize(document: SequenceDocument) {
     controls.push({ ordinal, alternative: node });
     lines.push('end'); ordinal++;
   }
-  return { source: lines.join('\n'), events, controls };
+  return { source: lines.join('\n'), events, controls, participantIds };
 }
 
 // Fail closed at the SVG/export boundary. A new Mermaid DOM shape needs review.
@@ -92,7 +100,7 @@ export function assertSafeSvg(svg: SVGSVGElement) {
 }
 
 export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
-  const { events, controls } = serialize(document);
+  const { events, controls, participantIds } = serialize(document);
   const semantic = svg.querySelectorAll('[data-et="message"], [data-et="note"]');
   if (semantic.length !== events.length) throw new Error('SVG step count mismatch');
   const usedText = new Set<Element>();
@@ -102,7 +110,7 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
     const shape = matches[0];
     let nodes: Element[];
     if (step.kind === 'message') {
-      if (shape.getAttribute('data-from') !== step.from || shape.getAttribute('data-to') !== step.to
+      if (shape.getAttribute('data-from') !== participantIds.get(step.from) || shape.getAttribute('data-to') !== participantIds.get(step.to)
         || !shape.classList.contains(step.arrow === 'solid' ? 'messageLine0' : 'messageLine1')
         || shape.localName !== (step.from === step.to ? 'path' : 'line')) {
         throw new Error(`SVG message role mismatch: ${step.id}`);
@@ -147,9 +155,9 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
   if (usedText.size !== svg.querySelectorAll('text.messageText').length) throw new Error('Unbound SVG message text');
   for (const participant of document.participants) {
     const actors = Array.from(svg.querySelectorAll('[data-et="participant"]'))
-      .filter(node => node.getAttribute('data-id') === participant.id);
+      .filter(node => node.getAttribute('data-id') === participantIds.get(participant.id));
     const lifeLines = Array.from(svg.querySelectorAll('[data-et="life-line"]'))
-      .filter(node => node.getAttribute('data-id') === participant.id);
+      .filter(node => node.getAttribute('data-id') === participantIds.get(participant.id));
     if (actors.length !== 1 || lifeLines.length !== 1 || actors[0].getAttribute('data-type') !== participant.kind
       || normalize(actors[0].textContent || '') !== normalize(participant.label)) {
       throw new Error(`SVG participant mismatch: ${participant.id}`);

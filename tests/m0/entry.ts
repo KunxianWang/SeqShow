@@ -1,9 +1,11 @@
-import { fixtures } from './fixtures';
+import { fixtures as originalFixtures } from './fixtures';
+import { parsedFixtures } from '../fixtures/parsed';
 import { bindSteps, assertSafeSvg, renderSequence, serialize } from '../../src/renderer/mermaid-adapter';
 import { mountPlayer } from '../../src/player';
 import { exportHtml, safeJson } from '../../src/export';
 import css from '../../src/player.css';
 
+const fixtures = [...originalFixtures, ...parsedFixtures];
 const root = document.querySelector<HTMLElement>('[data-player]')!;
 const select = document.querySelector<HTMLSelectElement>('[data-fixture]')!;
 const error = document.querySelector<HTMLElement>('[data-error]')!;
@@ -64,7 +66,7 @@ function negativeChecks() {
 const api = {
   fixtures: fixtures.map(({ id, title }) => ({ id, title })), render,
   snapshot: () => player.snapshot(), seek: (index: number) => player.seek(index), geometry,
-  exportCurrent, negativeChecks,
+  exportCurrent, negativeChecks, destroy: () => player.destroy(),
 };
 declare global {
   interface Window {

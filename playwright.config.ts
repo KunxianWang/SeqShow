@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/e2e',
   workers: 1,
-  reporter: [['list'], ['json', { outputFile: 'artifacts/m1/e2e-report.json' }]],
+  reporter: [['list'], ['json', { outputFile: 'artifacts/e2e/report.json' }]],
   use: { baseURL: 'http://127.0.0.1:4174', trace: 'retain-on-failure' },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

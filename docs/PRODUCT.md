@@ -1,6 +1,6 @@
 # SeqShow 产品定义
 
-状态：v0.1 产品设计基线；M0/M1 已完成，用户 Parser 与正式编辑器尚未实现。更新：2026-10-07。
+状态：v0.1 产品设计基线；M0/M1 已完成；M2 核心已通过阶段验收，正式编辑器尚未实现。更新：2026-10-07。
 
 本文件定义产品范围和完成标准。技术实现见 [ARCHITECTURE](ARCHITECTURE.md)，交互见 [DESIGN](DESIGN.md)，验证见 [TESTING](TESTING.md)，执行见 [mvp.md](exec-plans/active/mvp.md)。
 
@@ -70,11 +70,11 @@ P02 与 P03 是受限 Mermaid 兼容，不宣称完整支持。P10 的部分案�
 | A->>A: message | 自调用，占一个消息步骤 |
 | Note left of A: text / Note right of A: text | 对已存在的参与者添加 Note，Note 占一个步骤 |
 | Note over A: text / Note over A,B: text | 覆盖一个或两个已存在的参与者 |
-| alt label / else label / end | 一个 block 有两个 case，case 内只含 Message / Note；多个顶层 block 可串联 |
+| alt label / else label / end | 一个 block 有两个带非空标签的 case，case 内只含 Message / Note；多个顶层 block 可串联 |
 
 参与者 ID 首版为 ASCII 字母或下划线开头，后接字母、数字、下划线或连字符；中文名称通过 as 标签展示，消息与 Note 支持中文。显式声明顺序优先，隐式参与者在需要时追加。Note 的“已存在”指能在整份文档的参与者表中解析，不要求声明必须出现在 Note 前一行。重复声明与未知 Note 参与者给出错误；不通过文本内容合并重复消息。
 
-文本标签按纯文本显示，冒号后的剩余内容完整保留，包括 URL、冒号和普通标点。HTML 标签、富文本或换行标记不在兼容承诺内：检测到标记输入时报告当前不支持，不能执行或静默转换。长文本允许视觉折行，不能因此增加步骤。
+文本标签按纯文本显示。消息/Note 的语法冒号可跟一个格式空格；消费该分隔空格后，剩余内容完整保留，包括额外前后空格、URL、冒号和普通标点。HTML 标签、富文本或换行标记不在兼容承诺内：检测到标记输入时报告当前不支持，不能执行或静默转换。长文本允许视觉折行，不能因此增加步骤。
 
 不支持：嵌套 alt、第三条 case、opt、loop、par、activation/deactivation、+/- 激活简写、create/destroy、autonumber、rect、其他箭头、分号拼接多语句、frontmatter、配置 directives、click/links 与 Mermaid 其他图类型。诊断区分 Mermaid 本身的语法错误和 SeqShow 暂不支持的合法 Mermaid 语法。
 
@@ -88,7 +88,7 @@ P02 与 P03 是受限 Mermaid 兼容，不宣称完整支持。P10 的部分案�
 - 当前播放路径由共同步骤和每个 alt 的所选 case 构成；其他 case 不进入步骤列表。
 - Step 0 / N 为总览，没有当前步骤高亮；Step k / N（k ≥ 1）聚焦第 k 个 Message 或 Note。
 - alt / else / end、参与者声明和普通注释不占步骤。仅有参与者、没有可播放 Message / Note 的图给出“没有可播放步骤”。
-- 改变任一分支时暂停，回到 Step 0，重算 N；不从旧 index 猜测恢复位置。
+- 改变任一分支时暂停，回到 Step 0，重算 N；不从旧 index 猜测恢复位置。允许单条 case 无步骤；整图仍必须有至少一个步骤，选中空路径时停在 0/0，Play/Next/Previous 禁用。
 - 从 Step 0 按 Next 到 1；从 Step N 按 Previous 到 N-1。播放到 N 时停在 N，保留最后一步高亮；再次 Play 从 Step 1 开始。
 - 1500 ms 自动推进一次，不要求用户等待视觉动画完成；隐藏页面时暂停。Focus 开关不修改 index 或分支。
 

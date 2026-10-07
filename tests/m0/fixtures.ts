@@ -1,7 +1,7 @@
 import type { Alternative, Message, Note, Participant, SequenceDocument } from '../../src/core/model';
 import { loginExample } from '../../src/examples';
 
-const source = { line: 1, column: 1 }; // Hand-authored M0 models, not Parser output.
+const source = { line: 1, column: 1 }; // Hand-authored M0 helpers; the login fixture now uses Parser output.
 const participant = (id: string, label = id, kind: Participant['kind'] = 'participant'): Participant => ({ id, label, kind });
 const message = (id: string, from: string, to: string, text: string, arrow: Message['arrow'] = 'solid'): Message =>
   ({ kind: 'message', id, from, to, text, arrow, source });
@@ -25,8 +25,8 @@ export const fixtures: Fixture[] = [
   {
     id: 'login', title: 'Login — actor, self-call, alt and Note',
     model: loginExample, paths: [
-      { choices: { auth: 'yes' }, ids: ['post', 'find', 'user', 'verify', 'session', 'success'] },
-      { choices: { auth: 'no' }, ids: ['post', 'find', 'user', 'verify', 'denied', 'failure'] },
+      { choices: { 'alt:1': 'alt:1:first' }, ids: ['step:1', 'step:2', 'step:3', 'step:4', 'step:5', 'step:6'] },
+      { choices: { 'alt:1': 'alt:1:second' }, ids: ['step:1', 'step:2', 'step:3', 'step:4', 'step:7', 'step:8'] },
     ],
   },
   {

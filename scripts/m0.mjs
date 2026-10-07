@@ -31,9 +31,9 @@ const server = createServer((request, response) => {
 await new Promise((accept, reject) => { server.once('error', reject); server.listen(process.argv.includes('--serve') ? 4173 : 0, '127.0.0.1', accept); });
 const address = `http://127.0.0.1:${server.address().port}`;
 if (process.argv.includes('--serve')) {
-  console.log(`M0 preview: ${address}\nManual models only; full editor/Parser follows in later milestones.`);
+  console.log(`M0 preview: ${address}\nOriginal and parsed validation fixtures; the full editor follows in M3.`);
 } else {
-  const report = { stage: 'M0', status: 'running', testedAt: new Date().toISOString(), mermaid: '12.1.0', node: process.version, requestedBrowsers: selected, runtimeBytes: Buffer.byteLength(runtimeText), browsers: [] };
+  const report = { stage: 'M0 regression + M2 parsed inputs', status: 'running', testedAt: new Date().toISOString(), mermaid: '12.1.0', node: process.version, requestedBrowsers: selected, runtimeBytes: Buffer.byteLength(runtimeText), browsers: [] };
   try {
     for (const name of selected) {
       const engine = engines[name];
@@ -59,6 +59,11 @@ if (process.argv.includes('--serve')) {
             const snapshot = await page.evaluate(() => window.m0.snapshot());
             assert.equal(snapshot.index, 0); assert.equal(snapshot.playing, false);
             assert.deepEqual(snapshot.stepIds, path.ids);
+            if (!path.ids.length) {
+              assert.equal(await page.locator('[data-action="play"]').isDisabled(), true);
+              assert.equal(await page.locator('[data-action="next"]').isDisabled(), true);
+              assert.equal(await page.locator('[data-action="previous"]').isDisabled(), true);
+            }
             for (let index = 0; index <= path.ids.length; index++) {
               await page.evaluate(index => window.m0.seek(index), index);
               await assertHighlight(page, data.model, path.ids, index);
@@ -78,6 +83,7 @@ if (process.argv.includes('--serve')) {
             assert.equal((await page.evaluate(() => window.m0.negativeChecks())).length, 14);
             await page.screenshot({ path: resolve(output, `${name}-login.png`), fullPage: true });
             await checkPlayback(page, 6);
+            await checkLifecycle(page);
           }
           if (fixture.id === 'unicode' && name === 'chromium') await page.screenshot({ path: resolve(output, 'chromium-unicode.png'), fullPage: true });
           const offline = await browser.newContext({ viewport: { width: 1280, height: 960 } });
@@ -139,6 +145,33 @@ if (process.argv.includes('--serve')) {
     await writeFile(resolve(output, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
     throw error;
   } finally { await new Promise(accept => server.close(accept)); }
+}
+
+async function checkLifecycle(page) {
+  await page.locator('[data-action="reset"]').click();
+  // Play/Pause/Play must still produce exactly one tick per 1500 ms.
+  for (let i = 0; i < 3; i++) await page.locator('[data-action="play"]').click();
+  await page.clock.runFor(1500);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).index, 2);
+  await page.locator('[data-action="reset"]').click();
+  await page.clock.runFor(3000);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).index, 0);
+  await page.locator('[data-action="play"]').click();
+  const before = await page.locator('[data-status]').textContent();
+  await page.evaluate(() => window.m0.destroy());
+  await page.clock.runFor(3000);
+  assert.equal(await page.locator('[data-status]').textContent(), before);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).playing, false);
+  await page.evaluate(() => window.m0.render('login'));
+  await page.clock.runFor(3000);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).index, 0);
+  await page.locator('[data-action="play"]').click();
+  await page.evaluate(() => window.m0.render('login'));
+  await page.clock.runFor(3000);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).index, 0);
+  await page.locator('[data-action="play"]').click();
+  await page.clock.runFor(1500);
+  assert.equal((await page.evaluate(() => window.m0.snapshot())).index, 2);
 }
 
 async function selectBranches(page, choices) {

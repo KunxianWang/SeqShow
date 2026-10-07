@@ -11,5 +11,5 @@ test.each(fixtures)('$id: default path and each authored branch path retain the 
 
 test('an invalid branch cannot silently select an unrelated path', () => {
   const login = fixtures.find(fixture => fixture.id === 'login')!;
-  expect(() => deriveSteps(login.model, { auth: 'unknown' })).toThrow('Unknown branch for auth');
+  expect(() => deriveSteps(login.model, { 'alt:1': 'unknown' })).toThrow('Unknown branch for alt:1');
 });
