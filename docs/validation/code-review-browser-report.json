@@ -1,0 +1,184 @@
+{
+  "stage": "M0 regression + M2 parsed inputs",
+  "status": "passed",
+  "testedAt": "2026-10-07T21:18:15.655Z",
+  "mermaid": "12.1.0",
+  "node": "v22.14.0",
+  "requestedBrowsers": [
+    "chromium"
+  ],
+  "runtimeBytes": 3959,
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "153.0.8010.12",
+      "fixtures": [
+        {
+          "id": "linear",
+          "paths": 1,
+          "checkedStates": 3,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 29214,
+          "remoteRequests": 0
+        },
+        {
+          "id": "login",
+          "paths": 2,
+          "checkedStates": 14,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 35320,
+          "remoteRequests": 0
+        },
+        {
+          "id": "repeated",
+          "paths": 1,
+          "checkedStates": 6,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 31162,
+          "remoteRequests": 0
+        },
+        {
+          "id": "notes",
+          "paths": 1,
+          "checkedStates": 6,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 30612,
+          "remoteRequests": 0
+        },
+        {
+          "id": "unicode",
+          "paths": 1,
+          "checkedStates": 5,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 34020,
+          "remoteRequests": 0
+        },
+        {
+          "id": "branches",
+          "paths": 4,
+          "checkedStates": 26,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 36068,
+          "remoteRequests": 0
+        },
+        {
+          "id": "single",
+          "paths": 1,
+          "checkedStates": 2,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 27784,
+          "remoteRequests": 0
+        },
+        {
+          "id": "text-data",
+          "paths": 1,
+          "checkedStates": 4,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 31390,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-linear",
+          "paths": 1,
+          "checkedStates": 3,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 29249,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-repeated",
+          "paths": 1,
+          "checkedStates": 5,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 30559,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-notes",
+          "paths": 1,
+          "checkedStates": 6,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 30716,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-alias",
+          "paths": 1,
+          "checkedStates": 4,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 31369,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-multiple",
+          "paths": 4,
+          "checkedStates": 24,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 35594,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-long",
+          "paths": 1,
+          "checkedStates": 3,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 33510,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-empty-path",
+          "paths": 2,
+          "checkedStates": 3,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 29295,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-id-boundaries",
+          "paths": 1,
+          "checkedStates": 5,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 32529,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-keyword-participants",
+          "paths": 2,
+          "checkedStates": 6,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 31490,
+          "remoteRequests": 0
+        },
+        {
+          "id": "parsed-empty-labels",
+          "paths": 1,
+          "checkedStates": 7,
+          "offline": "passed",
+          "offlineMode": "setOffline",
+          "exportedBytes": 31283,
+          "remoteRequests": 0
+        }
+      ],
+      "negativeChecks": 14,
+      "mobileScroll": "passed",
+      "playback": "passed"
+    }
+  ]
+}

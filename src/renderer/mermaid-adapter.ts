@@ -4,6 +4,12 @@ import { allSteps, type Alternative, type SequenceDocument, type Step } from '..
 // Mermaid 12.1.0's classic sequence SVG contract lives only in this adapter.
 
 const normalize = (text: string) => text.replace(/\s+/gu, '');
+function matchesStepText(rendered: string, expected: string) {
+  // Mermaid 12.1.0 renders an empty Message/Note label as one U+200B placeholder.
+  // Accept it only for blank model text; never strip it from nonempty labels.
+  return normalize(rendered) === normalize(expected)
+    || (!expected.trim() && rendered === '\u200b');
+}
 // Wrap plain graphemes before escaping. Mermaid's automatic word wrapping can
 // split a numeric entity and display its source instead of the original glyph.
 const canvas = window.document.createElement('canvas');
@@ -121,7 +127,7 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
       while (previous?.matches('text.messageText')) {
         texts.unshift(previous); previous = previous.previousElementSibling;
       }
-      if (!texts.length || normalize(texts.map(node => node.textContent).join('')) !== normalize(step.text)) {
+      if (!texts.length || !matchesStepText(texts.map(node => node.textContent).join(''), step.text)) {
         throw new Error(`SVG message text mismatch: ${step.id}; received ${JSON.stringify(texts.map(node => node.textContent))}`);
       }
       texts.forEach(node => usedText.add(node));
@@ -129,7 +135,7 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
     } else {
       const textNodes = shape.querySelectorAll('.noteText tspan, text.noteText:not(:has(tspan))');
       if (shape.localName !== 'g' || !shape.querySelector('rect.note')
-        || normalize(Array.from(textNodes, node => node.textContent).join('')) !== normalize(step.text)) {
+        || !matchesStepText(Array.from(textNodes, node => node.textContent).join(''), step.text)) {
         throw new Error(`SVG note role mismatch: ${step.id}`);
       }
       nodes = [shape];

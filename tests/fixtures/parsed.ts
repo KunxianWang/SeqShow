@@ -64,6 +64,27 @@ __proto__->>constructor: hello
 constructor-->>end: return
 end->>tail-: call
 tail- ->> __proto__: finish`, paths: [{ choices: {}, ids: ['step:1', 'step:2', 'step:3', 'step:4'] }] },
+  { id: 'parsed-keyword-participants', source: `sequenceDiagram
+actor alt as Alternate service
+participant else as 备用服务
+alt ->> else: start
+alt success
+alt\t-->> else: accepted
+else failure
+else ->> alt: retry
+end`, paths: [
+    { choices: { 'alt:1': 'alt:1:first' }, ids: ['step:1', 'step:2'] },
+    { choices: { 'alt:1': 'alt:1:second' }, ids: ['step:1', 'step:3'] },
+  ] },
+  { id: 'parsed-empty-labels', source: `sequenceDiagram
+participant A
+participant B
+A->>B:
+B-->>B:${'   '}
+Note left of A:
+Note right of B:${'   '}
+Note over A:
+Note over A,B:${'   '}`, paths: [{ choices: {}, ids: ['step:1', 'step:2', 'step:3', 'step:4', 'step:5', 'step:6'] }] },
 ];
 
 export const parsedFixtures = sources.map(({ id, source, paths }) => {
