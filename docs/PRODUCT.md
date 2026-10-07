@@ -1,6 +1,6 @@
 # SeqShow 产品定义
 
-状态：v0.1 产品设计基线；M0–M3 已完成；源码编辑、分支播放与错误恢复通过阶段验收，M4/M5 完整导出与发布验收仍待完成。更新：2026-10-07。
+状态：v0.1 产品设计基线；M0–M4 已完成；源码编辑、分支播放、错误恢复与离线导出通过阶段验收，M5 完整产品与发布验收仍待完成。更新：2026-10-07。
 
 本文件定义产品范围和完成标准。技术实现见 [ARCHITECTURE](ARCHITECTURE.md)，交互见 [DESIGN](DESIGN.md)，验证见 [TESTING](TESTING.md)，执行见 [mvp.md](exec-plans/active/mvp.md)。
 

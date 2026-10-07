@@ -1,6 +1,7 @@
 import { fixtures as originalFixtures } from './fixtures';
 import { parsedFixtures } from '../fixtures/parsed';
-import { bindSteps, assertSafeSvg, renderSequence, serialize } from '../../src/renderer/mermaid-adapter';
+import { bindSteps, renderSequence, serialize } from '../../src/renderer/mermaid-adapter';
+import { assertSafeSvg } from '../../src/renderer/svg-safety';
 import { mountPlayer } from '../../src/player';
 import { exportHtml, safeJson } from '../../src/export';
 import css from '../../src/player.css';

@@ -1,0 +1,88 @@
+{
+  "stage": "M4 standalone HTML export",
+  "status": "passed",
+  "date": "2026-10-07",
+  "baseline": "340110dcb5e66d84bdb02f58b51f5707f63bf28d",
+  "branch": "ffang/m4-offline-export",
+  "node": "v22.14.0",
+  "mermaid": "12.1.0",
+  "checks": [
+    {
+      "command": "npm run typecheck",
+      "status": "passed"
+    },
+    {
+      "command": "npm run lint",
+      "status": "passed",
+      "warnings": 0
+    },
+    {
+      "command": "npm test",
+      "status": "passed",
+      "files": 6,
+      "tests": 138
+    },
+    {
+      "command": "npm run test:e2e",
+      "status": "passed",
+      "build": "passed",
+      "browser": "chromium",
+      "stats": {
+        "startTime": "2026-10-07T21:56:01.308Z",
+        "duration": 20319.242,
+        "expected": 29,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test tests/e2e/export.spec.ts --project=webkit --grep 'login export|two independent exported|empty selected path|Chinese offline layout at 390px|constructed export data'",
+      "status": "passed",
+      "browser": "webkit",
+      "stats": {
+        "startTime": "2026-10-07T21:57:26.369Z",
+        "duration": 143312.92400000003,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "command": "npm run test:m0",
+      "status": "passed",
+      "browser": "chromium",
+      "fixtures": 18,
+      "paths": 27,
+      "states": 132,
+      "negativeChecks": 14,
+      "remoteRequests": 0
+    }
+  ],
+  "offlineValidation": {
+    "chromium": "fresh context with setOffline(true) before file navigation",
+    "webkit": "fresh context with HTTP(S)/WS(S) blocked and attempted requests observed",
+    "newExportRemoteRequests": 0,
+    "newExportPageErrors": 0,
+    "rawSourceCommentExcluded": true,
+    "webExportActionsEquivalent": true,
+    "constructedTextEscaping": "passed",
+    "unsafeSvgAndChoicesRejected": true,
+    "downloadFailureRecoveryAndUrlCleanup": "passed"
+  },
+  "limitations": [
+    "Firefox application tests not run: known Windows launch failure",
+    "Only five selected WebKit M4 tests run",
+    "M5 full product/release acceptance pending",
+    "Mermaid large chunk build warning remains"
+  ],
+  "screenshots": [
+    "m4-chinese-offline-1280.png",
+    "m4-chinese-offline-360.png",
+    "m4-chinese-offline-390.png",
+    "m4-chinese-offline-768.png",
+    "m4-login-offline-failure-step6.png",
+    "m4-login-offline.png"
+  ]
+}

@@ -1,6 +1,6 @@
 # SeqShow MVP 执行计划
 
-状态：D0、M0–M3 已完成；M4–M5 尚未开始。
+状态：D0、M0–M4 已完成；M5 尚未开始。
 
 更新日期：2026-10-07。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户随后明确要求“合并到 main 然后继续”：本轮将 M0–M2 快进合入并推送 main（a705464），再从 main 创建 ffang/m3-editor 完成 M3。正式编辑器使用真实解析模型；M4/M5 完整验收尚未执行，不声称完整 MVP 已实现。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户随后明确要求“合并到 main 然后继续”：本轮将 M0–M2 快进合入并推送 main（a705464），再从 main 创建 ffang/m3-editor 完成 M3。正式编辑器使用真实解析模型；随后 M4 离线导出已在独立工作分支验收；M5 完整验收尚未执行，不声称完整 MVP 已实现。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -53,7 +53,7 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 | M1 | COMPLETE | Vite/TS、完整工程 scripts、单元/集成/E2E 基础检查、运行说明 | 工程基础 |
 | M2 | COMPLETE | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
 | M3 | COMPLETE | 编辑器与共享播放器、案例、响应式 | P01、P04、P05、P06、P08、P10 |
-| M4 | NOT STARTED | 单文件导出与 file:// 离线验收 | P07、P09 |
+| M4 | COMPLETE | 单文件导出与 file:// 离线验收 | P07、P09 |
 | M5 | NOT STARTED | 完整检查、真实视觉核验、README | P01–P10 |
 | U0 | NOT STARTED | 自带输入、真实采用、二次使用与 stars | 产品验证，不阻断代码 MVP |
 
@@ -164,19 +164,21 @@ M0 通过不代表整个 MVP 已完成；其示例可能尚未连接用户 Parse
 
 ### 任务
 
-- [ ] 构建可内联的共享播放器运行包，不复制播放算法或依赖闭包 toString。
-- [ ] 内联规范化 SVG、必要语义数据、CSS/JS；不默认写入原始源码。
-- [ ] 保留导出时的 choices，从总览暂停开始；收件人可改变路径。
-- [ ] 正确编码 script 数据上下文，检查资源属性、SVG 内容与必要 defs。
-- [ ] 实现下载、busy/失败处理及 stale 导出禁用。
-- [ ] 下载真实 artifact，在全新浏览器上下文 file:// 打开、断网、观察网络尝试并播放/回退/换分支。
-- [ ] 对照 Web 与导出执行相同动作序列；核验移动宽度、中文和箭头。
+- [x] 构建可内联的共享播放器运行包，不复制播放算法或依赖闭包 toString。
+- [x] 内联规范化 SVG、必要语义数据、CSS/JS；不默认写入原始源码。
+- [x] 保留导出时的 choices，从总览暂停开始；收件人可改变路径。
+- [x] 正确编码 script 数据上下文，检查资源属性、SVG 内容与必要 defs。
+- [x] 实现下载、busy/失败处理及 stale 导出禁用。
+- [x] 下载真实 artifact，在全新浏览器上下文 file:// 打开、断网、观察网络尝试并播放/回退/换分支。
+- [x] 对照 Web 与导出执行相同动作序列；核验移动宽度、中文和箭头。
 
 ### 退出条件
 
 E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文件在实际浏览器可操作，不借助 Web 已加载资源或 http 服务。
 
 关联需求：P07、P09，复验 P03–P05、P08。
+
+退出条件已满足：138 项单元/集成、29 项 Chromium production、5 项 WebKit 导出重点检查与 Chromium M0 回归通过；真实离线截图已查看。详情见 [M4 记录](../../validation/M4.md)。
 
 ## 10. M5 — 完整验收与发布准备
 
@@ -280,13 +282,16 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-07 | M2 审核 | 独立副本 typecheck、lint、npm test、test:m0、test:e2e、git diff --check | PASS | 129 项单元/集成；Chromium 18 场景 / 27 路径 / 132 状态；2 项 production E2E，未混入并行 M3 改动 |
 | 2026-10-07 | 联合复核 | M3 + GPT-6 修复：typecheck、lint、Vitest、production Chromium/WebKit | PASS | 135 项单元/集成、19 项 Chromium、4 项 WebKit 重点 E2E；代码无冲突，保留执行计划的两边历史 |
 | 2026-10-07 | 联合复核 | node scripts/m0.mjs --browsers=chromium,webkit；查看新增场景断网 file:// 截图 | PASS | 两浏览器各 18 场景/27 路径/132 状态/14 负向；远程请求 0，见联合复核报告 |
+| 2026-10-07 | M4 | typecheck、lint、npm test、production build + Chromium E2E | PASS | 6 文件/138 项单元与集成、29 项 production 用户路径；SVG 安全边界共用、保存选择校验、下载失败 URL 清理 |
+| 2026-10-07 | M4 | WebKit 导出五项；npm run test:m0 | PASS | WebKit 动作对照、多/空路径、390px 中文、构造数据通过；Chromium M0 18 场景/27 路径/132 状态/14 负向，远程请求 0 |
+| 2026-10-07 | M4 | 查看真实下载文件与六份离线布局截图 | PASS | 初始总览/暂停/Focus、URL 文本、箭头/自调用/Note 保留，窄屏控件和长图仅内部滚动；见 M4.md |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0–M3 已完成。用户本次明确授权在复核通过后将 ffang/m3-editor 与 kxw/code-review-parser 一起合入 main；整合和联合验证已在 ffang/m3-review-integration 通过；按本次授权将联合结果合入并推送 main。后续其他合并仍须单独批准。
+当前：M0–M3 与 GPT-6 修复已按上次明确授权合入并推送 main（340110d）；M4 在 ffang/m4-offline-export 完成，尚未合并。后续合并仍须单独批准。
 
-下一实现任务：M4，补齐真实导出产物的安全、分支选择、共享播放一致性与 file:// 离线验收。既有导出原型和基础回归不代替 M4 退出条件。
+下一任务：M5，核对完整 P01–P10 / DoD、浏览器最低范围、实际性能与发布准备；不因 M4 通过自动发布或完成整个 MVP。
 
-剩余：M4–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M3 编辑器通过不代表完整 MVP 或 M5 发布验收完成。
+剩余：M5 完整应用与发布验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M4 离线导出通过不代表完整 MVP 或 M5 发布验收完成。

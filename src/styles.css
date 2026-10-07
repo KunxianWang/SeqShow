@@ -19,9 +19,8 @@ textarea:focus-visible, a:focus-visible, summary:focus-visible, .preview-panel:f
 .preview-notice { padding: 10px 12px; border-radius: 6px; background: #eff6ff; color: #1e40af; margin: 0; font-size: 13px; }
 .preview-panel[data-state='stale'] .preview-notice, .preview-panel[data-state='error'] .preview-notice { background: #fff7ed; color: #9a3412; }
 .path-help { margin: 12px 0 0; }
-.preview-panel [data-diagram] { padding: 16px; max-height: 640px; }
+.preview-panel [data-diagram] { padding: 16px; }
 .preview-panel [data-controls] label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 100%; overflow-wrap: anywhere; }
-[data-controls] select { max-width: 100%; }
 .preview-panel [data-controls] label { flex-basis: 100%; }
 .preview-panel [data-controls] label select { min-width: 0; flex: 1; }
 .syntax { margin-top: 18px; border-top: 1px solid #e2e8f0; padding-top: 16px; }

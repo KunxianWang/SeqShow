@@ -39,6 +39,8 @@ function update() {
   render.textContent = busy ? !successful && revision === 0 ? 'Preparing example…' : 'Rendering…' : failed && !successful ? 'Retry' : 'Render';
   example.disabled = busy;
   download.disabled = !successful || stale || busy || exporting;
+  download.textContent = exporting ? 'Exporting…' : 'Export HTML';
+  download.setAttribute('aria-busy', String(exporting));
   player?.setEnabled(!stale && !busy, !busy);
   if (busy) notice.textContent = 'Rendering…';
   else if (failed) notice.textContent = successful ? 'Last successful render — the current source could not be rendered.' : 'Could not prepare this diagram. Fix the source or retry.';
@@ -127,8 +129,8 @@ download.onclick = () => {
   try {
     const html = exportHtml(successful.svg, successful.model, player!.snapshot().choices, runtime, css);
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
-    const link = document.createElement('a'); link.href = url; link.download = 'seqshow-presentation.html'; link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const link = document.createElement('a'); link.href = url; link.download = 'seqshow-presentation.html';
+    try { link.click(); } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
     exportError.textContent = '';
   } catch (reason) { exportError.textContent = `Export failed: ${String(reason)}`; }
   finally { exporting = false; update(); }

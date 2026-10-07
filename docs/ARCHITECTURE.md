@@ -1,6 +1,6 @@
 # SeqShow 技术架构
 
-状态：v0.1 架构基线；M0–M3 已完成；Parser、纯 Playback 与正式编辑器通过阶段验收，完整导出与发布验收属于 M4/M5。更新：2026-10-07。
+状态：v0.1 架构基线；M0–M4 已完成；Parser、纯 Playback、正式编辑器与离线导出通过阶段验收，完整发布验收属于 M5。更新：2026-10-07。
 
 产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/active/mvp.md)。
 
@@ -68,6 +68,7 @@ src/
     playback.ts              路径派生与纯状态转换
   renderer/
     mermaid-adapter.ts       固定版本布局、绑定、SVG 规范化
+    svg-safety.ts            Renderer/Export 共用的 SVG 资源与执行边界
   player.ts                  Web/导出复用的 DOM 播放器
   export.ts                  单文件 HTML 生成与安全序列化
   examples.ts                六个原创案例
@@ -239,6 +240,8 @@ M1 使用一个 Vite 虚拟模块加载 `scripts/build-player.mjs` 的 esbuild �
 
 导出与下载失败给用户可恢复的错误，不删除源码或已编译结果。
 
+M4 的 exportHtml 在生成前调用 initialPlayback 校验并补全 choices；assertSafeSvg 原样移到 svg-safety.ts，Renderer 与 Export 共用，Export 不再因资源校验加载 Mermaid。main.ts 提供 Exporting/aria-busy，anchor 点击的 finally 安排 Blob URL 释放。共享 player.css 同时约束离线与 Web 的长图滚动、窄屏控件和焦点。真实产物安全和动作一致性见 [M4 记录](validation/M4.md)。
+
 ## 12. 状态与验证映射
 
 | 边界 | 主要责任 | 对应需求 |
@@ -262,7 +265,7 @@ M1 使用一个 Vite 虚拟模块加载 `scripts/build-player.mjs` 的 esbuild �
 ## 14. 尚未完成的技术验证
 
 - 接近输入上限时的真实浏览器性能；M2 已覆盖语义限额与 Parser→SVG 常规/边界 fixture，不把限额当作性能承诺。
-- M3 的异步过期结果、初始渲染失败、旧结果标识、恢复与六案例已通过 Chromium，见 [M3 记录](validation/M3.md)；完整导出一致性仍待 M4。
-- 单文件运行包在 file://、Chromium、Firefox、WebKit 的兼容性。
+- M3 的异步过期结果、初始渲染失败、旧结果标识、恢复与六案例已通过 Chromium，见 [M3 记录](validation/M3.md)；M4 已验证 Web/导出的动作序列一致、分支保留、错误与数据编码，见 [M4 记录](validation/M4.md)。
+- 单文件已通过 Chromium 和 WebKit 重点 file:// 检查；Firefox 未验证，M5 的完整发布浏览器范围仍需核对。
 
 这些待验证项不等于产品范围待定。M0 与后续真实检查必须把结果、截图路径和取舍写入执行计划。

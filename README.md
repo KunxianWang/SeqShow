@@ -4,7 +4,7 @@ Present Mermaid sequence diagrams, step by step.
 
 把已有 Mermaid 时序图转换为可以逐步讲解、选择分支、聚焦并离线分享的技术演示。
 
-**当前状态：M0–M3 已完成。** 可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus。源码编辑、错误定位与恢复、示例替换保护、键盘和响应式布局已实现；完整离线导出验收与发布准备仍属于 M4/M5。
+**当前状态：M0–M4 已完成。** 可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus。源码编辑、错误定位与恢复、示例替换保护、键盘和响应式布局已实现；单文件 HTML 的分支保留、安全编码、离线操作与播放一致性已通过 M4；完整产品及发布准备仍属于 M5。
 
 内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
 
@@ -38,7 +38,7 @@ npm test
 npm run test:e2e
 ```
 
-npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 19 项 Chromium 编辑器及离线回归检查；尚未覆盖完整 E01–E12。Firefox/WebKit 项目仍保留：
+npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 29 项 Chromium 编辑器及离线检查，覆盖 E01–E12 的主流程；M5 完整发布验收尚未完成。Firefox/WebKit 项目仍保留：
 
 ```sh
 npx playwright install firefox webkit
@@ -47,7 +47,9 @@ npx playwright test --project=webkit
 npx playwright test --project=firefox
 ```
 
-M3 与 GPT-6 修复联合验证：135 项单元/集成与 19 项 Chromium production 检查通过。Windows WebKit 的登录、键盘、390px 中文与真实下载/离线四项通过，离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [联合复核](docs/validation/REVIEW-MERGE-2026-10-07.md)；M3 独立基线见 [M3 验证](docs/validation/M3.md)。
+M4 当前通过 138 项单元/集成、29 项 Chromium production 以及 5 项 WebKit 导出重点检查：登录动作一致性、多个分支、空路径、390px 中文和恶意构造数据。WebKit 离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [M4 验证](docs/validation/M4.md)；此前联合基线见 [复核记录](docs/validation/REVIEW-MERGE-2026-10-07.md)。
+
+导出时选择各条路径，点击 Export HTML 下载 `seqshow-presentation.html`；将这一个文件发给收件人，用浏览器直接打开即可。打开时从总览暂停开始，保留选择并允许改选。文件包含参与者、消息与 Note 标签；原始源码及注释不会默认附带。断网承诺针对导出文件，首次访问编辑器仍需要应用静态资源。
 
 ## M0 验证页面
 
@@ -78,13 +80,14 @@ M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture�
 | [M1 验证](docs/validation/M1.md) | 工具链、清洁安装与 production 证据 |
 | [M2 验证](docs/validation/M2.md) | 子集解析、纯状态、双浏览器与真实离线文件 |
 | [M3 验证](docs/validation/M3.md) | 编辑器、六案例、错误恢复、键盘与响应式证据 |
+| [M4 验证](docs/validation/M4.md) | 独立 HTML、真实下载、播放一致性与导出安全 |
 | [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
 
 MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布局、Focus 和独立 HTML 导出。CLI、Agent skill、AI 生成、云分享与视频导出后置。
 
 ## 开发流程
 
-用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发，GPT-6 修复来自 kxw/code-review-parser；本次联合复核通过后，按用户明确授权经 ffang/m3-review-integration 一起合入 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
+用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发，GPT-6 修复来自 kxw/code-review-parser；本次联合复核通过后，按用户明确授权经 ffang/m3-review-integration 一起合入 main。M4 在 ffang/m4-offline-export 开发，尚未合并 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
 
 ## 许可证
 
