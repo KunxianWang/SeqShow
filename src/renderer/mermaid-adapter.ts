@@ -25,7 +25,7 @@ function labelLines(text: string) {
   return lines;
 }
 // Only adapter-generated breaks are markup; user content is always entities.
-const label = (text: string) => labelLines(text).map(line => line.replace(/[&<>#;:$%"`\[\]{}\r\n]/gu,
+const label = (text: string) => labelLines(text).map(line => line.replace(/[&<>#;:$%"`[\]{}\r\n]/gu,
     char => `#${char.codePointAt(0)};`)).join('<br/>');
 
 export function serialize(document: SequenceDocument) {

@@ -1,4 +1,5 @@
 import type { Alternative, Message, Note, Participant, SequenceDocument } from '../../src/core/model';
+import { loginExample } from '../../src/examples';
 
 const source = { line: 1, column: 1 }; // Hand-authored M0 models, not Parser output.
 const participant = (id: string, label = id, kind: Participant['kind'] = 'participant'): Participant => ({ id, label, kind });
@@ -23,13 +24,7 @@ export const fixtures: Fixture[] = [
   },
   {
     id: 'login', title: 'Login — actor, self-call, alt and Note',
-    model: { participants: [participant('U', 'Browser', 'actor'), participant('API'), participant('DB', 'Database')], nodes: [
-      message('post', 'U', 'API', 'POST /login'), message('find', 'API', 'DB', 'Find user'),
-      message('user', 'DB', 'API', 'User', 'dashed'), message('verify', 'API', 'API', 'Verify password'),
-      alternative('auth',
-        { id: 'yes', label: 'authenticated', steps: [message('session', 'API', 'U', 'Session', 'dashed'), note('success', 'over', ['U', 'API'], 'Login succeeded')] },
-        { id: 'no', label: 'unauthorized', steps: [message('denied', 'API', 'U', '401', 'dashed'), note('failure', 'over', ['U', 'API'], 'Login failed')] }),
-    ] }, paths: [
+    model: loginExample, paths: [
       { choices: { auth: 'yes' }, ids: ['post', 'find', 'user', 'verify', 'session', 'success'] },
       { choices: { auth: 'no' }, ids: ['post', 'find', 'user', 'verify', 'denied', 'failure'] },
     ],

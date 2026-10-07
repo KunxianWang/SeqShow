@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Present Mermaid sequence diagrams, step by step.">
+  <title>SeqShow — Sequence presentations</title>
+</head>
+<body>
+  <main data-player>
+    <h1>SeqShow <small>· Preview</small></h1>
+    <p>Explore the login example, step by step. Custom diagrams are coming next.</p>
+    <p>Paths are presentation choices; conditions are not evaluated.</p>
+    <button type="button" data-export disabled>Download offline HTML</button>
+    <p data-error role="alert"></p>
+    <div data-controls></div>
+    <div data-status role="status" aria-live="polite">Loading example…</div>
+    <div data-diagram></div>
+  </main>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

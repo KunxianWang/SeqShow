@@ -1,6 +1,6 @@
 # SeqShow 测试与验收策略
 
-状态：测试规格已准备；应用、测试代码和 npm scripts 尚不存在，以下检查尚未执行。日期：2026-10-06。
+状态：验收策略基线；M0/M1 已有可运行检查，完整产品验收尚未执行。更新：2026-10-07。
 
 需求编号来自 [PRODUCT](PRODUCT.md)，模块边界来自 [ARCHITECTURE](ARCHITECTURE.md)，视觉与操作规则来自 [DESIGN](DESIGN.md)。真实执行证据写入 [mvp.md](exec-plans/active/mvp.md)。
 
@@ -132,21 +132,23 @@ E12 不能只阻断请求后忽略错误；还要记录是否尝试发起网络�
 
 最终 E2E 针对 production build 的 preview 服务，避免只证明 dev 模式可用。preview 是本地验证服务器，不是生产托管服务。
 
-## 10. 未来必须提供的 npm scripts
+## 10. 已建立的 npm scripts 与当前范围
 
-以下是 M1 必须实现的正式命令契约，目前均尚不存在。M0 已提供独立 `npm run test:m0` 与 `npm run m0:preview`，具体检查范围见 [M0 记录](validation/M0.md)，不能代替完整验收：
+M1 已建立以下正式命令。当前 Web 入口为登录模型原型；Vitest 有 9 项路径单元检查与 1 项运行包构建集成检查；E2E 有生产登录页与真实下载/断网文件两项基础检查。随着 M2–M5 实现补齐完整覆盖，不用已有通过数代替未来的功能验收。具体证据见 [M1 记录](validation/M1.md)。M0 的独立验证命令继续保留：
 
 | 命令 | 必须实现的行为 |
 | --- | --- |
-| npm run dev | 启动本地编辑器开发环境 |
+| npm run dev | 启动 Vite 开发环境；当前为登录原型，编辑器在 M3 接入 |
 | npm run typecheck | TypeScript 无输出检查，含应用与测试相关类型 |
 | npm run lint | 应用、测试和构建配置的合理静态检查，不强推格式噪声 |
 | npm test | 非 watch 单元与集成测试，退出码能用于验收 |
-| npm run test:e2e | 按测试配置运行 Playwright，保存失败证据 |
+| npm run test:e2e | 先 production build，再对隔离 preview 运行 Chromium 基础用例，保存报告与失败 trace |
 | npm run build | production 静态产物及可内联的离线播放器运行包 |
 | npm run preview | 对已构建产物启动本地 preview |
 
-M0 的 npm ci、版本与浏览器初始化步骤已写入 README。M1 追加正式工具链后重新核验安装与命令契约。
+M1 的 npm ci、版本、初始化与浏览器命令已在 README 核验。Firefox/WebKit 项目均保留；扩展运行先 build，再使用 `npx playwright test --project=webkit` 或 `--project=firefox`。默认 E2E 使用 Chromium，不声称执行了所有浏览器或 E01–E12。Windows WebKit 使用串行 worker 与 90 秒用例上限，其断网文件验证延续 M0 的远程请求拦截；Firefox 启动失败仍未验证。
+
+typecheck 覆盖 src、tests 的 TypeScript 与 Vite/Vitest/Playwright 配置；Node .mjs 构建/验证脚本通过 lint 和真实运行核验，不开启 checkJs。构建成功不能代替类型检查。
 
 最终顺序：typecheck → lint → npm test → build → production preview 的 E2E → 人工查看关键截图与导出文件。修复后重跑受影响检查；最终状态有新改动时再补必要完整门槛。
 

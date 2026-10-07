@@ -61,15 +61,23 @@ function negativeChecks() {
   if (safeJson('</script>\u2028\u2029').includes('<')) throw new Error('Unsafe JSON');
   return rejected;
 }
-(window as any).m0 = {
+const api = {
   fixtures: fixtures.map(({ id, title }) => ({ id, title })), render,
   snapshot: () => player.snapshot(), seek: (index: number) => player.seek(index), geometry,
   exportCurrent, negativeChecks,
 };
+declare global {
+  interface Window {
+    m0: typeof api;
+    m0Ready?: boolean;
+    m0Failure?: string;
+  }
+}
+window.m0 = api;
 try {
   await render(current.id);
-  (window as any).m0Ready = true;
+  window.m0Ready = true;
 } catch (reason) {
   error.textContent = String(reason);
-  (window as any).m0Failure = String(reason);
+  window.m0Failure = String(reason);
 }

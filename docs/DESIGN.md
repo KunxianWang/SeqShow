@@ -1,6 +1,6 @@
 # SeqShow UI / UX 规范
 
-状态：v0.1 交互设计，尚无应用界面。日期：2026-10-06。
+状态：v0.1 交互设计基线；已有登录原型，完整编辑器体验尚未实现。更新：2026-10-07。
 
 范围与步骤语义见 [PRODUCT](PRODUCT.md)，数据与生命周期见 [ARCHITECTURE](ARCHITECTURE.md)，验收见 [TESTING](TESTING.md)。
 

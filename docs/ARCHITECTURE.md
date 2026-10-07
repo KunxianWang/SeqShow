@@ -1,6 +1,6 @@
 # SeqShow 技术架构
 
-状态：v0.1 设计基线，尚无应用代码或依赖安装。日期：2026-10-06。
+状态：v0.1 架构基线；M0/M1 已完成，Parser 与正式编辑器尚待实现。更新：2026-10-07。
 
 产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/active/mvp.md)。
 
@@ -23,7 +23,7 @@
 | 浏览器验收 | Playwright | 真实 SVG 布局、键盘、响应式与离线导出 |
 | 包管理 | npm + package-lock.json | 一个包，不建 monorepo；版本在 M0/M1 实际安装时核验并记录 |
 
-正式工具链表包含 M1 尚待配置的工具。M0 已锁定 Mermaid 12.1.0、Playwright 1.63.0、esbuild 0.28.2，实测 Node 22.14.0 / npm 10.9.2；环境要求 >=22.12.0。版本写入 package.json 与 lockfile，不使用远程 latest CDN。Vite、Vitest、typecheck 与 lint 在 M1 建立。
+M1 已建立正式工具链：Vite 8.3.3、TypeScript 6.0.3、Vitest 5.0.3、ESLint 10.12.0，保留 Mermaid 12.1.0、Playwright 1.63.0、esbuild 0.28.2。实测 Node 22.14.0 / npm 10.9.2；支持 Node ^22.13.0、^24.0.0 或 >=26.0.0，与检查工具的 engines 一致。精确版本写入 package.json 与 lockfile，不使用远程 latest CDN。检查范围见 [M1 记录](validation/M1.md)。
 
 ## 3. 总体数据流
 
@@ -48,7 +48,7 @@ Export：SVG + 最少语义数据 + 共享播放器 + 内联 CSS/JS
 
 ## 4. 计划目录
 
-下列 src/tests 文件是后续实现目标，目前不创建空实现文件。
+下列为最终目标目录；部分已由 M0/M1 建立，Parser、正式编辑器与完整案例仍待实现，不创建空实现文件。
 
 ```text
 AGENTS.md
@@ -223,6 +223,8 @@ player.ts 消费 SequenceDocument、规范化 SVG、语义绑定和初始分支�
 一个 .html：内联 CSS、已经渲染且规范化的 SVG、最少可序列化语义数据、构建时生成的共享播放器 JS。打开后无需重新解析 Mermaid，也无需网络、模块 import、外置文件或在线字体。
 
 播放器运行包由构建阶段生成并内联，不能用函数 toString() 拼接含闭包的运行时，也不能复制一份容易漂移的播放算法。开发与 production build 都要能获取同样的运行包。
+
+M1 使用一个 Vite 虚拟模块加载 `scripts/build-player.mjs` 的 esbuild 结果。开发模式跟踪运行包真实依赖并在其修改时刷新页面/内联脚本；production 同时输出 dist/export-player.js。M0 验证器也复用此构建函数。运行包的依赖输入必须全来自项目源码，禁止引入 Mermaid 或其他 runtime package。
 
 ### 数据处理边界
 

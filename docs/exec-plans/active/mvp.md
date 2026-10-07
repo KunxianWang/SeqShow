@@ -1,8 +1,8 @@
 # SeqShow MVP 执行计划
 
-状态：D0 文档基线与 M0 技术路线验证已完成；M1–M5 尚未开始。
+状态：D0、M0 技术路线与 M1 工具链已完成；M2–M5 尚未开始。
 
-日期：2026-10-06。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
+更新日期：2026-10-07。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
 ## 1. 计划依据与执行边界
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-最初授权是先建立规格和执行计划；D0 已完成。用户随后明确授权开始 M0，当前已建立最小验证环境与手写模型原型，不声称完整 MVP 已实现，也不提前推进 M1–M5。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0，并在 2026-10-07 授权下一步 M1。当前已完成技术路线与正式工具链，保留手写模型原型，不声称完整 MVP 已实现，本轮不提前推进 M2–M5。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -48,7 +48,7 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 | --- | --- | --- | --- |
 | D0 | COMPLETE | 六份文档、交叉链接、统一语义 | 产品与工程基线 |
 | M0 | COMPLETE | Mermaid 12.1.0、集中映射、稳定布局、离线证明与证据 | P02、P03、P05、P07、P09 |
-| M1 | NOT STARTED | 工具链、npm scripts、构建与运行说明 | 工程基础 |
+| M1 | COMPLETE | Vite/TS、完整工程 scripts、单元/集成/E2E 基础检查、运行说明 | 工程基础 |
 | M2 | NOT STARTED | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
 | M3 | NOT STARTED | 编辑器与共享播放器、案例、响应式 | P01、P04、P05、P06、P08、P10 |
 | M4 | NOT STARTED | 单文件导出与 file:// 离线验收 | P07、P09 |
@@ -104,12 +104,14 @@ M0 通过不代表整个 MVP 已完成；其示例可能尚未连接用户 Parse
 
 ### 任务
 
-- [ ] 在当前目录建立 Vite + TypeScript + 原生 DOM/CSS 的单包项目，保留 docs/research。
-- [ ] 建立 npm lockfile，固定经过 M0 验证的 Mermaid；无 CDN/latest、后端或 monorepo。
-- [ ] 配置 typecheck、lint、非 watch test、test:e2e、build、dev、preview。
-- [ ] 安装并配置必要 Vitest / Playwright，记录实际浏览器可用范围。
-- [ ] 建立最小静态页面、测试入口及 production preview 验证方式。
-- [ ] README 写清实际环境要求、安装/运行、检查命令及当前支持程度。
+- [x] 在当前目录建立 Vite + TypeScript + 原生 DOM/CSS 的单包项目，保留 docs/research。
+- [x] 更新 npm lockfile，保留 M0 验证的 Mermaid 12.1.0；无 CDN/latest、后端或 monorepo。
+- [x] 配置 typecheck、lint、非 watch test、test:e2e、build、dev、preview。
+- [x] 安装并配置 Vitest / Playwright，保留三浏览器项目并记录实际范围。
+- [x] 建立静态登录模型原型、测试入口及隔离 production preview 验证方式。
+- [x] README 写清环境、安装/运行、检查命令与当前支持程度。
+
+具体文件、版本、命令与证据见 [M1 记录](../../validation/M1.md)。M1 的通过范围为工程基础，用户 Parser、纯状态转换完整覆盖与编辑器仍属于后续里程碑。
 
 ### 退出条件
 
@@ -208,6 +210,7 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | DEC08 | 2026-10-06 | 测试进入真实 file:// 与断网新上下文 | 避免将在线可用误当作独立导出 |
 | DEC09 | 2026-10-06 | 当前内容首次上传 main；后续 ffang 工作分支，每次合并先问用户 | 用户指定的仓库与工作流，见 AGENTS |
 | DEC10 | 2026-10-06 | M0 采用 Mermaid 12.1.0 + 集中 SVG 适配；关闭 Mermaid 自动折行，先折行纯文本再编码 | 语义属性可校验映射；实测自动折行会拆开字符实体，见 M0 失败 fixture |
+| DEC11 | 2026-10-07 | Web、M0 与生产导出复用一个 esbuild 运行包构建函数；Vite 虚拟模块跟踪实际源码依赖 | 防止开发修改播放器后导出仍使用旧脚本；无需 CDN 或额外生成目录 |
 
 新增决定只记录改变实现路线、范围或验收的事项，不将每次普通编辑写成架构决策。
 
@@ -241,14 +244,25 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-06 | M0 | npm audit --json | PASS | KaTeX override 0.18.2 后 0 个已知漏洞；没有强制降级 Mermaid |
 | 2026-10-06 | M0 | npm ci --no-fund --no-audit；npm run test:m0 | PASS | 从 lockfile 重装 122 个包；最后 Chromium 复验通过，固定报告为 m0-clean-install-report.json |
 | 2026-10-06 | M0 | 人工查看登录、中文长文本、390px Note 截图 | PASS | 文字/箭头/Note/self-call 可读；窄屏图内滚动，固定证据在 docs/validation/ |
-| 2026-10-06 | M1–M5 | typecheck、lint、Vitest、production build、完整 E01–E12 | NOT RUN | 本轮仅 M0；esbuild 验证包不代替正式工具链或 MVP 验收 |
+| 2026-10-06 | M0 时点 | 正式工具链检查与完整 E01–E12 | NOT RUN | 当时仅 M0；后续 M1 工具链已实际运行，完整产品 E01–E12 仍未执行 |
+| 2026-10-07 | M1 | 核验 registry engines/peerDependencies，安装并精确锁定工具链 | PASS | Node 22.14.0；TS 6.0.3 处于 typescript-eslint 支持范围，不强装当前不受支持的 TS 7 |
+| 2026-10-07 | M1 | 首次 lint、修正 M0 的显式 any 与无效转义 | FAIL → FIXED | M0 暴露 API 添加实际推导类型；不关闭规则或忽略整个文件 |
+| 2026-10-07 | M1 | npm ci、typecheck、lint、npm test、production build、npm run test:e2e | PASS | 干净重装后 10 项单元/集成与 2 项 Chromium production E2E，见 M1 报告 |
+| 2026-10-07 | M1 | 清洁安装的 Windows esbuild 文件占用 | FAIL → FIXED | 停止本项目旧 M0 预览后重装成功；没有改为管理员运行或删除无关文件 |
+| 2026-10-07 | M1 | 开发页、虚拟运行包更新与源码恢复 | PASS | 临时改变共享播放器按钮文本后，两者同步更新；按原始字节恢复源码 |
+| 2026-10-07 | M1 | npm run test:m0 | PASS | 8 个 fixture / 12 路径 / 66 状态，14 个负向检查；复用新构建函数后无回归 |
+| 2026-10-07 | M1 | WebKit production / 下载 / 离线 E2E | FAIL → FIXED | 默认并行/30 秒测试超时；trace 显示 Windows 驱动操作较慢，串行与 90 秒上限后两项通过 |
+| 2026-10-07 | M1 | Firefox 启动复核 | NOT RUN | 官方测试二进制仍 spawn UNKNOWN；应用用例未运行，保留项目 |
+| 2026-10-07 | M1 | npm audit | PASS | 0 个已知漏洞，保留 KaTeX 0.18.2 override |
+| 2026-10-07 | M1 | 查看 production 登录页、共享播放器脚本与截图 | PASS | 4173 正式预览可操作；固定截图 docs/validation/m1-login.png |
+| 2026-10-07 | M2–M5 | Parser、完整编辑器、完整 E01–E12、发布验收 | NOT RUN | 本轮仅完成 M1 工程基础 |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0 已完成，工作分支为 ffang/m0-renderer-validation；不合并 main，合并须另行取得用户批准。
+当前：M0/M1 已完成；ffang/m1-toolchain 从未合并的 M0 分支继续开发。不合并 main，合并仍须用户批准。
 
-下一实现任务：M1，在当前目录建立正式 Vite / TypeScript 工具链和规定 scripts，复用 M0 已验证的模型、适配层及共享播放器。
+下一实现任务：M2，实现 PRODUCT 的受限 Parser、诊断、引用和限额，再完善纯 Playback 状态转换并接入适配层。
 
-剩余：M1–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 测试浏览器启动失败和 WebKit setOffline/file:// 差异已经记录；不阻断 Chromium 的 M0 准入，也不允许将 M5 发布验收提前标 COMPLETE。
+剩余：M2–M5 应用实现与验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M1 基础通过不代表完整 MVP 或 M5 发布验收完成。

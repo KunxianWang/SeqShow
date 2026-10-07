@@ -3,17 +3,38 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Step-by-step Mermaid sequence presentations — M0 validation",
+  "description": "Step-by-step Mermaid sequence presentations",
   "license": "MIT",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0 || >=26.0.0"
+  },
   "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:e2e": "npm run build && playwright test --project=chromium",
+    "build": "vite build",
+    "preview": "vite preview",
     "test:m0": "node scripts/m0.mjs",
     "m0:preview": "node scripts/m0.mjs --serve"
   },
-  "dependencies": { "mermaid": "12.1.0" },
-  "overrides": { "katex": "0.18.2" },
+  "dependencies": {
+    "mermaid": "12.1.0"
+  },
+  "overrides": {
+    "katex": "0.18.2"
+  },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@playwright/test": "1.63.0",
-    "esbuild": "0.28.2"
+    "@types/node": "22.20.5",
+    "esbuild": "0.28.2",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.3",
+    "vitest": "5.0.3"
   }
 }

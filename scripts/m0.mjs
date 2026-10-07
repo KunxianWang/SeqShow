@@ -5,6 +5,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
+import { buildPlayer } from './build-player.mjs';
 
 const output = resolve('artifacts/m0');
 const engines = { chromium, firefox, webkit };
@@ -13,10 +14,10 @@ for (const name of selected) assert(name in engines, `Unknown browser: ${name}`)
 await mkdir(output, { recursive: true });
 const [harness, runtime, html, css] = await Promise.all([
   build({ entryPoints: ['tests/m0/entry.ts'], bundle: true, write: false, format: 'esm', platform: 'browser', target: 'es2024', loader: { '.css': 'text' } }),
-  build({ entryPoints: ['src/export-player.ts'], bundle: true, write: false, format: 'iife', platform: 'browser', target: 'es2024', minify: true }),
+  buildPlayer(),
   readFile('tests/m0/index.html', 'utf8'), readFile('src/player.css', 'utf8'),
 ]);
-const runtimeText = runtime.outputFiles[0].text;
+const runtimeText = runtime.code;
 assert(!/mermaid|katex|https?:\/\//iu.test(runtimeText), 'Offline runtime must have no Mermaid or remote dependency');
 const routes = new Map([
   ['/', ['text/html', html]], ['/m0.js', ['text/javascript', harness.outputFiles[0].text]],
