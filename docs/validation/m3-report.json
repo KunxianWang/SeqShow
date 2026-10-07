@@ -1,0 +1,64 @@
+{
+  "stage": "M3 editor and player",
+  "status": "passed",
+  "date": "2026-10-07",
+  "baseline": "a7054644cf8a830341de568e87f2b127049d8903",
+  "node": "v22.14.0",
+  "mermaid": "12.1.0",
+  "verification": "Detached worktree with only M3 owned files applied to committed M2 baseline",
+  "excludedConcurrentReviewFiles": [
+    "src/core/parser.ts",
+    "src/renderer/mermaid-adapter.ts",
+    "tests/fixtures/parsed.ts",
+    "tests/unit/parser.test.ts"
+  ],
+  "checks": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "productionBuild": "passed",
+    "vitest": {
+      "passed": 103,
+      "failed": 0,
+      "files": 5
+    },
+    "chromiumProductionE2E": {
+      "startTime": "2026-10-07T21:25:50.582Z",
+      "duration": 12183.589,
+      "expected": 19,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "webkitSelectedE2E": {
+      "startTime": "2026-10-07T21:27:24.293Z",
+      "duration": 89345.871,
+      "expected": 4,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "m0Regression": {
+      "fixtures": 16,
+      "paths": 24,
+      "states": 119,
+      "negativeChecks": 14,
+      "remoteRequests": 0
+    }
+  },
+  "limits": [
+    "Firefox application tests not run: known Windows binary launch failure",
+    "Only four selected WebKit tests run",
+    "M4/M5 full export and release acceptance remains pending"
+  ],
+  "screenshots": [
+    "m3-chinese-1280-step1.png",
+    "m3-chinese-360-step1.png",
+    "m3-chinese-390-step1.png",
+    "m3-chinese-768-step1.png",
+    "m3-error-1280.png",
+    "m3-login-1280.png",
+    "m3-login-failure-step6.png",
+    "m3-replace-dialog.png",
+    "m3-self-call.png"
+  ]
+}

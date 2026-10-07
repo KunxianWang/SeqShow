@@ -7,15 +7,54 @@
   <title>SeqShow — Sequence presentations</title>
 </head>
 <body>
-  <main data-player>
-    <h1>SeqShow <small>· Preview</small></h1>
-    <p>Explore the login example, step by step. Custom diagrams are coming next.</p>
-    <p>Paths are presentation choices; conditions are not evaluated.</p>
-    <button type="button" data-export disabled>Download offline HTML</button>
-    <p data-error role="alert"></p>
-    <div data-controls></div>
-    <div data-status role="status" aria-live="polite">Loading example…</div>
-    <div data-diagram></div>
+  <main class="app" data-app>
+    <header class="app-header">
+      <div><h1>SeqShow</h1><p>Turn sequence diagrams into step-by-step presentations.</p></div>
+      <a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+    </header>
+    <div class="workspace">
+      <section class="editor-panel" aria-label="Diagram editor">
+        <div class="panel-heading"><h2>Source</h2><span class="eyebrow">Mermaid sequence diagram</span></div>
+        <label for="example">Example</label>
+        <select id="example" data-example></select>
+        <label class="source-label" for="source">Mermaid source</label>
+        <textarea id="source" data-source spellcheck="false" aria-describedby="source-help" wrap="off"></textarea>
+        <div class="editor-actions"><button class="primary" type="button" data-render>Preparing example…</button><span data-source-state role="status"></span></div>
+        <div data-error role="alert"></div>
+        <details class="syntax"><summary>Supported syntax</summary>
+          <p>One statement per line, starting with <code>sequenceDiagram</code>. Use ASCII participant IDs; labels and messages can be Chinese.</p>
+          <pre>actor U as User
+participant API
+U-&gt;&gt;API: Request
+API--&gt;&gt;U: Response
+Note over U,API: Plain text
+alt success
+  API--&gt;&gt;U: Done
+else failure
+  API--&gt;&gt;U: Error
+end</pre>
+          <p>Also: self calls; Note left of / right of / over one or two participants; multiple top-level alt blocks; whole-line %% comments.</p>
+          <p>Limits: 50,000 UTF-16 units · 20 participants · 200 messages / Notes across all paths · 10 alt blocks.</p>
+        </details>
+        <details class="syntax"><summary>Unsupported syntax</summary><p>Nested alt, opt / loop / par, activation, create / destroy, autonumber, rect, other arrows, multiple statements on one line, HTML / rich text, frontmatter, directives and click / links.</p></details>
+        <p class="help" id="source-help">Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</p>
+      </section>
+      <section class="preview-panel" data-player aria-label="Presentation player" tabindex="0">
+        <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
+        <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
+        <p class="path-help">Presentation paths only; conditions are not evaluated.</p>
+        <div data-controls></div>
+        <div data-status role="status" aria-live="polite">Loading example…</div>
+        <div data-diagram><p class="placeholder">Your presentation will appear here.</p></div>
+        <p class="help">Focus the player to use ← Previous · → Next · Space Play / Pause · Home Reset.</p>
+        <p data-export-error role="alert"></p>
+      </section>
+    </div>
+    <dialog data-replace aria-labelledby="replace-title">
+      <h2 id="replace-title">Replace current source?</h2>
+      <p>You have changed the source. Loading this example will replace your draft.</p>
+      <div class="dialog-actions"><button type="button" data-cancel>Cancel</button><button class="primary" type="button" data-confirm>Replace current source</button></div>
+    </dialog>
   </main>
   <script type="module" src="/src/main.ts"></script>
 </body>

@@ -4,7 +4,11 @@ Present Mermaid sequence diagrams, step by step.
 
 把已有 Mermaid 时序图转换为可以逐步讲解、选择分支、聚焦并离线分享的技术演示。
 
-**当前状态：M0–M2 已完成。** 受限 Mermaid Parser、源位置诊断、引用/限额检查与纯播放状态已实现。Vite 原型现在从真实 Mermaid 源码生成登录演示并下载独立 HTML；可编辑源码、Render 和错误恢复将在 M3 接入，当前尚不是完整 MVP。
+**当前状态：M0–M3 已完成。** 可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus。源码编辑、错误定位与恢复、示例替换保护、键盘和响应式布局已实现；完整离线导出验收与发布准备仍属于 M4/M5。
+
+内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
+
+![SeqShow 编辑器与演示预览](docs/validation/m3-login-1280.png)
 
 ## 开发与生产预览
 
@@ -34,7 +38,7 @@ npm test
 npm run test:e2e
 ```
 
-npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 Chromium 基础检查；尚未覆盖完整 E01–E12。Firefox/WebKit 项目仍保留：
+npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 19 项 Chromium 编辑器及离线回归检查；尚未覆盖完整 E01–E12。Firefox/WebKit 项目仍保留：
 
 ```sh
 npx playwright install firefox webkit
@@ -43,7 +47,7 @@ npx playwright test --project=webkit
 npx playwright test --project=firefox
 ```
 
-Windows WebKit 的 production 登录页与下载文件检查已通过，离线文件使用远程请求拦截。Firefox 测试浏览器在本机无法启动，未验证。M2 扩展场景、版本、截图与限制见 [M2 验证](docs/validation/M2.md)。
+M3 基线上 103 项单元/集成与 19 项 Chromium production 检查通过。Windows WebKit 的登录、键盘、390px 中文与真实下载/离线四项通过，离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [M3 验证](docs/validation/M3.md)。
 
 ## M0 验证页面
 
@@ -73,13 +77,14 @@ M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture�
 | [M0 验证](docs/validation/M0.md) | 渲染/离线证明、截图与浏览器限制 |
 | [M1 验证](docs/validation/M1.md) | 工具链、清洁安装与 production 证据 |
 | [M2 验证](docs/validation/M2.md) | 子集解析、纯状态、双浏览器与真实离线文件 |
+| [M3 验证](docs/validation/M3.md) | 编辑器、六案例、错误恢复、键盘与响应式证据 |
 | [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
 
 MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布局、Focus 和独立 HTML 导出。CLI、Agent skill、AI 生成、云分享与视频导出后置。
 
 ## 开发流程
 
-初始文档在 main。后续更新使用 ffang 开头的分支；ffang/m2-parser-playback 从尚未合并的 M1 分支继续开发，包含 M0/M1 历史。每次合并均须仓库所有者明确批准。
+用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发；后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
 
 ## 许可证
 

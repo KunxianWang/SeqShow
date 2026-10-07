@@ -4,7 +4,7 @@
 
 SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的技术演示。
 
-当前仓库处于 **M0–M2 已完成、M3–M5 尚未开始**的阶段。已存在受限 Parser、纯 Playback、从真实源码解析的登录原型、Mermaid 适配层、共享播放器、离线导出与分层检查；正式编辑器尚未实现。结果见 [M0 记录](docs/validation/M0.md)、[M1 记录](docs/validation/M1.md) 与 [M2 记录](docs/validation/M2.md)。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
+当前仓库处于 **M0–M3 已完成、M4–M5 尚未开始**的阶段。已存在受限 Parser、纯 Playback、从真实源码解析的登录原型、Mermaid 适配层、共享播放器、离线导出与分层检查；源码编辑器、六个案例、响应式布局、键盘与错误恢复已实现。结果见 [M0 记录](docs/validation/M0.md)、[M1 记录](docs/validation/M1.md) 、[M2 记录](docs/validation/M2.md) 与 [M3 记录](docs/validation/M3.md)。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
 
 ## 先读什么
 
@@ -13,12 +13,13 @@ SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的
 | [docs/PRODUCT.md](docs/PRODUCT.md) | 用户、范围、语法子集、用户故事、需求编号、Definition of Done |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Parser → Model → Playback → Renderer → Export 的职责与约束 |
 | [docs/DESIGN.md](docs/DESIGN.md) | 页面布局、步骤状态、分支选择、Focus Mode、错误和键盘行为 |
-| [docs/TESTING.md](docs/TESTING.md) | 测试层次、验收场景、未来 npm scripts 与完成证据 |
+| [docs/TESTING.md](docs/TESTING.md) | 测试层次、验收场景、npm scripts 与完成证据 |
 | [docs/exec-plans/active/mvp.md](docs/exec-plans/active/mvp.md) | 当前里程碑、状态、决策记录、验证结果、下一项任务 |
 | docs/research/ | 历史调研与 star 快照，作为背景证据，不作为实现规格 |
 | [docs/validation/M0.md](docs/validation/M0.md) | M0 版本、适配假设、复现命令、证据与浏览器限制 |
 | [docs/validation/M1.md](docs/validation/M1.md) | 正式工具链、命令、production 验证与剩余范围 |
 | [docs/validation/M2.md](docs/validation/M2.md) | Parser、纯 Playback、真实模型→SVG 与离线回归 |
+| [docs/validation/M3.md](docs/validation/M3.md) | 编辑器、错误恢复、六案例、键盘与响应式验收 |
 
 阅读顺序：PRODUCT → ARCHITECTURE → 与任务相关的 DESIGN / TESTING → 当前执行计划。
 
@@ -36,7 +37,7 @@ SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的
 1. 在当前目录工作，保留现有研究资料和用户文件。不要另建一层 seqshow 项目目录。
 2. 产品范围以 PRODUCT 为准；模块规则以 ARCHITECTURE 为准；交互以 DESIGN 为准；完成标准以 TESTING 为准。文档冲突先明确并同步相关文档，不能在实现中默默改承诺。
 3. 首版是浏览器应用、一种主题、一层 alt/else、离线 HTML 导出。CLI、skill、云分享、AI、视频导出均后置。
-4. M0 已选择 Mermaid 12.1.0 + 集中 SVG 适配路线；升级必须复验 fixture。M1 工具链与 M2 核心已建立，接下来按 M3–M5 推进，不自写完整 Mermaid grammar、布局引擎或通用插件系统。
+4. M0 已选择 Mermaid 12.1.0 + 集中 SVG 适配路线；升级必须复验 fixture。M1 工具链、M2 核心与 M3 编辑器已建立，接下来按 M4–M5 推进，不自写完整 Mermaid grammar、布局引擎或通用插件系统。
 5. 复用标准平台能力和当前依赖。模块职责可以分离，不为未来多个 renderer、协作或后端引入接口、工厂或服务层。
 6. 不支持的输入必须给出诊断，不能吞掉语法、静默删除消息或回退成看似成功的演示。
 7. Parser / Model / Playback 不依赖页面 DOM；Mermaid 输出结构假设集中在适配模块；Web 与导出播放器复用同一播放语义。

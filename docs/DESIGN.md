@@ -1,6 +1,6 @@
 # SeqShow UI / UX 规范
 
-状态：v0.1 交互设计基线；M2 登录原型已使用真实 Parser 与纯 Playback，完整编辑器体验尚未实现。更新：2026-10-07。
+状态：v0.1 交互设计基线；M3 编辑器、共享播放器、六案例、错误恢复与响应式体验已实现并验收。更新：2026-10-07。
 
 范围与步骤语义见 [PRODUCT](PRODUCT.md)，数据与生命周期见 [ARCHITECTURE](ARCHITECTURE.md)，验收见 [TESTING](TESTING.md)。
 
@@ -10,7 +10,7 @@
 
 页面默认加载 PRODUCT 的登录示例，首次渲染后处于总览。用户可直接按 Play，也可修改源码后 Render。初次加载按钮展示 Preparing example，渲染失败提供 Retry，不要求先读教程。
 
-导航只保留 SeqShow 名称、简短用途、GitHub 入口。仓库地址尚未确定时，开发预览不展示一个假的链接；正式发布前填入真实地址。文档不会在此阶段创建公开仓库。
+导航只保留 SeqShow 名称、简短用途、GitHub 入口。GitHub 入口指向用户创建的真实仓库 https://github.com/KunxianWang/SeqShow；本阶段不发布站点。
 
 ## 2. 桌面布局
 
@@ -98,7 +98,7 @@ Focus 默认开启。Focus 关闭后完整图恢复一般展示，同时保留�
 | 空输入 | Paste a sequence diagram to continue | 保留编辑器，输入后 Render |
 | 不支持语法 | 第 X 行：当前版本不支持 opt 等，并展示具体语句 | 修改输入，或加载支持案例 |
 | 结构/引用错误 | 行列位置、原因、相关参与者或 block | 点击诊断时定位源码，不丢失内容 |
-| 超限 | 实际数量与允许上限，不截断 | 用户缩小图 |
+| 超限 | 源码显示实际 UTF-16 长度；语义项显示已检测数量下限与允许上限，不截断 | 用户缩小图 |
 | Mermaid 布局/映射失败 | Could not prepare this diagram for playback；具体可读原因 | 保留源码，再次 Render 或换案例 |
 | 编译中 | Rendering…，相关控件禁用 | 成功或失败后恢复；过期结果不覆盖新草稿 |
 | 导出失败 | Export failed；可重试原因 | 保留有效预览与源码，允许重试 |

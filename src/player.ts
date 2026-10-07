@@ -5,9 +5,13 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
   const svg = root.querySelector('svg')!;
   const controls = root.querySelector<HTMLElement>('[data-controls]')!;
   const status = root.querySelector<HTMLElement>('[data-status]')!;
+  const details = window.document.createElement('p');
+  details.dataset.stepDetails = ''; status.after(details);
+  root.tabIndex = 0;
   let state = initialPlayback(document, initialChoices);
   let steps = deriveSteps(document, state.choices);
   let focus = true;
+  let enabled = true, focusEnabled = true, destroyed = false;
   let timer: ReturnType<typeof setInterval> | undefined;
   controls.replaceChildren();
   const pause = () => { clearInterval(timer); timer = undefined; };
@@ -20,8 +24,8 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
   const previous = button('Previous', () => dispatch({ type: 'PREVIOUS' }));
   const play = button('Play', () => dispatch({ type: state.playing ? 'PAUSE' : 'PLAY' }));
   const next = button('Next', () => dispatch({ type: 'NEXT' }));
-  button('Reset', () => dispatch({ type: 'RESET' }));
-  const focusButton = button('Focus', () => { focus = !focus; update(); });
+  const reset = button('Reset', () => dispatch({ type: 'RESET' }));
+  const focusButton = button('Focus', () => { if (!destroyed && focusEnabled) { focus = !focus; update(); } });
   for (const [ordinal, alternative] of alternatives(document).entries()) {
     const label = window.document.createElement('label');
     label.append(`Path ${ordinal + 1}: `);
@@ -34,9 +38,12 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     }
     select.value = state.choices[alternative.id];
     select.onchange = () => dispatch({ type: 'CHOOSE_BRANCH', id: alternative.id, caseId: select.value });
-    label.append(select); controls.append(label);
+    const other = window.document.createElement('span');
+    other.dataset.otherPath = alternative.id;
+    label.append(select, other); controls.append(label);
   }
   function dispatch(action: PlaybackAction) {
+    if (destroyed || (!enabled && action.type !== 'PAUSE')) return;
     state = transition(document, state, action);
     steps = deriveSteps(document, state.choices);
     if (!state.playing) pause();
@@ -61,23 +68,62 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
       const owner = title.closest('[data-seq-alternative]')!.getAttribute('data-seq-alternative')!;
       title.setAttribute('data-selected', String(title.getAttribute('data-seq-case') === choices[owner]));
     }
+    for (const alternative of alternatives(document)) {
+      const other = controls.querySelector<HTMLElement>(`[data-other-path="${alternative.id}"]`)!;
+      other.textContent = `Other path: ${alternative.cases.find(branch => branch.id !== choices[alternative.id])!.label}`;
+    }
     const active = current ? new Set(current.kind === 'message' ? [current.from, current.to] : current.participants) : new Set();
     for (const node of svg.querySelectorAll('[data-seq-participant]')) {
       node.setAttribute('data-active', String(active.has(node.getAttribute('data-seq-participant')!)));
     }
     svg.setAttribute('data-focus', String(focus && index > 0));
     status.textContent = current ? `${index} / ${steps.length} — ${current.text}` : `Overview · 0 / ${steps.length}`;
-    previous.disabled = index === 0; next.disabled = index === steps.length;
+    status.setAttribute('aria-live', state.playing ? 'off' : 'polite');
+    details.textContent = current ? current.kind === 'message' ? `${current.from} → ${current.to}` : `Note · ${current.participants.join(', ')}` : 'No current step · all paths keep their original layout.';
+    previous.disabled = !enabled || index === 0; next.disabled = !enabled || index === steps.length;
     play.textContent = state.playing ? 'Pause' : 'Play';
-    play.disabled = steps.length === 0;
+    play.disabled = !enabled || steps.length === 0;
+    reset.disabled = !enabled; focusButton.disabled = !focusEnabled;
+    for (const select of controls.querySelectorAll('select')) select.disabled = !enabled;
     focusButton.setAttribute('aria-pressed', String(focus));
+    if (current && enabled) {
+      const element = svg.querySelector('[data-phase="current"]')!;
+      const container = root.querySelector<HTMLElement>('[data-diagram]')!;
+      const item = element.getBoundingClientRect(), viewport = container.getBoundingClientRect();
+      const left = item.left < viewport.left || item.right > viewport.right
+        ? container.scrollLeft + (item.left + item.right - viewport.left - viewport.right) / 2 : container.scrollLeft;
+      const top = item.top < viewport.top || item.bottom > viewport.bottom
+        ? container.scrollTop + (item.top + item.bottom - viewport.top - viewport.bottom) / 2 : container.scrollTop;
+      if (left !== container.scrollLeft || top !== container.scrollTop) container.scrollTo({ left, top,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
   }
   const visibility = () => { if (window.document.hidden) dispatch({ type: 'PAUSE' }); };
   window.document.addEventListener('visibilitychange', visibility);
+  const keyboard = (event: KeyboardEvent) => {
+    const target = event.target as HTMLElement;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+      || target.closest('textarea, input, select, [contenteditable]:not([contenteditable="false"])')
+      || (event.code === 'Space' && (event.repeat || target.closest('button')))) return;
+    const actions: Record<string, HTMLButtonElement> = { ArrowLeft: previous, ArrowRight: next, Space: play, Home: reset };
+    const button = actions[event.code];
+    if (button) { event.preventDefault(); if (!button.disabled) button.click(); }
+  };
+  root.addEventListener('keydown', keyboard);
   update();
   return {
     snapshot: () => ({ ...state, total: steps.length, focus, choices: { ...state.choices }, stepIds: steps.map(step => step.id) }),
     seek: (index: number) => dispatch({ type: 'SEEK', index }),
-    destroy: () => { pause(); state = { ...state, playing: false }; window.document.removeEventListener('visibilitychange', visibility); controls.replaceChildren(); },
+    setEnabled: (value: boolean, allowFocus = value) => {
+      if (destroyed) return;
+      enabled = value; focusEnabled = allowFocus;
+      if (!enabled) dispatch({ type: 'PAUSE' }); else update();
+    },
+    destroy: () => {
+      if (destroyed) return;
+      destroyed = true; pause(); state = { ...state, playing: false };
+      window.document.removeEventListener('visibilitychange', visibility);
+      root.removeEventListener('keydown', keyboard); details.remove(); controls.replaceChildren();
+    },
   };
 }

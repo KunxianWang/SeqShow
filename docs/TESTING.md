@@ -1,6 +1,6 @@
 # SeqShow 测试与验收策略
 
-状态：验收策略基线；M0/M1 检查与 M2 核心验收已建立，完整产品验收尚未执行。更新：2026-10-07。
+状态：验收策略基线；M0–M3 阶段验收已建立，M4/M5 完整产品验收尚未执行。更新：2026-10-07。
 
 需求编号来自 [PRODUCT](PRODUCT.md)，模块边界来自 [ARCHITECTURE](ARCHITECTURE.md)，视觉与操作规则来自 [DESIGN](DESIGN.md)。真实执行证据写入 [mvp.md](exec-plans/active/mvp.md)。
 
@@ -134,15 +134,15 @@ E12 不能只阻断请求后忽略错误；还要记录是否尝试发起网络�
 
 ## 10. 已建立的 npm scripts 与当前范围
 
-M1 已建立以下正式命令。M2 将 Web 登录示例改为 Parser 输出；Vitest 有 79 项 Parser、17 项路径/状态与 1 项运行包集成检查；E2E 仍为生产登录页和真实下载/离线文件两项。M0 验证器保留 8 个原始场景，新增 8 个真实解析场景，覆盖多个不等长分支、空路径、特殊 ID 与计时器生命周期。具体结果见 [M2 记录](validation/M2.md)。随着 M3–M5 实现补齐完整覆盖，不用已有通过数代替未来的功能验收。
+M1 已建立以下正式命令。M3 在已提交的 M2 基线上通过 103 项 Vitest：79 项 Parser、17 项路径/状态、6 项独立案例期望与 1 项运行包集成。Chromium production E2E 为 19 项，覆盖 E01–E10 相关交互、初始失败/异步过期、图内滚动，以及既有真实下载/离线回归。WebKit 另通过登录、键盘、390px 中文和下载/离线 4 项。M0 回归保留 16 个场景、24 条路径、119 个状态。具体结果与隔离验证方式见 [M3 记录](validation/M3.md)；这些通过数不代替 M4/M5 的完整导出和发布验收。
 
 | 命令 | 必须实现的行为 |
 | --- | --- |
-| npm run dev | 启动 Vite 开发环境；当前为登录原型，编辑器在 M3 接入 |
+| npm run dev | 启动 Vite 开发环境；源码编辑器、六案例与共享播放器 |
 | npm run typecheck | TypeScript 无输出检查，含应用与测试相关类型 |
 | npm run lint | 应用、测试和构建配置的合理静态检查，不强推格式噪声 |
 | npm test | 非 watch 单元与集成测试，退出码能用于验收 |
-| npm run test:e2e | 先 production build，再对隔离 preview 运行 Chromium 基础用例，保存报告与失败 trace |
+| npm run test:e2e | 先 production build，再对隔离 preview 运行 Chromium 编辑器与离线回归用例，保存报告与失败 trace |
 | npm run build | production 静态产物及可内联的离线播放器运行包 |
 | npm run preview | 对已构建产物启动本地 preview |
 
