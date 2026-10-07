@@ -9,9 +9,13 @@ const declaration = new RegExp(`^(participant|actor)[ \\t]+(${identifier})(?:[ \
 // Match the longest arrow before consuming a sender's trailing hyphen.
 const message = new RegExp(`^(${identifier}?)[ \\t]*(-->>|->>)[ \\t]*(${identifier})[ \\t]*: ?(.*)$`, 'u');
 const note = new RegExp(`^Note[ \\t]+(left[ \\t]+of|right[ \\t]+of|over)[ \\t]+(${identifier})(?:[ \\t]*,[ \\t]*(${identifier}))?[ \\t]*: ?(.*)$`, 'u');
-const unsupported = /^(?:opt|loop|par|and|critical|break|option|activate|deactivate|create|destroy|autonumber|rect|click|links?|box|endbox|title)\b/u;
+const unsupportedKeywords = 'opt|loop|par|and|critical|break|option|activate|deactivate|create|destroy|autonumber|rect|click|links?|box|endbox|title';
+const unsupported = new RegExp(`^(?:${unsupportedKeywords})\\b`, 'u');
 const markup = /<\/?[A-Za-z][^>]*>|<!--|<!DOCTYPE|`[^`]*`/iu;
-const secondStatement = new RegExp(`;[ \\t]*(?:(?:participant|actor|Note|alt|else|end)(?:[ \\t]|$)|${identifier}[ \\t]*[-<][^:]*:)`, 'u');
+// A second message needs an arrow, receiver and delimiter. Do not scan across
+// arbitrary text/semicolons to a later URL's colon (e.g. "loop-count; https://...").
+const joinedMessage = `${identifier}[ \\t]*(?:<<|<)?-{1,2}(?:>>?|x|\\))?[ \\t]*[+-]?${identifier}[ \\t]*:`;
+const secondStatement = new RegExp(`;[ \\t]*(?:(?:participant|actor|Note|alt|else|end|${unsupportedKeywords})(?:[ \\t]|$)|${joinedMessage})`, 'u');
 const unsupportedMessage = new RegExp(`^${identifier}[ \\t]*[-<][^:]*:`, 'u');
 
 /** A small, line-based subset parser. Raw source never reaches Mermaid. */
@@ -53,7 +57,9 @@ export function parseSequence(source: string): ParseResult {
       return fail('UNSUPPORTED', '请把每条语句放在独立的一行，不支持分号拼接。',
         { ...location, column: location.column + (joined?.index ?? line.indexOf(';')) });
     }
-    if (/^alt(?:[ \t]|$)/u.test(line)) {
+    // Keywords are valid participant IDs too; a complete message wins over a block opener.
+    const matchedMessage = message.exec(line);
+    if (!matchedMessage && /^alt(?:[ \t]|$)/u.test(line)) {
       if (block) return fail('UNSUPPORTED', '暂不支持嵌套 alt。', location, '将分支改为多个顶层 alt/else。');
       const label = line.slice(3).trim();
       if (!label) return fail('BRANCH_STRUCTURE', 'alt 需要 case 标签。', location);
@@ -66,7 +72,7 @@ export function parseSequence(source: string): ParseResult {
       nodes.push(node); block = { node, selected: 0, hasElse: false };
       continue;
     }
-    if (/^else(?:[ \t]|$)/u.test(line)) {
+    if (!matchedMessage && /^else(?:[ \t]|$)/u.test(line)) {
       if (!block || block.hasElse) return fail('BRANCH_STRUCTURE', 'else 必须在 alt 中且只能出现一次。', location);
       const label = line.slice(4).trim();
       if (!label) return fail('BRANCH_STRUCTURE', 'else 需要 case 标签。', location);
@@ -88,7 +94,6 @@ export function parseSequence(source: string): ParseResult {
       declarations.set(id, location);
       continue;
     }
-    const matchedMessage = message.exec(line);
     const matchedNote = note.exec(line);
     let step: Step;
     if (matchedMessage) {

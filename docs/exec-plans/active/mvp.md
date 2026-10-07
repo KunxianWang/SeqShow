@@ -18,6 +18,8 @@
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
+2026-10-07 代码审核追加授权：本次按用户指定使用 `kxw/code-review-parser` 分支修复并推送，明确不合并 main；此命名只用于本次任务。审核结果见 [审核记录](../../validation/REVIEW-2026-10-07.md)。
+
 不提前运行用户试用、创建公开仓库、发布站点、在社区发帖或联系他人。自动测试通过、技术 MVP 完成、用户采用、100 stars 分开记录。
 
 ## 2. 核心交付链
@@ -267,12 +269,14 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-07 | M2 | Play/Pause、RESET、页面隐藏、重新 Render、destroy | PASS | 可控时钟验证不会累积计时器或推进新图 |
 | 2026-10-07 | M2 | 查看 production、中文长文本与特殊 ID 离线截图 | PASS | 固定证据在 docs/validation；4173 预览初始 0/6 |
 | 2026-10-07 | M3–M5 | 编辑器、完整 E01–E12、浏览器/发布验收 | NOT RUN | 当前固定示例原型；Firefox 环境限制仍保留 |
+| 2026-10-07 | M2 审核 | 复现关键字参与者、分号误接收/误拒绝、空标签 SVG 映射错误 | FAIL → FIXED | 新增 Parser 回归和两项浏览器 fixture，见审核记录 |
+| 2026-10-07 | M2 审核 | 独立副本 typecheck、lint、npm test、test:m0、test:e2e、git diff --check | PASS | 129 项单元/集成；Chromium 18 场景 / 27 路径 / 132 状态；2 项 production E2E，未混入并行 M3 改动 |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0–M2 已完成；ffang/m2-parser-playback 从未合并的 M1 分支继续开发。不合并 main，合并仍须用户批准。
+当前：M0–M2 已完成。本次代码审核以 main 的 a705464 为基线，在 kxw/code-review-parser 修复并验证；不合并 main。审核不包含共享目录里其他会话正在开发的 M3 改动。
 
 下一实现任务：M3，建立源码编辑器与 Render，接入诊断定位、dirty/stale、异步过期保护、示例替换、键盘和响应式体验。
 

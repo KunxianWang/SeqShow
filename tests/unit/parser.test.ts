@@ -64,6 +64,29 @@ test('hyphen IDs and prototype-like IDs are ordinary participants', () => {
   expect(allSteps(model)).toMatchObject([{ from: 'constructor', to: 'a-b' }, { from: 'a-b', to: '__proto__' }, { from: 'step-1', to: 'step-1' }]);
 });
 
+test('semicolon punctuation and keyword prefixes in text remain ordinary data', () => {
+  const text = 'one; optional; loop-count; title=value; https://example.com:80/x';
+  expect(allSteps(parse(`sequenceDiagram\nA->>B: ${text}\nNote over A: ${text}`))
+    .map(step => step.text)).toEqual([text, text]);
+});
+
+test.each(['alt', 'else'])('keyword participant %s supports whitespace before either arrow', id => {
+  const model = parse(`sequenceDiagram\n${id} ->> B: hello\n${id}\t-->> B: reply`);
+  expect(model.participants.map(participant => participant.id)).toEqual([id, 'B']);
+  expect(allSteps(model)).toMatchObject([
+    { from: id, to: 'B', arrow: 'solid', text: 'hello' },
+    { from: id, to: 'B', arrow: 'dashed', text: 'reply' },
+  ]);
+});
+
+test('keyword participants remain messages inside real branches', () => {
+  const model = parse('sequenceDiagram\nalt success\nalt ->> else: hello\nelse failure\nelse -->> alt: reply\nend');
+  expect(alternatives(model)[0].cases).toMatchObject([
+    { label: 'success', steps: [{ from: 'alt', to: 'else', text: 'hello' }] },
+    { label: 'failure', steps: [{ from: 'else', to: 'alt', text: 'reply' }] },
+  ]);
+});
+
 test('tabs and whitespace between Note keywords do not change semantics', () => {
   expect(parse('sequenceDiagram\n\tparticipant A\n\tNote\tleft\t of\tA: hello').nodes[0]).toMatchObject({
     kind: 'note', placement: 'left', participants: ['A'], text: 'hello', source: { line: 3, column: 2 },
@@ -72,11 +95,25 @@ test('tabs and whitespace between Note keywords do not change semantics', () => 
 
 describe('diagnostics distinguish unsupported Mermaid from malformed input', () => {
   test.each([
+    'activate B', 'deactivate B', 'loop retry', 'opt optional', 'par parallel',
+    'and other', 'critical transaction', 'break stop', 'option retry',
+    'create participant C', 'destroy B', 'autonumber', 'rect rgb(0,0,0)',
+    'click B "https://x"', 'link B: docs@https://x', 'links B: {}',
+    'box services', 'endbox', 'title diagram',
+  ])('rejects a second unsupported statement after a semicolon: %s', statement => {
+    expect(diagnostic(`sequenceDiagram\n  A->>B: one; ${statement}`)).toMatchObject({
+      code: 'UNSUPPORTED', line: 2, column: 13,
+    });
+  });
+  test.each([
     'opt optional', 'loop retry', 'par parallel', 'activate A', 'deactivate A',
     'create participant A', 'destroy A', 'autonumber', 'rect rgb(0,0,0)',
     'click A "https://x"', 'link A: x@https://x', 'A->B: other arrow', 'A--B: no head',
     'A-xB: cross', 'A-)B: async', 'A<<->>B: bidirectional', 'A->>+B: activate', 'A-->>-B: deactivate',
     'participant A; participant B', 'A->>B: one; B->>A: two', 'A->>B: one; end',
+    'A->>B: one; B-->>A: two', 'A->>B: one; B->A: two',
+    'A->>B: one; B--A: two', 'A->>B: one; B-xA: two', 'A->>B: one; B-)A: two',
+    'A->>B: one; B<<->>A: two', 'A->>B: one; B->>+A: two',
     'participant A as <b>name</b>', 'A->>B: <br/>', 'A->>B: `rich text`',
     '%%{init: {}}%%',
   ])('rejects %s as unsupported', statement => {
