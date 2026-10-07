@@ -1,0 +1,542 @@
+{
+  "fetched_at_utc": "2026-10-07T00:15:00.491686+00:00",
+  "query": "skill created:2026-08-01..2026-10-06 stars:100..5000",
+  "api_url": "https://api.github.com/search/repositories?q=skill+created%3A2026-08-01..2026-10-06+stars%3A100..5000&sort=stars&order=desc&per_page=20",
+  "total_count": 415,
+  "incomplete_results": false,
+  "repositories": [
+    {
+      "full_name": "rehan-remade/universal-modder",
+      "description": "Point Claude at any game. Skills, tools and the fal MCP that let Claude Code mod almost any PC game you own: recon, reverse engineering, fal-generated art/3D/audio, in-game testing, showcase videos.",
+      "stargazers_count": 4591,
+      "forks_count": 405,
+      "created_at": "2026-09-30T05:00:35Z",
+      "pushed_at": "2026-10-07T00:13:26Z",
+      "open_issues_count": 25,
+      "html_url": "https://github.com/rehan-remade/universal-modder",
+      "topics": [
+        "age-of-empires",
+        "claude-code",
+        "claude-code-plugin",
+        "fal",
+        "game-assets",
+        "game-modding",
+        "mcp",
+        "modding",
+        "reverse-engineering",
+        "tmodloader"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "yang0/handraw-style",
+      "description": "手绘风格编号画廊与双语提示词 Skill",
+      "stargazers_count": 4465,
+      "forks_count": 529,
+      "created_at": "2026-09-05T21:57:22Z",
+      "pushed_at": "2026-10-06T23:56:18Z",
+      "open_issues_count": 5,
+      "html_url": "https://github.com/yang0/handraw-style",
+      "topics": [],
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      }
+    },
+    {
+      "full_name": "Ryze-AI-Adgent/open-seo-mcp-skills",
+      "description": "Free SEO MCP server + open-source SEO and GEO skills for Claude: keyword research, rank tracking, audits, backlinks, AI visibility on your real GSC/GA4/ads data. claude mcp add ryze --transport http https://connector.get-ryze.ai/mcp",
+      "stargazers_count": 4310,
+      "forks_count": 364,
+      "created_at": "2026-08-29T23:37:01Z",
+      "pushed_at": "2026-09-24T01:53:55Z",
+      "open_issues_count": 1,
+      "html_url": "https://github.com/Ryze-AI-Adgent/open-seo-mcp-skills",
+      "topics": [
+        "ai-seo",
+        "ai-visibility",
+        "backlinks",
+        "claude",
+        "claude-code",
+        "claude-skills",
+        "dataforseo",
+        "generative-engine-optimization",
+        "geo",
+        "geo-mcp",
+        "keyword-research",
+        "llm-seo",
+        "mcp",
+        "mcp-server",
+        "open-source-seo",
+        "rank-tracking",
+        "seo",
+        "seo-audit",
+        "seo-mcp",
+        "seo-mcp-server"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "eternityspring/shuohao-skills",
+      "description": "AI 短剧制作的 skill 集合：拆角色、排大纲、出场景与道具设定、写剧本、切分镜 | Agent skills for AI short-drama production — character bibles, adaptation outlines, art bibles, screenplays, storyboards. Runs in Claude Code & codex.",
+      "stargazers_count": 4197,
+      "forks_count": 566,
+      "created_at": "2026-08-06T10:38:49Z",
+      "pushed_at": "2026-09-26T12:49:53Z",
+      "open_issues_count": 3,
+      "html_url": "https://github.com/eternityspring/shuohao-skills",
+      "topics": [],
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      }
+    },
+    {
+      "full_name": "KKKKhazix/human-writing",
+      "description": "让 AI 写的中文读起来像一个具体的人在说话。通用创作与改稿 Skill，开箱即用。",
+      "stargazers_count": 3958,
+      "forks_count": 299,
+      "created_at": "2026-08-05T01:19:41Z",
+      "pushed_at": "2026-08-11T15:07:45Z",
+      "open_issues_count": 8,
+      "html_url": "https://github.com/KKKKhazix/human-writing",
+      "topics": [
+        "agent-skills",
+        "chinese-writing",
+        "creative-writing",
+        "writing-skill"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Leonxlnx/unlazy",
+      "description": "Anti-laziness skill for AI agents. Core: the Depth Tree method, which splits a task N layers deep and gives every leaf the full time budget of the whole task, so effort multiplies with depth. Grounded in 2025-2026 research on model laziness, underthinking and premature completion.",
+      "stargazers_count": 3848,
+      "forks_count": 285,
+      "created_at": "2026-08-09T23:39:12Z",
+      "pushed_at": "2026-09-03T09:31:17Z",
+      "open_issues_count": 9,
+      "html_url": "https://github.com/Leonxlnx/unlazy",
+      "topics": [
+        "ai-agents",
+        "claude",
+        "claude-code",
+        "llm",
+        "productivity",
+        "prompt-engineering",
+        "skill"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "yanliudesign/mono-color-skill",
+      "description": "One-ink editorial print image skill — warm paper, halftone photography, active negative space, and restrained typography.",
+      "stargazers_count": 3355,
+      "forks_count": 96,
+      "created_at": "2026-08-19T06:07:45Z",
+      "pushed_at": "2026-09-02T18:49:42Z",
+      "open_issues_count": 6,
+      "html_url": "https://github.com/yanliudesign/mono-color-skill",
+      "topics": [
+        "agent-skill",
+        "ai-agent",
+        "claude-skill",
+        "editorial-design",
+        "generative-art",
+        "halftone",
+        "image-generation",
+        "monochrome",
+        "poster-design",
+        "prompt-engineering",
+        "risograph",
+        "zine"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Nanako0129/sepia",
+      "description": "De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction, venue-matched rules for professional prose. Based on StoryScope (arXiv:2604.03136).",
+      "stargazers_count": 3003,
+      "forks_count": 193,
+      "created_at": "2026-08-28T05:56:49Z",
+      "pushed_at": "2026-10-06T11:00:39Z",
+      "open_issues_count": 7,
+      "html_url": "https://github.com/Nanako0129/sepia",
+      "topics": [
+        "agent-skills",
+        "ai-writing",
+        "antigravity",
+        "claude-code",
+        "codex",
+        "developer-tools",
+        "fiction",
+        "grok",
+        "humanizer",
+        "llm",
+        "prompt-engineering",
+        "writing-tools"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "mcncarl/jianying-headless",
+      "description": "Private source preview: native Jianying drafts, isolated editing/export, and standalone Agent Skill.",
+      "stargazers_count": 2983,
+      "forks_count": 1948,
+      "created_at": "2026-09-15T11:51:15Z",
+      "pushed_at": "2026-09-27T01:50:33Z",
+      "open_issues_count": 13,
+      "html_url": "https://github.com/mcncarl/jianying-headless",
+      "topics": [],
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      }
+    },
+    {
+      "full_name": "nateherkai/scroll-craft",
+      "description": "An agent skill for building premium, immersive, scroll-driven websites. Works with Codex, Claude Code, and other coding agents. Also available as a Claude Code plugin.",
+      "stargazers_count": 2972,
+      "forks_count": 439,
+      "created_at": "2026-08-22T15:25:08Z",
+      "pushed_at": "2026-09-30T13:31:42Z",
+      "open_issues_count": 6,
+      "html_url": "https://github.com/nateherkai/scroll-craft",
+      "topics": [
+        "accessibility",
+        "agent-skills",
+        "ai-web-design",
+        "anthropic",
+        "claude-code",
+        "claude-code-plugin",
+        "creative-coding",
+        "design-system",
+        "frontend",
+        "interaction-design",
+        "landing-page",
+        "scroll-animation",
+        "scrollytelling",
+        "typography",
+        "web-design"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "typesafe-ai/skills",
+      "description": "Agent skills for building with TypeSafe's System One API",
+      "stargazers_count": 2607,
+      "forks_count": 157,
+      "created_at": "2026-08-24T23:58:39Z",
+      "pushed_at": "2026-09-12T05:42:06Z",
+      "open_issues_count": 14,
+      "html_url": "https://github.com/typesafe-ai/skills",
+      "topics": [],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Rion-Wu-tech/wechat-intelligence-hub",
+      "description": "Local-first WeChat intelligence system with a read-only CLI, Codex skills, searchable chat history, daily briefings, follow-ups and opportunity tracking.",
+      "stargazers_count": 2597,
+      "forks_count": 2734,
+      "created_at": "2026-09-04T15:00:53Z",
+      "pushed_at": "2026-09-29T23:21:32Z",
+      "open_issues_count": 8,
+      "html_url": "https://github.com/Rion-Wu-tech/wechat-intelligence-hub",
+      "topics": [],
+      "license": {
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdx_id": "AGPL-3.0",
+        "url": "https://api.github.com/licenses/agpl-3.0",
+        "node_id": "MDc6TGljZW5zZTE="
+      }
+    },
+    {
+      "full_name": "lennney/stop-that-shit",
+      "description": "Stop That Shit（别再造史了）｜面向 Codex/GPT 场景的多平台 Hook + Skill Guard：拦截 AI coding agent 无需求的哈希、校验和与任务范围膨胀。 A multi-platform Hook + Skill Guard for AI coding agents in Codex/GPT workflows: stop unrequested hashes, checksums, and task-scope creep.",
+      "stargazers_count": 2495,
+      "forks_count": 54,
+      "created_at": "2026-08-11T15:31:45Z",
+      "pushed_at": "2026-10-05T06:36:53Z",
+      "open_issues_count": 7,
+      "html_url": "https://github.com/lennney/stop-that-shit",
+      "topics": [
+        "agent-skills",
+        "ai-agents",
+        "ai-coding",
+        "claude-code",
+        "codex",
+        "codex-cli",
+        "codex-plugin",
+        "developer-tools",
+        "guardrails",
+        "hermes-agent",
+        "local-first",
+        "opencode",
+        "overengineering",
+        "scope-control",
+        "yagni"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Appllama/appllama-skills",
+      "description": "A builder, not just a researcher. Agent skills that turn top-grossing app patterns into native-quality mobile screens.",
+      "stargazers_count": 2420,
+      "forks_count": 118,
+      "created_at": "2026-08-13T07:19:54Z",
+      "pushed_at": "2026-09-06T09:01:39Z",
+      "open_issues_count": 1,
+      "html_url": "https://github.com/Appllama/appllama-skills",
+      "topics": [
+        "agent-skills",
+        "ai-agents",
+        "claude",
+        "claude-code",
+        "claude-code-skill",
+        "claude-skills",
+        "codex",
+        "codex-skill",
+        "cursor",
+        "design-system",
+        "expo",
+        "mcp",
+        "mobile-app-development",
+        "mobile-design",
+        "mobile-ui",
+        "model-context-protocol",
+        "react-native",
+        "skills",
+        "ui-design"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "larashero3-dotcom/lieflat-less-ai-tone",
+      "description": "一个基于 283 万字语料统计的去 AI 味 skill · An AI-tone removal skill grounded in a 2.83-million-character corpus study",
+      "stargazers_count": 2341,
+      "forks_count": 151,
+      "created_at": "2026-08-20T09:07:59Z",
+      "pushed_at": "2026-08-24T06:57:13Z",
+      "open_issues_count": 2,
+      "html_url": "https://github.com/larashero3-dotcom/lieflat-less-ai-tone",
+      "topics": [],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Vincentwei1021/anything2explainer",
+      "description": "Topic in, narrated explainer video out. A Claude Code / Codex skill that turns any topic into a black-canvas motion-graphics explainer video with TTS voiceover, subtitles and a chapter progress bar. Chinese or English; every frame drawn in code with Remotion.",
+      "stargazers_count": 2273,
+      "forks_count": 315,
+      "created_at": "2026-09-08T17:19:54Z",
+      "pushed_at": "2026-09-18T11:52:13Z",
+      "open_issues_count": 5,
+      "html_url": "https://github.com/Vincentwei1021/anything2explainer",
+      "topics": [
+        "agent-skills",
+        "ai-agents",
+        "ai-video",
+        "claude-code",
+        "claude-code-skill",
+        "codex",
+        "edge-tts",
+        "educational-video",
+        "explainer-video",
+        "kokoro",
+        "motion-graphics",
+        "multi-agent",
+        "react",
+        "remotion",
+        "text-to-video",
+        "tts",
+        "typescript",
+        "video-generation"
+      ],
+      "license": {
+        "key": "other",
+        "name": "Other",
+        "spdx_id": "NOASSERTION",
+        "url": null,
+        "node_id": "MDc6TGljZW5zZTA="
+      }
+    },
+    {
+      "full_name": "cclank/lanshu-create-ai-presenter-video",
+      "description": "Provider-neutral Codex Skill for producing verified AI presenter videos from a script and an authorized presenter image.",
+      "stargazers_count": 2250,
+      "forks_count": 360,
+      "created_at": "2026-08-20T13:40:06Z",
+      "pushed_at": "2026-10-06T09:25:33Z",
+      "open_issues_count": 2,
+      "html_url": "https://github.com/cclank/lanshu-create-ai-presenter-video",
+      "topics": [
+        "ai-video",
+        "codex",
+        "codex-skill",
+        "digital-human",
+        "video-generation"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "Adkid-Zephyr/anti-defensive-writing-Skill",
+      "description": "极致轻量｜阻止论文的防御性写作 | Anti-defensive writing for academic papers — 学术写作原则 Skill + prompt pack (CN/EN)",
+      "stargazers_count": 2228,
+      "forks_count": 48,
+      "created_at": "2026-08-11T18:02:07Z",
+      "pushed_at": "2026-10-07T00:10:21Z",
+      "open_issues_count": 1,
+      "html_url": "https://github.com/Adkid-Zephyr/anti-defensive-writing-Skill",
+      "topics": [
+        "academic-writing",
+        "ai-writing",
+        "claude-skill",
+        "paper-writing",
+        "prompt"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "kaankiziltug/logo-design-skill",
+      "description": "A comprehensive logo-design skill for Claude, Gemini CLI, Codex and other AI agents: principles, process, SVG craft, testing tools and a 1,400+ logo reference library.",
+      "stargazers_count": 2164,
+      "forks_count": 143,
+      "created_at": "2026-09-26T08:23:34Z",
+      "pushed_at": "2026-09-30T18:16:50Z",
+      "open_issues_count": 0,
+      "html_url": "https://github.com/kaankiziltug/logo-design-skill",
+      "topics": [
+        "agent-skills",
+        "branding",
+        "claude",
+        "claude-skills",
+        "codex",
+        "gemini-cli",
+        "logo-design",
+        "svg"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    },
+    {
+      "full_name": "cbrock84/headcount",
+      "description": "An agent organization structured as a company — 15+ departments, 125+ skills, each independently installable, citing the standards and regulators that settle the question. Runs in Claude Code and ChatGPT.",
+      "stargazers_count": 2000,
+      "forks_count": 316,
+      "created_at": "2026-08-28T18:03:04Z",
+      "pushed_at": "2026-09-17T19:13:19Z",
+      "open_issues_count": 4,
+      "html_url": "https://github.com/cbrock84/headcount",
+      "topics": [
+        "agent-marketplace",
+        "chatgpt-plugin",
+        "chatgpt-skills",
+        "claude-code",
+        "claude-code-plugin",
+        "claude-plugin",
+        "claude-skills",
+        "mcp",
+        "organization"
+      ],
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      }
+    }
+  ]
+}

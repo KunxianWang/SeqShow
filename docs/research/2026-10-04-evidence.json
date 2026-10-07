@@ -1,0 +1,368 @@
+{
+  "research_date": "2026-10-04",
+  "timezone": "America/Los_Angeles",
+  "method": "Public forum qualitative research, competitor documentation verification; no interviews or product execution tests.",
+  "search_query_count": 72,
+  "sources": [
+    {
+      "id": "S01",
+      "type": "用户求助",
+      "date": "2026-02-17",
+      "title": "两份资产工作簿频繁更新，比较新增和删除要花数小时",
+      "url": "https://www.reddit.com/r/excel/comments/1r6qqxo/what_is_the_best_tool_or_function_to_compare_data/",
+      "access": "正文及回复",
+      "note": "50–400 行、顺序可能改变；评论给出 Power Query 等替代方法。付费买软件的意愿未验证。"
+    },
+    {
+      "id": "S02",
+      "type": "用户求助",
+      "date": "2026-04-08",
+      "title": "逐日报表比较因增删行误报，单元格变化难定位",
+      "url": "https://www.reddit.com/r/excel/comments/1sfu357/comparing_sheets_for_changes/",
+      "access": "正文及回复",
+      "note": "已尝试条件格式和 Power Query，仍卡在行匹配与字段级变化。"
+    },
+    {
+      "id": "S03",
+      "type": "用户求助",
+      "date": "2026-03-05",
+      "title": "每月手工把银行 PDF 日期金额抄进 Excel",
+      "url": "https://www.reddit.com/r/productivity/comments/1rllebe/every_month_i_have_to_copy_pdf_information_to/",
+      "access": "正文及回复",
+      "note": "重要反证：发帖人试用 Excel 自带 PDF 导入后反馈效果比预期好。"
+    },
+    {
+      "id": "S04",
+      "type": "用户求助",
+      "date": "2025-01-07；关键回复 2025-03-05",
+      "title": "照片和模糊 PDF 表格转换成 Excel 的效果不理想",
+      "url": "https://v2ex.com/t/1103243",
+      "access": "正文及回复",
+      "note": "复杂合并表头与缺列是具体问题；属于历史证据，不能推断 2026 所有模型仍然失败。"
+    },
+    {
+      "id": "S05",
+      "type": "用户求助",
+      "date": "2025-10-10",
+      "title": "求推荐发票整理工具，最好通过电子邮箱",
+      "url": "https://v2ex.com/t/1164207",
+      "access": "正文及回复",
+      "note": "明确表示收费也可以接受；回复推荐发票盒子，说明已有替代方案。"
+    },
+    {
+      "id": "S06",
+      "type": "用户求助",
+      "date": "2024-05-31",
+      "title": "月度发票和收据重命名，希望有预览与连续操作",
+      "url": "https://www.reddit.com/r/macapps/comments/1d4rzni/",
+      "access": "检索正文摘录",
+      "note": "历史需求，含商业软件可接受的描述；本轮未进一步核对完整评论。"
+    },
+    {
+      "id": "S07",
+      "type": "用户求助",
+      "date": "2026-01-18",
+      "title": "寻找完全本地且真正移除内容的 PDF 脱敏工具",
+      "url": "https://www.reddit.com/r/pdf/comments/1qgdg1n/pdf_redaction_app_that_runs_locally/",
+      "access": "正文及回复",
+      "note": "明确希望外发给 AI 或客户前处理；回复指出 PDF-XChange 等现有产品。"
+    },
+    {
+      "id": "S08",
+      "type": "用户求助",
+      "date": "2026-02-09",
+      "title": "寻找离线安全 PDF 脱敏工具",
+      "url": "https://www.reddit.com/r/pdf/comments/1r0fwna/any_good_offline_secure_pdf_redaction_tool/",
+      "access": "检索正文摘录",
+      "note": "反对上传服务器处理敏感文件；推荐回复存在作者推广，不能直接视作满意度证据。"
+    },
+    {
+      "id": "S09",
+      "type": "用户讨论",
+      "date": "2026-02-22",
+      "title": "分享给客户前脱敏仍依赖人工复核，担心隐藏信息",
+      "url": "https://www.reddit.com/r/software/comments/1rc0wwt/whats_the_best_tool_to_redact_sensitive_info/",
+      "access": "正文及回复",
+      "note": "已使用 Acrobat；帖子提及商业产品，不能排除营销动机，降权使用。"
+    },
+    {
+      "id": "S10",
+      "type": "用户求助",
+      "date": "2026-05-29",
+      "title": "Copilot 套公司 PowerPoint 模板出现漂移与溢出",
+      "url": "https://www.reddit.com/r/microsoft_365_copilot/comments/1tr5svo/help_with_basic_powerpoint_prompt_with_company/",
+      "access": "正文及回复",
+      "note": "用户列出模板丢失、内容重排、字号与位置问题；部分回复给出原生使用方法。"
+    },
+    {
+      "id": "S11",
+      "type": "用户求助",
+      "date": "2026-06-04",
+      "title": "寻找能重复生成符合公司模板销售演示文稿的流程",
+      "url": "https://www.reddit.com/r/codex/comments/1twfr18/working_system_for_creating_consistent_sales/",
+      "access": "正文及回复",
+      "note": "核心需求是版式、品牌与可复用模式，未验证现有方案是否满足。"
+    },
+    {
+      "id": "S12",
+      "type": "用户求助",
+      "date": "2026-03-01",
+      "title": "数千张截图怎样整理",
+      "url": "https://www.reddit.com/r/androidapps/comments/1rhz6sn/app_for_organizing_screenshots/",
+      "access": "正文及回复",
+      "note": "有回复试用后因范围不符和订阅付费卸载；帖子列出多种现有截图工具。"
+    },
+    {
+      "id": "S13",
+      "type": "用户求助",
+      "date": "2026-03-27",
+      "title": "教师希望截图中的教学技巧能检索并重新利用",
+      "url": "https://www.reddit.com/r/PKMS/comments/1s51ibj/best_appsystem_for_organizing_screenshots_of/",
+      "access": "正文及回复",
+      "note": "明确职业场景：焊接技巧、课堂演示与故障排查；没有明确付费信号。"
+    },
+    {
+      "id": "S14",
+      "type": "用户求助",
+      "date": "2026-09-23",
+      "title": "iPhone 截图越存越多，之后很少找回来",
+      "url": "https://www.reddit.com/r/ApplePhotos/comments/1wo2289/how_do_you_organize_all_the_screenshots_on_your/",
+      "access": "检索正文摘录",
+      "note": "近期需求佐证；未核对整帖评论，不作为核心商业化证据。"
+    },
+    {
+      "id": "S15",
+      "type": "混合：求助后转为作者招募",
+      "date": "2026-03-26",
+      "title": "手机截图积压与找回问题",
+      "url": "https://www.reddit.com/r/ADHD/comments/1s4n3r8/how_do_you_manage_your_phone_screenshots_or_are/",
+      "access": "正文及回复",
+      "note": "编辑后附开发和 early access 招募，不能当作纯独立需求证据。"
+    },
+    {
+      "id": "S16",
+      "type": "用户求助；存在同作者跨版重复",
+      "date": "2026-07-20",
+      "title": "寻找本地开源 AI 对话导出工具，保留格式和长对话",
+      "url": "https://www.reddit.com/r/software/comments/1v1q1no/looking_for_an_opensource_tool_to_export_ai_chats/",
+      "access": "正文及回复",
+      "note": "在 r/ChatGPT 存在同题跨帖，本报告按一条需求计；后续称尚未尝试推荐工具。"
+    },
+    {
+      "id": "S17",
+      "type": "用户求助",
+      "date": "2026-08-28",
+      "title": "希望单独导出一段 AI 对话",
+      "url": "https://www.reddit.com/r/ChatGPT/comments/1w0hd3e/no_single_export/",
+      "access": "检索正文摘录及页面核对",
+      "note": "反映该用户当时体验；未据此断言平台当前完全没有单对话导出能力。"
+    },
+    {
+      "id": "S18",
+      "type": "用户求助",
+      "date": "2024-12-15",
+      "title": "一次性灵活文件处理希望可视化，担心脚本误删",
+      "url": "https://meta.appinn.net/t/topic/64193",
+      "access": "正文及回复",
+      "note": "当前需 Excel、BCompare 和文件管理器组合；频率明确为一次性，订阅价值偏弱。"
+    },
+    {
+      "id": "S19",
+      "type": "用户求助",
+      "date": "2022-03-01",
+      "title": "文件分类与备注，希望整个目录交付同事后仍可见",
+      "url": "https://meta.appinn.net/t/topic/30433/1",
+      "access": "正文及回复",
+      "note": "需求具体但年代较早；只作资料交付工具的探索线索。"
+    },
+    {
+      "id": "S20",
+      "type": "混合：用户讨论与自建系统",
+      "date": "2025-01-09",
+      "title": "Ask HN: How Do You Bookmark?",
+      "url": "https://news.ycombinator.com/item?id=42648006",
+      "access": "正文及回复",
+      "note": "书签和笔记维护摩擦；发帖人也在自建系统，不能视为未满足市场规模证明。"
+    },
+    {
+      "id": "S21",
+      "type": "用户讨论",
+      "date": "2026-01-19",
+      "title": "项目知识做成 skill 仍不触发，文档维护也有问题",
+      "url": "https://linux.do/t/topic/1485472",
+      "access": "正文及回复",
+      "note": "关键需求来自回复；对宿主机制的解释是用户推测，不直接当作技术事实。"
+    },
+    {
+      "id": "S22",
+      "type": "缺陷报告",
+      "date": "2026-01-19",
+      "title": "Claude Code 忽略 skill 调用要求",
+      "url": "https://github.com/anthropics/claude-code/issues/19308",
+      "access": "正文与状态",
+      "note": "已关闭为重复，不能据此声称该具体问题仍未修复。"
+    },
+    {
+      "id": "S23",
+      "type": "缺陷报告",
+      "date": "2026-09-03",
+      "title": "skill-creator 触发评测错误报告所有技能召回率为零",
+      "url": "https://github.com/anthropics/skills/issues/1721",
+      "access": "正文与状态",
+      "note": "本轮页面状态 Open；属于一个具体评测实现问题，不代表全部技能评测失效。"
+    },
+    {
+      "id": "S24",
+      "type": "作者推广",
+      "date": "2026-09，检索页显示约两周前",
+      "title": "FormulaAI：自然语言修改 Excel 后预览 diff",
+      "url": "https://v2ex.com/t/1242903",
+      "access": "检索正文摘录",
+      "note": "竞争供给证据；文件本地解析不等于内容完全不出网，未审计数据流。"
+    },
+    {
+      "id": "S25",
+      "type": "作者推广",
+      "date": "2026-05-09",
+      "title": "SnapFill 智能填表工具",
+      "url": "https://v2ex.com/t/1211312",
+      "access": "检索正文摘录",
+      "note": "竞争供给证据；不采信其准确率与节省时间宣传作为独立测量。"
+    },
+    {
+      "id": "S26",
+      "type": "官方文档",
+      "date": null,
+      "title": "Microsoft Spreadsheet Compare",
+      "url": "https://support.microsoft.com/en-us/excel/compare-two-versions-of-a-workbook-by-using-spreadsheet-compare",
+      "access": "正文",
+      "note": "官方已提供工作簿比较；适用 Excel for Windows 的企业计划及同等版本。"
+    },
+    {
+      "id": "S27",
+      "type": "官方文档",
+      "date": null,
+      "title": "Power Query PDF connector",
+      "url": "https://learn.microsoft.com/en-us/power-query/connectors/pdf",
+      "access": "正文",
+      "note": "已支持 PDF 表格导入；多行、跨页等情况仍需数据整理，宿主支持可能不同。"
+    },
+    {
+      "id": "S28",
+      "type": "官方产品页",
+      "date": null,
+      "title": "发票盒子",
+      "url": "https://www.fapiaohezi.com/",
+      "access": "正文与功能区",
+      "note": "邮箱等归集、识别、查重、报销单、Excel 与打印合集已有覆盖；厂商效果数字未独立验证。"
+    },
+    {
+      "id": "S29",
+      "type": "官方产品页",
+      "date": null,
+      "title": "NameQuick",
+      "url": "https://www.namequick.app/about",
+      "access": "正文与产品事实表",
+      "note": "Mac/Windows、内容命名、预览、规则与本地模型已有覆盖；公开价为自管模型单设备 $69 买断或托管 $12–99/月。"
+    },
+    {
+      "id": "S30",
+      "type": "官方文档",
+      "date": "页面注明 July 2026 更新",
+      "title": "Copilot PowerPoint 品牌模板",
+      "url": "https://support.microsoft.com/en-us/powerpoint/copilot/keep-your-presentation-on-brand-with-copilot",
+      "access": "正文",
+      "note": "模板、示例页、布局和 Brand kit 已有原生支持；本轮未测试真实模板效果。"
+    },
+    {
+      "id": "S31",
+      "type": "官方仓库",
+      "date": null,
+      "title": "Anthropic skill-creator",
+      "url": "https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md?plain=1",
+      "access": "正文相关章节",
+      "note": "已有评测、benchmark、人工复核、description 优化和触发测试，不是功能空白。"
+    },
+    {
+      "id": "S32",
+      "type": "官方文档",
+      "date": "2026-08-31 更新",
+      "title": "Adobe Acrobat Pro 脱敏与隐藏信息清理",
+      "url": "https://helpx.adobe.com/acrobat/desktop/protect-documents/redact-pdfs/redact.html",
+      "access": "正文",
+      "note": "现有工具能移除敏感文字和图片，应用时可清理隐藏信息。"
+    },
+    {
+      "id": "S33",
+      "type": "官方产品页",
+      "date": null,
+      "title": "PDF-XChange Editor",
+      "url": "https://www.pdf-xchange.com/product/pdf-xchange-editor",
+      "access": "正文与功能列表",
+      "note": "已有 Find and Redact、图层等功能；本轮未独立测试输出。"
+    },
+    {
+      "id": "S34",
+      "type": "官方文档",
+      "date": null,
+      "title": "Pixel Screenshots",
+      "url": "https://support.google.com/pixelphone/answer/15312581?hl=en",
+      "access": "正文",
+      "note": "已有自然语言检索、标题摘要、分类建议、动作和提醒；设备与地区限制需具体核对。"
+    },
+    {
+      "id": "S35",
+      "type": "官方产品页",
+      "date": null,
+      "title": "Raindrop.io 功能与定价结构",
+      "url": "https://raindrop.io/pro/buy",
+      "access": "正文",
+      "note": "免费收藏；Pro 已包含全文搜索、归档、提醒、标注与去重等；动态价格本轮未提取。"
+    },
+    {
+      "id": "S36",
+      "type": "项目仓库",
+      "date": null,
+      "title": "llm-chat-exporter",
+      "url": "https://github.com/joelvaneenwyk/llm-chat-exporter",
+      "access": "仓库说明",
+      "note": "已有多 AI 平台对话导出项目；本轮未运行兼容性测试。"
+    },
+    {
+      "id": "S37",
+      "type": "官方仓库",
+      "date": null,
+      "title": "NVIDIA SkillSpector",
+      "url": "https://github.com/NVIDIA/SkillSpector",
+      "access": "仓库说明",
+      "note": "技能安全扫描、输出和基线能力已有供给；本轮未做检测效果比较。"
+    },
+    {
+      "id": "S38",
+      "type": "官方仓库",
+      "date": null,
+      "title": "Cisco Skill Scanner",
+      "url": "https://github.com/cisco-ai-defense/skill-scanner",
+      "access": "仓库说明",
+      "note": "扫描、策略与 CI 集成已有供给；不能仅靠安全报告形式构成差异。"
+    },
+    {
+      "id": "S39",
+      "type": "官方产品页",
+      "date": null,
+      "title": "Beyond Compare 商店",
+      "url": "https://www.scootersoftware.com/shop",
+      "access": "产品页",
+      "note": "存在成熟收费比较工具；本轮不把评论中的免费描述当作事实。"
+    },
+    {
+      "id": "S40",
+      "type": "作者推广",
+      "date": "2026-09-15",
+      "title": "跨 AI 对话导出工具维护中因页面变化反复损坏",
+      "url": "https://www.reddit.com/r/buildinpublic/comments/1wgvfku/i_built_an_export_to_save_chats_from_chatgpt/",
+      "access": "检索正文摘录",
+      "note": "供给端维护成本线索，不是独立用户需求。"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "fetched_at_utc": "2026-10-07T00:20:12.073990+00:00",
+  "repositories": [
+    {
+      "full_name": "DeDuckProject/git-glimpse",
+      "description": "Auto-generate visual demo clips of UI changes in pull requests",
+      "stargazers_count": 7,
+      "forks_count": 0,
+      "created_at": "2026-03-11T12:04:39Z",
+      "pushed_at": "2026-03-16T23:00:30Z",
+      "html_url": "https://github.com/DeDuckProject/git-glimpse",
+      "license": {
+        "key": "agpl-3.0",
+        "name": "GNU Affero General Public License v3.0",
+        "spdx_id": "AGPL-3.0",
+        "url": "https://api.github.com/licenses/agpl-3.0",
+        "node_id": "MDc6TGljZW5zZTE="
+      },
+      "archived": false,
+      "default_branch": "main"
+    },
+    {
+      "full_name": "AlexKay28/clickcast",
+      "description": "Playwright browser automation, screenshots, and GIF/MP4/WebP recording for AI agents — a machine-readable JSON sidecar (selectors, timing, console errors, page state) plus a live MCP server for step-by-step browser control.",
+      "stargazers_count": 3,
+      "forks_count": 0,
+      "created_at": "2026-07-23T09:20:29Z",
+      "pushed_at": "2026-09-14T13:33:36Z",
+      "html_url": "https://github.com/AlexKay28/clickcast",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "archived": false,
+      "default_branch": "main"
+    },
+    {
+      "full_name": "cjcsecurity/readme-demo-recorder",
+      "description": "Scripted-flow browser demo recorder for Claude Code. YAML in, polished MP4 + GIF out, ready to drop into a README hero.",
+      "stargazers_count": 1,
+      "forks_count": 0,
+      "created_at": "2026-05-10T23:52:34Z",
+      "pushed_at": "2026-05-11T00:57:04Z",
+      "html_url": "https://github.com/cjcsecurity/readme-demo-recorder",
+      "license": {
+        "key": "apache-2.0",
+        "name": "Apache License 2.0",
+        "spdx_id": "Apache-2.0",
+        "url": "https://api.github.com/licenses/apache-2.0",
+        "node_id": "MDc6TGljZW5zZTI="
+      },
+      "archived": false,
+      "default_branch": "main"
+    },
+    {
+      "full_name": "devganeshg/ai-archi",
+      "description": "Animated architecture, LLD, sequence, workflow, data-flow & lifecycle diagrams from plain English — a Claude Code agent skill. Self-contained HTML, dark/light, step player, copy-PNG, up-to-4x export.",
+      "stargazers_count": 1,
+      "forks_count": 0,
+      "created_at": "2026-07-17T14:14:02Z",
+      "pushed_at": "2026-07-17T14:54:04Z",
+      "html_url": "https://github.com/devganeshg/ai-archi",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "archived": false,
+      "default_branch": "main"
+    },
+    {
+      "full_name": "csthink/dashmotion",
+      "description": "Animated technical diagrams from plain English or Mermaid — a Claude skill, self-contained HTML/SVG.",
+      "stargazers_count": 175,
+      "forks_count": 14,
+      "created_at": "2026-06-11T13:13:42Z",
+      "pushed_at": "2026-06-16T12:57:39Z",
+      "html_url": "https://github.com/csthink/dashmotion",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "archived": false,
+      "default_branch": "main"
+    },
+    {
+      "full_name": "stevederico/cartographer",
+      "description": "agent skill to create stunning architecture diagrams ",
+      "stargazers_count": 1,
+      "forks_count": 0,
+      "created_at": "2026-02-24T23:07:44Z",
+      "pushed_at": "2026-07-18T19:12:21Z",
+      "html_url": "https://github.com/stevederico/cartographer",
+      "license": null,
+      "archived": false,
+      "default_branch": "master"
+    },
+    {
+      "full_name": "Kaushik2210/gitVisualise",
+      "description": "Paste a GitHub link, get an interactive, narrated architecture tour. Website, CLI, Claude Code skill and GitHub Action. Zero dependencies, runs in your browser. Contributors welcome.",
+      "stargazers_count": 1,
+      "forks_count": 1,
+      "created_at": "2026-09-19T06:23:35Z",
+      "pushed_at": "2026-10-03T11:15:27Z",
+      "html_url": "https://github.com/Kaushik2210/gitVisualise",
+      "license": {
+        "key": "mit",
+        "name": "MIT License",
+        "spdx_id": "MIT",
+        "url": "https://api.github.com/licenses/mit",
+        "node_id": "MDc6TGljZW5zZTEz"
+      },
+      "archived": false,
+      "default_branch": "main"
+    }
+  ]
+}

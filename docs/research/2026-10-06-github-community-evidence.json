@@ -1,0 +1,105 @@
+{
+  "research_date_local": "2026-10-06",
+  "timezone": "America/Los_Angeles",
+  "purpose": "开发者开源项目选择与首批100stars验证",
+  "sources": [
+    {
+      "title": "Agent 任务越界与 guardrails 讨论",
+      "url": "https://www.reddit.com/r/ClaudeCode/comments/1ul7wfk/where_should_guardrails_for_ai_coding_agents/",
+      "kind": "community_discussion",
+      "supports": "存在单次任务超范围修改的抱怨与分层控制讨论",
+      "limit": "非代表性讨论，不证明市场规模；没有核验参与者背景"
+    },
+    {
+      "title": "Claude Code 工程实践",
+      "url": "https://www.v2ex.com/t/1199971",
+      "kind": "developer_experience",
+      "supports": "规则、上下文、验证与撤回的开发者体验",
+      "limit": "个人经验；其具体技术数字和机制未当作官方规格"
+    },
+    {
+      "title": "mainline 内测帖",
+      "url": "https://www.v2ex.com/t/1210451",
+      "kind": "author_promotion",
+      "supports": "团队历史决策与残留代码不一致的场景",
+      "limit": "作者自述，不计独立购买意愿"
+    },
+    {
+      "title": "claude-replay Show HN",
+      "url": "https://news.ycombinator.com/item?id=47276604",
+      "kind": "launch_discussion",
+      "supports": "105 points、36 comments；培训、分享、视频及用途争议",
+      "limit": "不能将 HN 互动直接归因为当前 GitHub stars"
+    },
+    {
+      "title": "Fanfa Show HN",
+      "url": "https://news.ycombinator.com/item?id=46147329",
+      "kind": "launch_discussion",
+      "supports": "154 points、33 comments；动态 Mermaid 演示、播放控制与导出讨论",
+      "limit": "相邻产品兴趣，不是 SeqShow 的需求或增长验证"
+    },
+    {
+      "title": "RTK Show HN",
+      "url": "https://news.ycombinator.com/item?id=46974740",
+      "kind": "launch_discussion",
+      "supports": "4 points、4 comments；作者的命令输出压缩场景",
+      "limit": "节省比例未独立验证；不能由这条帖定位 RTK 增长渠道"
+    },
+    {
+      "title": "Show HN 官方指南",
+      "url": "https://news.ycombinator.com/showhn.html",
+      "kind": "primary_guidelines",
+      "supports": "可用成果、便捷试用与发布范围",
+      "limit": "渠道规则可能变化，发布时再次核验"
+    },
+    {
+      "title": "926 次会话自审",
+      "url": "https://www.reddit.com/r/ClaudeCode/comments/1sd8t5u/anthropic_isnt_the_only_reason_youre_hitting/",
+      "kind": "author_self_audit",
+      "supports": "AI 编程用量与浪费的关注",
+      "limit": "自述数据，不推导账单节省或总市场"
+    },
+    {
+      "title": "独立 vibe coder 的上线后检查求助",
+      "url": "https://www.reddit.com/r/vibecoding/comments/1vev3b4/solo_vibe_coder_here_looking_for_advice_from/",
+      "kind": "community_help",
+      "supports": "监控、测试、安全和备份需求",
+      "limit": "不是响应式扫描的专门需求证据；没有确认此前搜索摘要提及的 CSS404 场景，故排除该细节"
+    },
+    {
+      "title": "Docker 备份覆盖验证讨论",
+      "url": "https://www.reddit.com/r/selfhosted/comments/1tekmq8/how_do_you_verify_that_your_docker_volumes_are/",
+      "kind": "community_discussion",
+      "supports": "恢复演练与配置变化后的覆盖漂移",
+      "limit": "只支持相邻长期需求，不证明短期涨星"
+    },
+    {
+      "title": "selfhosted 新项目集中帖",
+      "url": "https://www.reddit.com/r/selfhosted/comments/1wvclw4/new_project_megathread_week_of_01_oct_2026/",
+      "kind": "community_launch_channel",
+      "supports": "相关社区有项目发布入口",
+      "limit": "不是未来发布授权，发布时需再次阅读最新规则"
+    },
+    {
+      "title": "BackstopJS",
+      "url": "https://github.com/garris/BackstopJS",
+      "kind": "primary_repository",
+      "supports": "DiffShot 的相邻视觉回归竞争",
+      "limit": "未独立运行，本轮未定向抓取 star 数"
+    },
+    {
+      "title": "Playwright",
+      "url": "https://github.com/microsoft/playwright",
+      "kind": "primary_repository",
+      "supports": "已有浏览器自动化基础能力",
+      "limit": "未评测具体产品集成"
+    },
+    {
+      "title": "GitHub issue：rewind 行为",
+      "url": "https://github.com/anthropics/claude-code/issues/64615",
+      "kind": "issue_lead",
+      "supports": "检索时发现原生恢复功能的相关讨论",
+      "limit": "仅作排除完全空白假设的线索；本报告不据此判断当前产品行为"
+    }
+  ]
+}
