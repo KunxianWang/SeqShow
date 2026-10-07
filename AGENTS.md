@@ -4,7 +4,7 @@
 
 SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的技术演示。
 
-当前仓库处于 **M0–M3 已完成、M4–M5 尚未开始**的阶段。已存在受限 Parser、纯 Playback、从真实源码解析的登录原型、Mermaid 适配层、共享播放器、离线导出与分层检查；源码编辑器、六个案例、响应式布局、键盘与错误恢复已实现。结果见 [M0 记录](docs/validation/M0.md)、[M1 记录](docs/validation/M1.md) 、[M2 记录](docs/validation/M2.md) 与 [M3 记录](docs/validation/M3.md)。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
+当前仓库处于 **M0–M3 已完成、M4–M5 尚未开始**的阶段。已存在受限 Parser、纯 Playback、从真实源码解析的登录原型、Mermaid 适配层、共享播放器、离线导出与分层检查；源码编辑器、六个案例、响应式布局、键盘与错误恢复已实现。结果见 [M0 记录](docs/validation/M0.md)、[M1 记录](docs/validation/M1.md) 、[M2 记录](docs/validation/M2.md) 与 [M3 记录](docs/validation/M3.md)，以及 [联合复核](docs/validation/REVIEW-MERGE-2026-10-07.md)。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
 
 ## 先读什么
 

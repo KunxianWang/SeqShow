@@ -168,7 +168,10 @@ test('E06 startup render also cannot overwrite a draft typed while the example l
 });
 
 test('E07 keyboard controls stay inside the player and native button Space fires once', async ({ page }) => {
-  await open(page); await page.clock.install();
+  await open(page);
+  await page.clock.install({ time: '2026-10-07T00:00:00Z' });
+  // Drive ticks explicitly; slow browser actions must not advance autoplay.
+  await page.clock.pauseAt('2026-10-07T00:01:00Z');
   const player = page.locator('[data-player]');
   await player.focus(); await page.keyboard.press('ArrowRight');
   await expect(page.locator('[data-status]')).toHaveText('1 / 6 — POST /login');

@@ -47,7 +47,7 @@ npx playwright test --project=webkit
 npx playwright test --project=firefox
 ```
 
-M3 基线上 103 项单元/集成与 19 项 Chromium production 检查通过。Windows WebKit 的登录、键盘、390px 中文与真实下载/离线四项通过，离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [M3 验证](docs/validation/M3.md)。
+M3 与 GPT-6 修复联合验证：135 项单元/集成与 19 项 Chromium production 检查通过。Windows WebKit 的登录、键盘、390px 中文与真实下载/离线四项通过，离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [联合复核](docs/validation/REVIEW-MERGE-2026-10-07.md)；M3 独立基线见 [M3 验证](docs/validation/M3.md)。
 
 ## M0 验证页面
 
@@ -60,7 +60,7 @@ npm run test:m0
 
 M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture、播放所选路径、切换 Focus 和下载 HTML，暂不接受用户 Mermaid 输入。
 
-当前检查覆盖 16 个 fixture、24 条路径、119 个状态，包含不等长/空分支、特殊参与者 ID、语义绑定、稳定布局、计时器清理，以及在全新 Chromium 上下文中用 file:// 打开真实离线文件。HTML、截图与报告生成在 artifacts/m0/。
+当前检查覆盖 18 个 fixture、27 条路径、132 个状态，包含不等长/空分支、特殊参与者 ID、语义绑定、稳定布局、计时器清理，以及在全新 Chromium 上下文中用 file:// 打开真实离线文件。HTML、截图与报告生成在 artifacts/m0/。
 
 可选扩展命令：`node scripts/m0.mjs --browsers=chromium,webkit`（PowerShell 中给参数加引号）。具体浏览器差异见 [M0 记录](docs/validation/M0.md)；它不代表发布兼容性认证。
 
@@ -84,7 +84,7 @@ MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布�
 
 ## 开发流程
 
-用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发；后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
+用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发，GPT-6 修复来自 kxw/code-review-parser；本次联合复核通过后，按用户明确授权经 ffang/m3-review-integration 一起合入 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
 
 ## 许可证
 

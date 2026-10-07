@@ -278,12 +278,14 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-07 | M4/M5 | 完整导出一致性与发布验收、Firefox 应用用例 | NOT RUN | M4/M5 尚未开始；Firefox 已知启动限制保留，不标通过 |
 | 2026-10-07 | M2 审核 | 复现关键字参与者、分号误接收/误拒绝、空标签 SVG 映射错误 | FAIL → FIXED | 新增 Parser 回归和两项浏览器 fixture，见审核记录 |
 | 2026-10-07 | M2 审核 | 独立副本 typecheck、lint、npm test、test:m0、test:e2e、git diff --check | PASS | 129 项单元/集成；Chromium 18 场景 / 27 路径 / 132 状态；2 项 production E2E，未混入并行 M3 改动 |
+| 2026-10-07 | 联合复核 | M3 + GPT-6 修复：typecheck、lint、Vitest、production Chromium/WebKit | PASS | 135 项单元/集成、19 项 Chromium、4 项 WebKit 重点 E2E；代码无冲突，保留执行计划的两边历史 |
+| 2026-10-07 | 联合复核 | node scripts/m0.mjs --browsers=chromium,webkit；查看新增场景断网 file:// 截图 | PASS | 两浏览器各 18 场景/27 路径/132 状态/14 负向；远程请求 0，见联合复核报告 |
 
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0–M3 已完成。用户本次明确授权在复核通过后将 ffang/m3-editor 与 kxw/code-review-parser 一起合入 main；整合和联合验证在 ffang/m3-review-integration 进行。后续其他合并仍须单独批准。
+当前：M0–M3 已完成。用户本次明确授权在复核通过后将 ffang/m3-editor 与 kxw/code-review-parser 一起合入 main；整合和联合验证已在 ffang/m3-review-integration 通过；按本次授权将联合结果合入并推送 main。后续其他合并仍须单独批准。
 
 下一实现任务：M4，补齐真实导出产物的安全、分支选择、共享播放一致性与 file:// 离线验收。既有导出原型和基础回归不代替 M4 退出条件。
 
