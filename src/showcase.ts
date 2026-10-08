@@ -18,21 +18,21 @@ const previous = document.querySelector<HTMLButtonElement>('[data-chapter-prev]'
 const next = document.querySelector<HTMLButtonElement>('[data-chapter-next]')!;
 const fullscreen = document.querySelector<HTMLButtonElement>('[data-fullscreen]')!;
 const chapters = [
-  { kicker: '01 / THE BIG PICTURE', title: ['把流程，', '讲成故事。'],
-    description: '一张时序图，六个服务，数十次交互。听众应该先看哪里？让每一步都有自己的时刻。',
-    action: '开始这段讲解 →', cue: '五个章节，带你认识一个可操作的技术演示。', target: '' },
-  { kicker: '02 / ONE STEP AT A TIME', title: ['一次，', '只讲一步。'],
-    description: '请求从哪里发起，经过哪个服务，现在走到哪一步。播放、暂停和回退，都跟着你的讲解节奏。',
-    action: '讲解下一步 →', cue: '也可以使用下方 Play 自动播放，或用左右方向键逐步推进。', target: 'POST /orders + idempotency key' },
-  { kicker: '03 / CHOOSE YOUR PATH', title: ['同一个流程，', '不同的故事。'],
-    description: '第一次支付被拒绝，会怎样恢复？切换到另一条演示路径，只讲所选分支，全图的位置保持不变。',
-    action: '切换到支付恢复路径 ↗', cue: '两个分支独立选择；切换后先回到总览，再由演示按钮定位关键消息。', target: 'Authorize payment for order #1042' },
-  { kicker: '04 / KEEP THE CONTEXT', title: ['聚焦当下，', '保留上下文。'],
-    description: '当事件抵达履约服务，突出这一步的消息和参与者。其他交互仍然可读，听众不会失去整条链路。',
-    action: '对比 Focus 开 / 关', cue: '点一次对比完整上下文，再点一次回到聚焦状态。', target: 'Deliver OrderConfirmed · at least once' },
-  { kicker: '05 / TAKE THE STORY WITH YOU', title: ['把讲解，', '一起带走。'],
-    description: '把图、路径和播放器装进一个 HTML 文件。发给同事，直接打开；没有网络，也能继续播放、回退和选分支。',
-    action: '下载这份离线演示 ↓', cue: '下载后直接打开 HTML；离线承诺针对导出文件，当前展示页首次加载需要静态资源。', target: 'Order update · shipped' },
+  { kicker: '01 / THE BIG PICTURE', title: ['Turn a flow', 'into a story.'],
+    description: 'One sequence diagram. Six services. Dozens of interactions. Where should your audience look first? Give every step its own moment.',
+    action: 'Start the walkthrough →', cue: 'Five short chapters, all running on the real player.', target: '' },
+  { kicker: '02 / ONE STEP AT A TIME', title: ['One step', 'at a time.'],
+    description: 'Where the request starts, which service it touches, and where it is now. Play, pause and step back at the pace of your talk.',
+    action: 'Explain the next step →', cue: 'Or press Play below, or step with the arrow keys.', target: 'POST /orders + idempotency key' },
+  { kicker: '03 / CHOOSE YOUR PATH', title: ['Same flow,', 'different story.'],
+    description: 'What if the first payment is declined? Switch to another presentation path: only the chosen branch plays, and the diagram never moves.',
+    action: 'Show the payment recovery path ↗', cue: 'Each branch is chosen independently. Switching returns to the overview; this button then jumps to the key message.', target: 'Authorize payment for order #1042' },
+  { kicker: '04 / KEEP THE CONTEXT', title: ['Focus on now,', 'keep the context.'],
+    description: 'As the event reaches fulfillment, the current message and its services stand out. Everything else stays readable, so nobody loses the thread.',
+    action: 'Compare Focus on / off', cue: 'Click once to see the full context, again to return to Focus.', target: 'Deliver OrderConfirmed · at least once' },
+  { kicker: '05 / TAKE THE STORY WITH YOU', title: ['Take the story', 'with you.'],
+    description: 'The diagram, its paths and the player in one HTML file. Send it to a colleague; it opens directly and keeps playing, stepping back and switching paths — even offline.',
+    action: 'Download this offline demo ↓', cue: 'Open the downloaded HTML directly. The offline promise covers the exported file; this page itself loads static assets.', target: 'Order update · shipped' },
 ];
 const services = document.querySelector<HTMLElement>('[data-services]')!;
 let chapter = 0, disposed = false;
@@ -71,7 +71,7 @@ function showChapter(index: number) {
   chapter = Math.max(0, Math.min(chapters.length - 1, index));
   const content = chapters[chapter];
   const emphasis = document.createElement('em'); emphasis.textContent = content.title[1];
-  title.replaceChildren(content.title[0], document.createElement('br'), emphasis);
+  title.replaceChildren(content.title[0], document.createElement('br'), ' ', emphasis);
   document.querySelector<HTMLElement>('[data-kicker]')!.textContent = content.kicker;
   document.querySelector<HTMLElement>('[data-description]')!.textContent = content.description;
   document.querySelector<HTMLElement>('[data-cue]')!.textContent = content.cue;
@@ -105,7 +105,7 @@ function demonstrate() {
     const recovered = player.snapshot().choices['alt:1'] === 'alt:1:second';
     setBranch('alt:1', recovered ? 'alt:1:first' : 'alt:1:second');
     seekText(recovered ? 'Authorized · payment ref p_82' : 'Declined · insufficient funds');
-    action.textContent = recovered ? chapters[2].action : '切回首次支付成功路径 ↗';
+    action.textContent = recovered ? chapters[2].action : 'Back to the first-try success path ↗';
   } else if (chapter === 3) root.querySelector<HTMLButtonElement>('[data-action="focus"]')!.click();
   else {
     action.disabled = true;
@@ -114,7 +114,7 @@ function demonstrate() {
       const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
       const link = document.createElement('a'); link.href = url; link.download = 'seqshow-checkout.html';
       try { link.click(); } finally { setTimeout(() => URL.revokeObjectURL(url), 1000); }
-    } catch (reason) { error.textContent = `导出失败，可以重试：${String(reason)}`; }
+    } catch (reason) { error.textContent = `Export failed — you can retry: ${String(reason)}`; }
     finally { action.disabled = false; }
   }
 }
@@ -123,7 +123,7 @@ action.onclick = demonstrate;
 async function prepare() {
   if (root.dataset.state === 'busy' || disposed) return;
   root.dataset.state = 'busy'; root.setAttribute('aria-busy', 'true'); action.disabled = true;
-  action.textContent = '正在准备演示…'; error.textContent = '';
+  action.textContent = 'Preparing the demo…'; error.textContent = '';
   try {
     const model = parseSequence(checkoutSource);
     if (!model.ok) throw new Error(model.diagnostics[0].message);
@@ -143,8 +143,8 @@ async function prepare() {
     root.dataset.state = 'ready'; showChapter(chapter);
   } catch (reason) {
     if (disposed) return;
-    root.dataset.state = 'error'; error.textContent = `演示暂未准备好，请重试：${String(reason)}`;
-    action.textContent = '重新准备演示';
+    root.dataset.state = 'error'; error.textContent = `The demo is not ready yet — please retry: ${String(reason)}`;
+    action.textContent = 'Prepare the demo again';
   } finally {
     if (!disposed) { root.setAttribute('aria-busy', 'false'); action.disabled = false; }
   }
@@ -154,9 +154,9 @@ fullscreen.onclick = async () => {
   try {
     if (document.fullscreenElement) await document.exitFullscreen();
     else await document.documentElement.requestFullscreen();
-  } catch { error.textContent = '浏览器未允许全屏；仍可直接在当前窗口展示。'; }
+  } catch { error.textContent = 'The browser did not allow fullscreen; you can still present in this window.'; }
 };
-const syncFullscreen = () => { fullscreen.textContent = document.fullscreenElement ? '退出全屏 ↙' : '全屏展示 ↗'; };
+const syncFullscreen = () => { fullscreen.textContent = document.fullscreenElement ? 'Exit fullscreen ↙' : 'Fullscreen ↗'; };
 document.addEventListener('fullscreenchange', syncFullscreen);
 void prepare();
 if (import.meta.hot) import.meta.hot.dispose(() => {

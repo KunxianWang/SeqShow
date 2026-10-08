@@ -69,6 +69,30 @@ Windows，Node 22.14.0，固定锁文件，无新依赖。时间以原始报告�
 
 新增截图：[1280×720](showcase-1280x720.png)、[1920×1080 Focus](showcase-1920-focus.png)、[390 支付恢复](showcase-390.png)；[总览](showcase-overview.png)与[支付恢复](showcase-recovery.png)由捕获脚本更新。
 
+## 英文界面与流程图美化
+
+按用户要求，展示页界面（章节、说明、按钮、提示、错误、`lang`）全部改为英文；仓库文档仍为中文。
+
+流程图改进全产品生效（编辑器、导出、展示页一致），只用 Mermaid 渲染时一次确定的配置与静态样式，切步不改几何：
+
+- 标签折行宽度 220 → 260 px，`POST /orders + idempotency key` 等常见 API 标签不再断行；messageMargin 42、actorMargin 60、boxMargin / noteMargin 12。
+- 参与者白底、600 字重、8 px 圆角、轻投影；Note 淡蓝底深蓝 600 字重；消息与 case 文字白色描边光晕，生命线浅色虚线，线条不再穿过文字。
+- 试用 `rightAngles` 直角自调用：回环过扁且与标签重叠，已撤回，保留曲线。
+- 字体仍为 Arial：导出文件在收件人机器上离线打开，换系统字体会导致字宽与布局不符；若要更现代的字体需内嵌字体，待用户决定。
+- 代价：checkout 图宽 1524.5 → 1730（高 2086 → 1986），1440 宽下最后一个服务需图内横向滚动，服务雷达仍列出全部六个。
+
+| 命令 / 操作 | 结果 |
+| --- | --- |
+| `npm run typecheck`、`npm run lint` | PASS |
+| `npm test` | PASS，140 项 |
+| `npm run test:e2e` | PASS，40 项 Chromium |
+| `node scripts/m0.mjs --browsers=chromium,webkit` | PASS，两个引擎各 18 场景 / 27 路径 / 132 状态 / 14 负向，远程请求 0 |
+| `npx playwright test tests/e2e/showcase.spec.ts --project=webkit` | PASS，5 项 |
+| `node scripts/capture-showcase.mjs` + 组装 GIF | PASS，8 帧，1,534,206 bytes；已查看 contact-sheet |
+| `node scripts/capture-demo.mjs` + `python scripts/assemble-demo.py` | PASS，登录动图 10 帧，713,725 bytes；`demo/login.html` 由本次真实下载的离线文件更新 |
+
+`capture-demo.mjs` 与 `capture-showcase.mjs` 同样在 `FORCE_COLOR` 下无法识别 Vite 端口，已用 `stripVTControlCharacters` 修复。人工查看：展示页 1440×900 第 1 / 2 / 3 章、1280×720、390；编辑器登录、中文订单、校验案例。
+
 ## 剩余范围
 
 Firefox 本轮 NOT RUN；真实 Safari / iOS、屏幕阅读器与软键盘 NOT RUN。WebKit 通过不等于这些设备通过。设计 P-1–P-4 后置；P-5 按本轮授权实现固定 base 路线，Note 配色采用淡蓝而非原提案黄色。

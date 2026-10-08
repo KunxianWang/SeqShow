@@ -80,6 +80,12 @@ kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom
 .step-badge { position: absolute; width: 22px; height: 22px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--ss-d-current); box-shadow: 0 0 0 2px #fff; color: #fff; font: 700 11px/22px var(--ss-font); text-align: center; font-variant-numeric: tabular-nums; }
 .step-badge[hidden] { display: none; }
 
+/* Diagram polish: static and identical in every state, so step geometry never changes. A white
+   halo keeps lifelines from cutting through labels; lifelines become light dashed guides. */
+svg text[data-seq-step], svg text[data-seq-case] { paint-order: stroke; stroke: #fff !important; stroke-width: 5px !important; stroke-linejoin: round; }
+svg line[data-seq-participant] { stroke-dasharray: 3 5; stroke-width: 1.25px !important; }
+svg g[data-seq-participant] rect { stroke-width: 1.25px !important; filter: drop-shadow(0 1px 2px rgb(15 23 42 / 10%)); }
+
 /* Diagram states: colour and stroke only — text metrics never change, so geometry stays fixed. */
 svg line[data-phase], svg path[data-phase], svg rect.note { transition: stroke var(--ss-duration) var(--ss-ease), fill var(--ss-duration) var(--ss-ease); }
 svg marker path { fill: context-stroke !important; stroke: context-stroke !important; }

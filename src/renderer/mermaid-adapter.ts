@@ -17,11 +17,13 @@ const canvas = window.document.createElement('canvas');
 const measure = canvas.getContext('2d')!;
 measure.font = '16px Arial';
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+// Wide enough that common API labels ("POST /orders + idempotency key") stay on one line.
+const LABEL_WIDTH = 260;
 function labelLines(text: string) {
   const lines: string[] = [];
   let line = '';
   for (const { segment } of segmenter.segment(text)) {
-    if (line && measure.measureText(line + segment).width > 220) {
+    if (line && measure.measureText(line + segment).width > LABEL_WIDTH) {
       const boundary = line.lastIndexOf(' ');
       if (boundary > 0) { lines.push(line.slice(0, boundary)); line = line.slice(boundary + 1); }
       else { lines.push(line); line = ''; }
@@ -157,10 +159,10 @@ export async function renderSequence(document: SequenceDocument): Promise<SVGSVG
     themeVariables: {
       useGradient: false,
       primaryColor: '#f1f5f9', primaryTextColor: '#0f172a', primaryBorderColor: '#cbd5e1',
-      lineColor: '#64748b', actorBkg: '#f1f5f9', actorBorder: '#cbd5e1', actorTextColor: '#0f172a',
-      actorLineColor: '#cbd5e1', signalColor: '#64748b', signalTextColor: '#334155',
-      labelBoxBkgColor: '#eff6ff', labelBoxBorderColor: '#93c5fd', labelTextColor: '#1e40af',
-      loopTextColor: '#475569', noteBkgColor: '#eff6ff', noteBorderColor: '#bfdbfe', noteTextColor: '#1e40af',
+      lineColor: '#475569', actorBkg: '#ffffff', actorBorder: '#cbd5e1', actorTextColor: '#0f172a',
+      actorLineColor: '#cbd5e1', signalColor: '#475569', signalTextColor: '#1e293b',
+      labelBoxBkgColor: '#eff6ff', labelBoxBorderColor: '#93c5fd', labelTextColor: '#1d4ed8',
+      loopTextColor: '#475569', noteBkgColor: '#f5f8ff', noteBorderColor: '#c7d7fe', noteTextColor: '#1e3a8a',
     },
     // Parser limits the original input; safe IDs, entities and line breaks can
     // expand the generated source beyond Mermaid's default 50,000 characters.
@@ -168,7 +170,9 @@ export async function renderSequence(document: SequenceDocument): Promise<SVGSVG
     fontFamily: 'Arial, sans-serif',
     sequence: {
       mirrorActors: false, wrap: false, arrowMarkerAbsolute: false,
-      height: Math.max(65, ...document.participants.map(actor => labelLines(actor.label).length * 20 + 20)),
+      // Layout-time typography and spacing: fixed for the whole render, so steps never re-layout.
+      actorFontWeight: 600, noteFontWeight: 600, messageMargin: 42, boxMargin: 12, noteMargin: 12, actorMargin: 60,
+      height: Math.max(56, ...document.participants.map(actor => labelLines(actor.label).length * 20 + 20)),
     },
   });
   const { svg: markup } = await mermaid.render(`seqshow_${++renderId}`, source);
@@ -177,6 +181,8 @@ export async function renderSequence(document: SequenceDocument): Promise<SVGSVG
   const svg = window.document.importNode(parsed.documentElement, true) as unknown as SVGSVGElement;
   assertSafeSvg(svg);
   bindSteps(svg, document);
+  // Softer participant and Note corners; radius is not part of the measured geometry.
+  for (const box of svg.querySelectorAll('rect.actor, rect.note')) { box.setAttribute('rx', '8'); box.setAttribute('ry', '8'); }
   // Preserve Mermaid's text scale for wide diagrams. The surrounding diagram
   // container scrolls; shrinking all participants into the panel makes labels unreadable.
   svg.style.minWidth = `${Math.max(600, svg.viewBox.baseVal.width)}px`;

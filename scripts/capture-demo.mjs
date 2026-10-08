@@ -4,6 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { stripVTControlCharacters } from 'node:util';
 
 // Capture the actual production UI; keep this server separate from user previews.
 const output = resolve('artifacts/launch');
@@ -17,7 +18,8 @@ try {
     server.once('error', error => { clearTimeout(timeout); reject(error); });
     server.once('exit', code => { clearTimeout(timeout); reject(new Error(`Capture preview exited: ${code}`)); });
     server.stdout.on('data', data => {
-      if (data.toString().includes('127.0.0.1:4176')) { clearTimeout(timeout); accept(); }
+      // Strip ANSI colours: with FORCE_COLOR set, Vite styles the port and splits the URL.
+      if (stripVTControlCharacters(data.toString()).includes('127.0.0.1:4176')) { clearTimeout(timeout); accept(); }
     });
     server.stderr.on('data', data => process.stderr.write(data));
   });

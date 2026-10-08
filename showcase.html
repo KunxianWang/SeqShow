@@ -1,58 +1,58 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="用一个真实可操作的复杂案例，认识 SeqShow 的逐步讲解、分支、Focus 与离线分享。">
-  <title>SeqShow — 把流程，讲成故事</title>
+  <meta name="description" content="A live, hands-on tour of SeqShow: step-by-step playback, presentation paths, Focus and offline sharing on a real six-service flow.">
+  <title>SeqShow — Turn a flow into a story</title>
 </head>
 <body class="sc-body">
   <main class="sc">
     <header class="sc-top">
-      <a class="sc-brand" href="./" aria-label="SeqShow 编辑器"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>SeqShow<span class="sc-tag">产品演示</span></a>
-      <ol class="sc-chapters" aria-label="演示章节">
-        <li><button type="button" data-chapter="0" aria-current="step"><span class="sc-n">01</span>看见全貌</button></li>
-        <li><button type="button" data-chapter="1"><span class="sc-n">02</span>只讲一步</button></li>
-        <li><button type="button" data-chapter="2"><span class="sc-n">03</span>换一条路</button></li>
-        <li><button type="button" data-chapter="3"><span class="sc-n">04</span>聚焦当下</button></li>
-        <li><button type="button" data-chapter="4"><span class="sc-n">05</span>带走演示</button></li>
+      <a class="sc-brand" href="./" aria-label="SeqShow editor"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>SeqShow<span class="sc-tag">Showcase</span></a>
+      <ol class="sc-chapters" aria-label="Chapters">
+        <li><button type="button" data-chapter="0" aria-current="step"><span class="sc-n">01</span>Big picture</button></li>
+        <li><button type="button" data-chapter="1"><span class="sc-n">02</span>One step</button></li>
+        <li><button type="button" data-chapter="2"><span class="sc-n">03</span>Paths</button></li>
+        <li><button type="button" data-chapter="3"><span class="sc-n">04</span>Focus</button></li>
+        <li><button type="button" data-chapter="4"><span class="sc-n">05</span>Share</button></li>
       </ol>
-      <nav class="sc-actions" aria-label="展示操作"><button type="button" data-fullscreen>全屏展示 ↗</button><a class="editor-link" href="./?example=checkout" target="_blank" rel="noopener">打开编辑器 ↗</a></nav>
+      <nav class="sc-actions" aria-label="Showcase actions"><button type="button" data-fullscreen>Fullscreen ↗</button><a class="editor-link" href="./?example=checkout" target="_blank" rel="noopener">Open editor ↗</a></nav>
     </header>
 
     <section class="sc-story" aria-labelledby="chapter-title">
       <div class="sc-copy" aria-live="polite">
         <p class="sc-kicker" data-kicker>01 / THE BIG PICTURE</p>
-        <h1 id="chapter-title">把流程，<br><em>讲成故事。</em></h1>
+        <h1 id="chapter-title">Turn a flow<br> <em>into a story.</em></h1>
       </div>
-      <p class="sc-description" data-description>一张时序图，六个服务，数十次交互。听众应该先看哪里？让每一步都有自己的时刻。</p>
-      <div class="sc-cta"><button class="primary" type="button" data-demonstrate disabled>正在准备演示…</button><p data-cue>这一页的图与控件，都可以直接操作。</p></div>
+      <p class="sc-description" data-description>One sequence diagram. Six services. Dozens of interactions. Where should your audience look first? Give every step its own moment.</p>
+      <div class="sc-cta"><button class="primary" type="button" data-demonstrate disabled>Preparing the demo…</button><p data-cue>Everything on this page is live — the diagram and controls all work.</p></div>
     </section>
 
-    <section class="sc-stage" aria-label="可操作的订单流程演示">
+    <section class="sc-stage" aria-label="Interactive order flow demo">
       <section class="sc-player" data-player tabindex="0" aria-label="Presentation player" aria-busy="true">
         <div class="sc-stage-head">
           <div class="sc-title">
-            <h2><span class="sc-live"><i></i>LIVE</span>一笔订单的旅程<span class="sc-sub">Checkout → Fulfillment</span></h2>
-            <p class="path-help">选择演示路径；不会求值条件或调用真实服务。</p>
+            <h2><span class="sc-live"><i></i>LIVE</span>An order’s journey<span class="sc-sub">Checkout → Fulfillment</span></h2>
+            <p class="path-help">Presentation paths only; conditions are not evaluated and no real services are called.</p>
           </div>
           <div data-controls></div>
         </div>
-        <ol class="service-map" data-services aria-label="参与演示的六个服务"></ol>
-        <div data-diagram><p class="loading">正在准备六个服务的协作流程…</p></div>
+        <ol class="service-map" data-services aria-label="The six services in this demo"></ol>
+        <div data-diagram><p class="loading">Preparing a six-service flow…</p></div>
         <div class="player-dock">
           <p class="step-meta" data-step-meta></p>
           <div data-status role="status" aria-live="polite">Preparing diagram…</div>
-          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> 步骤 · <kbd>Space</kbd> 播放</p></div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play</p></div>
         </div>
       </section>
       <p class="showcase-error" data-error role="alert"></p>
     </section>
 
     <footer class="sc-foot">
-      <p>每条消息都来自 Mermaid 源码 · <code>sequenceDiagram</code></p>
-      <div class="sc-pager"><button type="button" data-chapter-prev disabled aria-label="上一章节">←</button><span data-chapter-count>01 / 05</span><button type="button" data-chapter-next aria-label="下一章节">→</button></div>
-      <a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">开源于 GitHub ↗</a>
+      <p>Every message comes from Mermaid source · <code>sequenceDiagram</code></p>
+      <div class="sc-pager"><button type="button" data-chapter-prev disabled aria-label="Previous chapter">←</button><span data-chapter-count>01 / 05</span><button type="button" data-chapter-next aria-label="Next chapter">→</button></div>
+      <a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">Open source on GitHub ↗</a>
     </footer>
   </main>
   <script type="module" src="/src/showcase.ts"></script>
