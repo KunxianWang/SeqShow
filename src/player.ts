@@ -131,7 +131,7 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     const x = Math.max(12, target.left - box.left - 14), y = target.top - box.top + target.height / 2;
     Object.assign(badge.style, { left: `${x / box.width * 100}%`, top: `${y / box.height * 100}%` });
   }
-  const resize = new ResizeObserver(() => { layout(); placeBadge(steps[state.index - 1]?.id); });
+  const resize = new ResizeObserver(() => { layout(); placeBadge(steps[state.index - 1]?.id); fit(); });
   resize.observe(svg);
 
   function dispatch(action: PlaybackAction) {
@@ -143,7 +143,16 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     update();
   }
   const chip = (id: string) => element('span', 'participant-chip', labels.get(id) ?? id);
-  const part = (className: string, text: string) => element('span', className, text);
+  const count = element('span', 'step-count'), total = element('span', 'step-total');
+  const separator = element('span', 'step-sep'), text = element('span', 'step-text');
+  // Long text and many paths scroll inside bounded boxes; only overflowing boxes join the tab order.
+  function fit() {
+    for (const box of [text, meta]) {
+      if (box.scrollHeight > box.clientHeight + 1) box.tabIndex = 0; else box.removeAttribute('tabindex');
+    }
+    paths.toggleAttribute('data-overflow', paths.scrollHeight > paths.clientHeight + 1);
+  }
+  for (const box of [text, meta, paths]) resize.observe(box);
   function update() {
     const { index, choices } = state;
     const current = steps[index - 1];
@@ -173,9 +182,12 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     }
     svg.setAttribute('data-focus', String(focus && index > 0));
     // Spans only style the counter; the live region's text stays "k / N — text".
-    status.replaceChildren(...current
-      ? [part('step-count', String(index)), part('step-total', ` / ${steps.length}`), part('step-sep', ' — '), part('step-text', current.text)]
-      : [part('step-text', 'Overview'), part('step-sep', ' · '), part('step-count', '0'), part('step-total', ` / ${steps.length}`)]);
+    // Re-insert only when the order flips, so a focused step text keeps focus during playback.
+    const order = current ? [count, total, separator, text] : [text, separator, count, total];
+    if (status.firstChild !== order[0] || status.childNodes.length !== order.length) status.replaceChildren(...order);
+    count.textContent = String(index); total.textContent = ` / ${steps.length}`;
+    separator.textContent = current ? ' — ' : ' · ';
+    if (text.textContent !== (current?.text ?? 'Overview')) { text.textContent = current?.text ?? 'Overview'; text.scrollTop = 0; }
     status.toggleAttribute('data-overview', !current);
     status.setAttribute('aria-live', state.playing ? 'off' : 'polite');
     kind.hidden = !current;
@@ -192,6 +204,7 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     focusButton.setAttribute('aria-pressed', String(focus));
     badge.textContent = current ? String(index) : '';
     placeBadge(current?.id);
+    fit();
     if (current && enabled) {
       const boxes = Array.from(svg.querySelectorAll('[data-phase="current"]'), node => node.getBoundingClientRect());
       const item = { left: Math.min(...boxes.map(box => box.left)), right: Math.max(...boxes.map(box => box.right)),

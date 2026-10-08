@@ -47,6 +47,26 @@
 
 Firefox 未运行：本机未安装 Playwright Firefox（M5 的 Firefox 结果来自 Linux）。
 
+## 复查修复：长文本与多分支
+
+用户复查发现两处首屏问题：450 字中文消息把讲解栏撑高，桌面 Next 落到首屏之外、手机讲解栏约 788 px；10 个 alt 时路径选择占满高度预算，挤出播放控件。原因是图区按固定的视口预算计算高度，没有考虑讲解栏与路径栏的实际内容。
+
+修复：
+
+- 桌面 Web 预览区（≥ 960 px）与导出面板（≥ 600 px）改为高度不超过视口的纵向 flex，只有图区收缩（最小 140 px、最大 720 px）。
+- 路径栏最多两行，视口高度 ≤ 820 px 时一行，超出部分在内部滚动并以底部阴影提示。
+- 步骤文本最多两行（高视口三行、手机四行），端点行最多两行，超出部分在内部滚动。完整文本仍在 `[data-status]` 中；只有真正溢出的区域才设 `tabindex=0`，状态 span 跨步骤复用，播放时焦点不丢失。
+- 键盘提示缩短为 `← → step · Space play / pause · Home reset`。
+
+新增回归（先在旧实现上运行确认失败，修复后通过）：
+
+- `long step text and ten alt blocks keep desktop controls on the first screen`（Web，1280×720 与 390×844）
+- `exported long step text and ten alt blocks keep controls on the first screen`（离线导出）
+
+实测（同一组 450 字 + 10 alt 输入）：1280×720 时 Next 底边 625 px；1440×900 时 836 px；390×844 时讲解栏高 204 px；正常登录例 1280×800 不变。修复后 `npm run test:e2e` 为 35 项 Chromium 通过（含上述 2 项），Vitest 138 项、typecheck、lint 通过；WebKit 重点集加上述 2 项共 8 项通过；`node scripts/m0.mjs --browsers=chromium,webkit` 两个引擎各 18 场景 / 27 路径 / 132 状态 / 14 负向通过，远程请求 0。截图：[1280×720](ui-v02-crowded-1280x720.png)、[390](ui-v02-crowded-390.png)。
+
+窄屏（< 960 px Web）为编辑器在上、预览在下的单列，本来就不承诺首屏可见播放控件；手机上路径栏不加滚动框，10 个 alt 时需滚动页面到达控件。
+
 ## 人工看图
 
 在 production preview 与离线导出文件中截图检查（页面横向溢出均为 0，页面错误与控制台错误为 0）：

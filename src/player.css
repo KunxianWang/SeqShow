@@ -48,6 +48,12 @@ kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom
 [data-controls] { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; margin: 16px 0 0; }
 .player-paths { display: flex; flex-wrap: wrap; gap: 12px; flex: 1 1 300px; min-width: 0; }
 .player-paths:empty { display: none; }
+/* Bounded so ten alt blocks cannot push the dock off screen; padding keeps focus rings visible. */
+@media (min-width: 600px) {
+  .player-paths { max-height: 136px; overflow-y: auto; margin: -4px; padding: 4px; overscroll-behavior: contain; }
+  .player-paths[data-overflow] { box-shadow: inset 0 -10px 8px -8px rgb(15 23 42 / 22%); }
+}
+@media (min-width: 600px) and (max-height: 820px) { .player-paths { max-height: 70px; } }
 .player-path { display: grid; gap: 4px; flex: 1 1 220px; min-width: 0; max-width: 380px; }
 .player-path-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; font-size: 12px; }
 .player-path-name { color: var(--ss-text-2); font-weight: 700; }
@@ -63,8 +69,8 @@ kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom
 .path-help::before { content: "i"; flex: none; width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 50%; font: 700 9px/11px var(--ss-font); text-align: center; }
 
 /* Stage: the SVG keeps its natural width and only this container scrolls */
-/* Leave room for the path bar and dock so desktop presenters never scroll the page to reach controls. */
-[data-diagram] { position: relative; max-height: clamp(240px, calc(100vh - 470px), 720px); overflow: auto; padding: 20px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: #fff; }
+/* Desktop panels cap this with flex layout instead (see .export-panel and the Web .preview-panel). */
+[data-diagram] { position: relative; max-height: clamp(240px, 70vh, 720px); overflow: auto; padding: 20px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: #fff; }
 [data-diagram] > svg { position: relative; z-index: 1; display: block; min-width: 600px; width: 100%; height: auto; }
 .diagram-underlay, .diagram-overlay { position: absolute; pointer-events: none; }
 .diagram-underlay { z-index: 0; }
@@ -97,16 +103,19 @@ svg line[data-seq-participant][data-active="true"] { stroke: #93c5fd !important;
 
 /* Presenter dock: step meta, live status and transport */
 .player-dock { display: grid; gap: 10px; margin-top: 12px; padding: 14px 16px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: #fff; }
-.step-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-height: 22px; margin: 0; color: var(--ss-text-2); font-size: 12px; overflow-wrap: anywhere; }
+.step-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-height: 22px; max-height: 52px; overflow-y: auto; margin: 0; color: var(--ss-text-2); font-size: 12px; overflow-wrap: anywhere; }
 .step-kind { padding: 2px 8px; border-radius: 999px; background: var(--ss-accent-soft); color: var(--ss-accent-strong); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 .step-kind[hidden] { display: none; }
 [data-step-details] { min-width: 0; line-height: 1.9; }
 .participant-chip { display: inline-block; line-height: 1.5; padding: 1px 7px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-sm); background: var(--ss-bg); color: var(--ss-text); font-weight: 600; overflow-wrap: anywhere; }
-[data-status] { display: flex; align-items: baseline; min-height: 40px; margin: 0; color: var(--ss-text); font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+[data-status] { display: flex; align-items: flex-start; min-height: 40px; margin: 0; color: var(--ss-text); font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
 [data-status] .step-count { order: 0; flex: none; font-size: 28px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
 [data-status] .step-total { order: 1; flex: none; margin-right: 16px; padding-right: 16px; border-right: 1px solid var(--ss-border); color: var(--ss-text-2); font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
 [data-status] .step-sep { display: none; }
-[data-status] .step-text { order: 2; flex: 1; min-width: 0; }
+/* Full text stays in the live region; the visible box scrolls after two lines (three on tall screens, four on phones). */
+[data-status] .step-text { order: 2; flex: 1; min-width: 0; max-height: calc(2.8em + 4px); padding-top: 4px; overflow-y: auto; overscroll-behavior: contain; }
+@media (min-width: 600px) and (min-height: 860px) { [data-status] .step-text { max-height: calc(4.2em + 4px); } }
+[data-status] .step-total { padding-top: 10px; }
 [data-status][data-overview] .step-text { color: var(--ss-text-2); font-weight: 500; }
 .player-dock-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 [data-transport] { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -121,6 +130,12 @@ svg line[data-seq-participant][data-active="true"] { stroke: #93c5fd !important;
 .export-panel { max-width: 1120px; margin: 0 auto; padding: 20px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-lg); background: #fff; box-shadow: var(--ss-shadow-panel); }
 .export-panel > p:first-child { margin-top: 0; }
 .export-foot { margin: 16px 0 0; color: var(--ss-text-3); font-size: 12px; text-align: center; }
+/* Fit the viewport: the stage absorbs whatever the path bar and dock need, so controls stay on screen. */
+@media (min-width: 600px) {
+  .export-panel { display: flex; flex-direction: column; max-height: calc(100vh - 80px); max-height: calc(100dvh - 80px); }
+  .export-panel > * { flex: none; }
+  .export-panel > [data-diagram] { flex: 0 1 auto; min-height: 140px; max-height: 720px; }
+}
 
 @media (max-width: 599px) {
   button, select { height: 44px; }
@@ -135,6 +150,8 @@ svg line[data-seq-participant][data-active="true"] { stroke: #93c5fd !important;
   [data-status] .step-count { font-size: 22px; }
   [data-status] .step-total { margin-right: 12px; padding-right: 12px; }
   [data-status] { font-size: 16px; }
+  [data-status] .step-text { max-height: calc(5.6em + 2px); padding-top: 2px; }
+  [data-status] .step-total { padding-top: 6px; }
   .export-page { padding: 0 12px 16px; }
   .export-panel { padding: 16px; }
 }

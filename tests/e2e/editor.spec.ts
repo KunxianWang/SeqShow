@@ -223,6 +223,35 @@ test('E09 loading an example protects modified drafts with Cancel, Escape and ex
   await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 2');
 });
 
+// 450 Chinese characters in one message plus the 10-alt limit: both used to push the controls off screen.
+const longText = '长消息'.repeat(150);
+const crowdedSource =`sequenceDiagram\nA->>B: ${longText}\n` + Array.from({ length: 10 }, (_, i) =>
+  `alt yes ${i + 1}\nA->>B: ok ${i + 1}\nelse no ${i + 1}\nB->>A: fail ${i + 1}\nend`).join('\n');
+const controlsOnScreen = (page: Page) => page.evaluate(() => scrollY === 0 && ['previous', 'play', 'next', 'reset']
+  .every(action => document.querySelector(`[data-action="${action}"]`)!.getBoundingClientRect().bottom <= innerHeight));
+
+test('long step text and ten alt blocks keep desktop controls on the first screen', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await open(page); await renderSource(page, crowdedSource);
+  expect(await controlsOnScreen(page)).toBe(true);
+  await page.locator('[data-action="next"]').click();
+  // The full text stays in the live region; only its visible box is bounded and scrolls.
+  await expect(page.locator('[data-status]')).toHaveText(`1 / 11 — ${longText}`);
+  await expect(page.locator('[data-status] .step-text')).toHaveAttribute('tabindex', '0');
+  expect(await controlsOnScreen(page)).toBe(true);
+  await expect(page.locator('[data-branch]')).toHaveCount(10);
+  await page.locator('[data-branch="alt:10"]').selectOption('alt:10:second');
+  await expect(page.locator('[data-branch="alt:10"]')).toHaveValue('alt:10:second');
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator('[data-player]').evaluate(node => (node as HTMLElement).focus({ preventScroll: true }));
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('[data-status]')).toContainText('1 / 11');
+  expect(await controlsOnScreen(page)).toBe(true);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const dock = await page.locator('.player-dock').evaluate(node => node.getBoundingClientRect().height);
+  expect(dock).toBeLessThan(320);
+});
+
 test('the current step scrolls inside a long diagram without moving the page', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await open(page);

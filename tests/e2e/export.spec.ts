@@ -175,6 +175,25 @@ for (const width of [360, 390, 768, 1280]) {
   });
 }
 
+test('exported long step text and ten alt blocks keep controls on the first screen', async ({ page, browser, browserName }, info) => {
+  const longText = '长消息'.repeat(150);
+  await open(page, `sequenceDiagram\nA->>B: ${longText}\n` + Array.from({ length: 10 }, (_, i) =>
+    `alt yes ${i + 1}\nA->>B: ok ${i + 1}\nelse no ${i + 1}\nB->>A: fail ${i + 1}\nend`).join('\n'));
+  const saved = await offline(browser, browserName, await download(page, info, 'crowded.html'));
+  const onScreen = () => saved.viewer.evaluate(() => scrollY === 0 && ['previous', 'play', 'next', 'reset']
+    .every(action => document.querySelector(`[data-action="${action}"]`)!.getBoundingClientRect().bottom <= innerHeight));
+  try {
+    await saved.viewer.setViewportSize({ width: 1280, height: 720 });
+    await saved.viewer.locator('[data-player]').evaluate(node => (node as HTMLElement).focus({ preventScroll: true }));
+    await saved.viewer.keyboard.press('ArrowRight');
+    await expect(saved.viewer.locator('[data-status]')).toHaveText(`1 / 11 — ${longText}`);
+    expect(await onScreen()).toBe(true);
+    await saved.viewer.setViewportSize({ width: 390, height: 844 });
+    expect(await saved.viewer.locator('.player-dock').evaluate(node => node.getBoundingClientRect().height)).toBeLessThan(320);
+    expect(saved.requests).toEqual([]); expect(saved.errors).toEqual([]);
+  } finally { await saved.context.close(); }
+});
+
 test('E12 constructed export data cannot escape JSON or SVG text to execute script or fetch', async ({ page, browser, browserName }, info) => {
   await open(page, 'sequenceDiagram\nA->>B: placeholder');
   await page.addScriptTag({ content: boundaryCode });

@@ -6,11 +6,11 @@ export const safeJson = (value: unknown) => JSON.stringify(value)
   .replace(/</gu, '\\u003c').replace(/\u2028/gu, '\\u2028').replace(/\u2029/gu, '\\u2029');
 
 // Static markup for exported files; index.html carries the same logo.
-const logo ='<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/>'
+const logo = '<svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/>'
   + '<path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/>'
   + '<path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
   + '<path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>';
-const keys = '<p class="player-help">Player keys: <kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p>';
+const keys = '<p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p>';
 
 export function exportHtml(svg: SVGSVGElement, model: SequenceDocument, choices: BranchChoices,
   runtime: string, css: string): string {
