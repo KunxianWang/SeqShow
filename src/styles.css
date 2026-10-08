@@ -3,6 +3,7 @@
 .app-header { display: flex; align-items: center; gap: 16px; min-height: 64px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-size: 18px; letter-spacing: -.01em; }
 .tagline { min-width: 0; margin: 0; padding-left: 16px; border-left: 1px solid var(--ss-border-strong); font-size: 14px; }
+.app-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .app-header a { margin-left: auto; padding: 6px 10px; border-radius: var(--ss-radius-sm); color: var(--ss-accent-strong); font-size: 14px; font-weight: 600; white-space: nowrap; text-decoration: none; }
 .app-header a:hover { background: var(--ss-accent-soft); }
 .workspace { display: grid; grid-template-columns: minmax(280px, 36fr) minmax(0, 64fr); gap: 20px; align-items: start; }

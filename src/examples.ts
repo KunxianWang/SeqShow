@@ -20,7 +20,53 @@ const parsed = parseSequence(loginSource);
 if (!parsed.ok) throw new Error(`Invalid bundled example: ${JSON.stringify(parsed.diagnostics)}`);
 export const loginExample = parsed.document;
 
+// A narrated example, not a production payment architecture or live integration.
+export const checkoutSource = `sequenceDiagram
+    participant Web as Checkout
+    participant API as Order API
+    participant Stock as Inventory
+    participant Pay as Payment
+    participant Queue as Event bus
+    participant Worker as Fulfillment
+    Note over Web,API: 01 / Accept the order
+    Web->>API: POST /orders + idempotency key
+    API->>API: Validate cart and calculate total
+    API->>Stock: Reserve 2 items for order #1042
+    Stock-->>API: Reservation held for 15 minutes
+    Note over API,Pay: 02 / Authorize payment
+    API->>Pay: Authorize payment for order #1042
+    alt payment approved
+        Pay-->>API: Authorized · payment ref p_82
+        API->>API: Save order + outbox event atomically
+        API-->>Web: 202 Accepted · order #1042
+    else payment recovered
+        Pay-->>API: Declined · insufficient funds
+        API-->>Web: Retry with another payment method
+        Web->>API: Submit a new payment method
+        API->>Pay: Authorize the replacement method
+        Pay-->>API: Authorized · payment ref p_83
+        API->>API: Save order + outbox event atomically
+        API-->>Web: 202 Accepted · order #1042
+    end
+    Note over API,Queue: 03 / Deliver the committed order
+    API->>Queue: Relay OrderConfirmed from the outbox
+    Queue->>Worker: Deliver OrderConfirmed · at least once
+    Worker->>Worker: Check event ID to prevent duplicate work
+    Worker->>Stock: Commit inventory for this order
+    Stock-->>Worker: Inventory committed
+    alt shipment created
+        Worker->>Worker: Create shipment and tracking ID
+        Worker-->>Queue: Publish ShipmentCreated
+        Queue-->>Web: Order update · shipped
+    else fulfillment delayed
+        Worker->>Worker: Save retry state for an operator
+        Worker-->>Queue: Publish FulfillmentDelayed
+        Queue-->>Web: Order update · delayed
+    end
+    Note over Queue,Worker: No live services. Paths are selected, not evaluated.`;
+
 export const examples = [
+  { id: 'checkout', title: 'Checkout · payment / fulfillment', source: checkoutSource },
   { id: 'login', title: 'Login · success / failure', source: loginSource },
   { id: 'request', title: 'API request · first steps', source: `sequenceDiagram
     participant Client

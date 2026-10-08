@@ -7,12 +7,13 @@
 | 素材 | 内容与用途 |
 | --- | --- |
 | [17 秒演示 GIF](../../demo/seqshow.gif) | 真实 production 界面的逐步消息、自调用、成功 / 失败路径、Focus 与离线 HTML |
-| [静态截图](../validation/ui-v02-merged-failure-player.png) | 本次从最终 UI v0.2 捕获的失败路径预览；不能使用 GIF 的场合可替代 |
+| [静态截图](../validation/showcase-login.png) | 本轮配色下实际捕获的登录失败路径预览；不能使用 GIF 的场合可替代 |
 | [离线登录演示](../../demo/login.html) | 下载为 HTML 并直接打开；GitHub 文件页本身不执行播放器 |
 | [M5 验收](../validation/M5.md) | 实际浏览器平台、支持子集、输入限额、已知限制与验证证据 |
 | [后续修复联合复核](../validation/REVIEW-M5-MERGE-2026-10-07.md) | 宽图和长消息修复、独立复验与最终合并范围 |
 | [UI 合并记录](../validation/UI-V02-MERGE.md) | UI v0.2、长正文 / 多分支修复及更新后的 GIF / 离线示例 |
-| [仓库](https://github.com/KunxianWang/SeqShow) | 技术 MVP、UI v0.2 和当前素材已按用户授权合入 main |
+| [仓库](https://github.com/KunxianWang/SeqShow) | 技术 MVP 与 UI v0.2 已合入 main；新展示与配色在 ffang/showcase，未合并 |
+| [发布会式互动展示讲稿](showcase.md) | 五章节、六服务复杂案例、20 秒动图与真实离线文件 |
 
 目前没有公开托管演示 URL。草稿不填写虚构的在线入口，也不宣传下载文件页能直接在线运行。合并和发布必须按 AGENTS 取得本次批准；准备阶段不改仓库设置或创建 Release / tag。
 
@@ -72,7 +73,7 @@ npm run preview
 
 完整兼容边界见 M5 与后续联合复核：M5 时 Windows Chromium 与 Linux Firefox 各 30 项 production E2E、Windows WebKit 6 项重点检查；后续修复的最终代码独立通过 Windows Chromium 全部 33 项，以及 Linux Firefox / Windows WebKit 各 9 项重点复验。Windows Firefox 测试二进制仍有启动问题，真实 Safari / iOS 设备未验证。刷新编辑器不会保存草稿；原始源码和注释不默认写入导出文件，但图的标签会包含在文件中。
 
-以上是 UI 改版前的历史范围。UI v0.2 最终代码独立通过 Windows Chromium 全部 35 项与 WebKit 新增布局回归 2 项，实现阶段另有 WebKit 8 项重点检查记录；新版 UI 尚未复验 Firefox。当前 GIF 和 demo/login.html 已从 d4ad48f 应用源码重新捕获，发布时兼容说明应使用 UI 合并记录，不能沿用旧版 Firefox 结果声称新版已通过。
+以上是 UI 改版前的历史范围。UI v0.2 最终代码独立通过 Windows Chromium 全部 35 项与 WebKit 新增布局回归 2 项，实现阶段另有 WebKit 8 项重点检查记录。当前工作分支新增复杂展示与 base 配色，GIF 和 demo/login.html 已重新捕获；最新范围见[展示验收](../validation/SHOWCASE.md)。新版展示尚未复验 Firefox，不能沿用旧版 Firefox 结果声称新版已通过。
 
 ## 试用反馈模板
 

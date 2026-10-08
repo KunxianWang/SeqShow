@@ -178,3 +178,11 @@ typecheck 覆盖 src、tests 的 TypeScript 与 Vite/Vitest/Playwright 配置；
 ## 13. 官方参考
 
 [Playwright 网络控制](https://playwright.dev/docs/network)用于配置请求观察与拦截；[Mermaid 时序图语法](https://mermaid.js.org/syntax/sequenceDiagram.html)用于核对支持与拒绝样例。具体行为以项目固定版本实测为准。
+
+## 14. 复杂案例与展示页回归
+
+当前新增第七个内置案例 checkout，独立检查六个服务、四种路径、20 / 24 步、支付恢复必须先授权成功再进入事件履约。新展示页需检查：五个章节驱动真实播放器，切分支保持几何，Focus 不改变当前步骤，章节恢复起点；真实下载保留两个分支、file:// 断网可播且远程请求为零；进入编辑器载入同一源码；360 / 768 / 1280 宽度无全页横向溢出，1280×720 播放控件可见。
+
+执行 `npm run typecheck`、`npm run lint`、`npm test`、`npm run test:e2e`；新套件为 `tests/e2e/showcase.spec.ts`，WebKit 可独立运行此套件。本轮全量基线 140 项单元 / 集成、40 项 Chromium E2E；WebKit 实际范围与 M0 结果见 [SHOWCASE](validation/SHOWCASE.md)。新配色须回归 M0，不能因视觉变更跳过适配契约检查。
+
+素材复现：build 后运行 `node scripts/capture-showcase.mjs`，实际验证原生全屏进入/退出、8 个演示状态与真实离线文件；再运行 `python scripts/assemble-demo.py --captures artifacts/showcase --output demo/showcase.gif --width 1040 --height 850`（使用已有 Pillow，不是应用依赖）。检查编码后 contact-sheet、桌面和窄屏截图；不以设计 mockup 代替产品截图。

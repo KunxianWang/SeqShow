@@ -153,7 +153,15 @@ let renderId = 0;
 export async function renderSequence(document: SequenceDocument): Promise<SVGSVGElement> {
   const { source } = serialize(document);
   mermaid.initialize({
-    startOnLoad: false, securityLevel: 'strict', theme: 'default', look: 'classic',
+    startOnLoad: false, securityLevel: 'strict', theme: 'base', look: 'classic',
+    themeVariables: {
+      useGradient: false,
+      primaryColor: '#f1f5f9', primaryTextColor: '#0f172a', primaryBorderColor: '#cbd5e1',
+      lineColor: '#64748b', actorBkg: '#f1f5f9', actorBorder: '#cbd5e1', actorTextColor: '#0f172a',
+      actorLineColor: '#cbd5e1', signalColor: '#64748b', signalTextColor: '#334155',
+      labelBoxBkgColor: '#eff6ff', labelBoxBorderColor: '#93c5fd', labelTextColor: '#1e40af',
+      loopTextColor: '#475569', noteBkgColor: '#eff6ff', noteBorderColor: '#bfdbfe', noteTextColor: '#1e40af',
+    },
     // Parser limits the original input; safe IDs, entities and line breaks can
     // expand the generated source beyond Mermaid's default 50,000 characters.
     maxTextSize: source.length,

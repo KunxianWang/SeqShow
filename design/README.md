@@ -1,8 +1,8 @@
 # SeqShow UI 设计提案 v0.2
 
-状态：§9.1 / §9.2 **已实现、复验并按本次用户授权合入 main**（见 [实现记录](../docs/validation/UI-V02.md)与[合并记录](../docs/validation/UI-V02-MERGE.md)）。§9.3 新增提案仍未实现。更新：2026-10-07。
+状态：§9.1 / §9.2 **已实现、复验并按当次用户授权合入 main**（见 [实现记录](../docs/validation/UI-V02.md)与[合并记录](../docs/validation/UI-V02-MERGE.md)）。本轮按用户美观与展示要求，在工作分支实施 P-5 的 base 主题路线与独立发布会式互动页；P-1–P-4 未实现。新展示见 [讲稿](../docs/release/showcase.md)，最新检查见 [展示验收](../docs/validation/SHOWCASE.md)。
 
-实现与样稿的差异：图内 OTHER PATH 标签已去掉（窄 alt 框中会与 Mermaid 居中的 case 标题重叠），改由斜纹底与路径选择器旁的 “Other path: …” 表达；当前步骤文字只变色、不加粗（加粗会改变 SVG 文本几何，违反"切步不改布局"）；图区高度按视口计算，保证 1280×720 以上桌面不滚动页面即可看到播放控件；Mermaid 主题保持 default（P-5 未确认）。
+实现与样稿的差异：图内 OTHER PATH 标签已去掉（窄 alt 框中会与 Mermaid 居中的 case 标题重叠），改由斜纹底与路径选择器旁的 “Other path: …” 表达；当前步骤文字只变色、不加粗（加粗会改变 SVG 文本几何，违反"切步不改布局"）；图区高度按视口计算，保证 1280×720 以上桌面不滚动页面即可看到播放控件。本轮将 Mermaid 改为受控 base 主题，Note 采用蓝底而非样稿黄底；字体、几何与共享播放语义保留。
 
 本目录给出 SeqShow Web 编辑器与离线导出播放器的视觉与布局设计。它在 [DESIGN](../docs/DESIGN.md) 的交互基线内重新组织视觉层次，不改变 [PRODUCT](../docs/PRODUCT.md) 的范围、步骤语义和 DoD。少数超出现有文档的细节单列在 §9.3，需确认后才能同步到 DESIGN / TESTING 并实现。
 

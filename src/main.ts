@@ -2,7 +2,7 @@ import './player.css';
 import './styles.css';
 import css from './player.css?raw';
 import runtime from 'virtual:seqshow-export-player';
-import { examples, loginSource } from './examples';
+import { examples } from './examples';
 import { INPUT_LIMITS, parseSequence, type Diagnostic } from './core/parser';
 import type { SequenceDocument } from './core/model';
 import { renderSequence } from './renderer/mermaid-adapter';
@@ -21,16 +21,19 @@ const notice = root.querySelector<HTMLElement>('[data-preview-state]')!;
 const download = root.querySelector<HTMLButtonElement>('[data-export]')!;
 const exportError = root.querySelector<HTMLElement>('[data-export-error]')!;
 const diagram = root.querySelector<HTMLElement>('[data-diagram]')!;
+const initialExample = examples.find(item => item.id === new URLSearchParams(location.search).get('example'))
+  ?? examples.find(item => item.id === 'login')!;
 let player: ReturnType<typeof mountPlayer> | undefined;
 let successful: { source: string; model: SequenceDocument; svg: SVGSVGElement } | undefined;
 let busy = false, stale = true, failed = false, exporting = false, disposed = false;
-let revision = 0, baseline = loginSource, loadedExample = 'login', pendingExample = '';
+let revision = 0, baseline = initialExample.source, loadedExample = initialExample.id, pendingExample = '';
 
 for (const item of examples) {
   const option = document.createElement('option');
   option.value = item.id; option.textContent = item.title; example.append(option);
 }
-editor.value = loginSource;
+editor.value = initialExample.source;
+example.value = initialExample.id;
 
 function update() {
   const state = busy ? 'busy' : failed ? 'error' : stale ? 'stale' : 'ready';

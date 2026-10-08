@@ -289,10 +289,10 @@ test('E10 HTML, directives, unsupported syntax and oversized input are rejected 
   await renderSource(page, linear);
 });
 
-test('six examples are renderable and the two independent alternatives have four distinct paths', async ({ page }) => {
+test('seven examples are renderable and the two independent alternatives have four distinct paths', async ({ page }) => {
   await open(page);
-  await expect(page.locator('[data-example] option')).toHaveCount(6);
-  for (const id of ['request', 'cache', 'job', 'validation', 'chinese', 'login']) {
+  await expect(page.locator('[data-example] option')).toHaveCount(7);
+  for (const id of ['request', 'cache', 'job', 'validation', 'chinese', 'login', 'checkout']) {
     await page.locator('[data-example]').selectOption(id); await ready(page);
     await expect(page.locator('[data-error]')).toBeEmpty();
     await expect(page.locator('[data-export]')).toBeEnabled();

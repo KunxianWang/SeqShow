@@ -31,6 +31,8 @@ SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的
 
 ## Git 分支与合并规则
 
+当前工作分支 `ffang/showcase` 按用户要求准备复杂案例、统一图配色与发布会式互动展示；见 [SHOWCASE](docs/validation/SHOWCASE.md)和[展示讲稿](docs/release/showcase.md)。与已合并 UI 的历史记录分开，合入 main 仍需当次明确同意。
+
 - 远程仓库：https://github.com/KunxianWang/SeqShow.git；主分支为 main。
 - 用户已明确授权本次将现有文档与调研资料上传到 main；此授权仅适用于本次初始内容上传。
 - 本次上传之后，任何更新先切换或新建名称以 ffang 开头的工作分支，建议使用 ffang/<task-name>；不要直接在 main 提交或推送更新。

@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => {
   let playerInputs = new Set<string>();
   return {
     base: './',
-    build: { target: 'es2024' },
+    build: { target: 'es2024', rollupOptions: { input: { app: resolve('index.html'), showcase: resolve('showcase.html') } } },
     server: { host: '127.0.0.1', port: 5173, strictPort: true },
     preview: { host: '127.0.0.1', port: 4173, strictPort: true },
     plugins: [{

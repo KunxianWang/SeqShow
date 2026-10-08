@@ -8,15 +8,17 @@ Present Mermaid sequence diagrams, step by step.
 
 **技术 MVP（M0–M5）与 UI v0.2 已完成并合入 main**。功能验收见 [M5](docs/validation/M5.md)，界面范围和最终复验见 [UI 合并记录](docs/validation/UI-V02-MERGE.md)。尚未公开部署或发布 Release。
 
-内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
+内置七个原创案例，新增六个服务协作的复杂订单：库存预留、支付恢复、outbox、事件去重与履约分支；另保留登录成功/失败、请求响应、缓存、后台任务、Note/自调用/重复消息与中文长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
 
-![SeqShow：逐步讲解、切换失败路径、Focus 与单文件离线播放](demo/seqshow.gif)
+![SeqShow：复杂订单流程的发布会式互动展示](demo/showcase.gif)
 
-17 秒真实操作状态演示，已使用 UI v0.2 重新捕获。也可查看 [静态预览](docs/validation/ui-v02-merged-failure-player.png)或下载下方离线文件。
+20 秒真实操作状态演示：六个服务、20 / 24 步、支付路径切换、Focus 与离线导出。可看[静态预览](docs/validation/showcase-overview.png)与[展示讲稿](docs/release/showcase.md)。新增展示在 `ffang/showcase` 工作分支，尚未合入 main。
 
 ## 先试一次
 
 运行下方生产预览命令，打开 [本地演示页](http://127.0.0.1:4173/)。选择登录成功/失败路径，点击 Next 或 Play。路径只表示讲解选择，SeqShow 不判断条件是否成立。
+
+第一次接触产品，建议打开[互动展示页](http://127.0.0.1:4173/showcase.html)：按五个章节体验，点击“全屏展示”用于分享或录屏。右上角“打开编辑器”载入同一复杂案例。也可下载[复杂订单离线演示](demo/checkout.html)，保留真实播放器；展示页自身仍需要应用静态资源。
 
 也可以下载 [现成的离线登录演示](demo/login.html)，保存为 `.html` 后用浏览器打开；初始为失败路径、总览暂停，可换路径和开启 Focus。GitHub 文件页展示源码，需要下载文件在本地打开。
 
@@ -75,7 +77,7 @@ npm test
 npm run test:e2e
 ```
 
-npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 35 项 Chromium 编辑器及离线检查，覆盖 E01–E12、同时达到四项输入上限、宽图文字尺寸、长消息箭头可见性，以及长正文和十个 alt 下播放控件的可见性。Firefox/WebKit 项目保留：
+npm test 为非 watch 的 Vitest 检查（当前 140 项）。test:e2e 先构建 production，再在隔离的 4174 预览上执行 40 项 Chromium 检查，覆盖 E01–E12、四项输入上限、宽图/长正文、多分支、展示章节和离线下载。最新范围见[展示验收](docs/validation/SHOWCASE.md)。Firefox/WebKit 项目保留：
 
 ```sh
 npx playwright install firefox webkit

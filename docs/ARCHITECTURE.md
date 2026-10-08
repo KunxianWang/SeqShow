@@ -187,6 +187,8 @@ Message 的绑定覆盖完整箭头、标签和自调用所需的线段；Note �
 
 Mermaid 的 SVG 不是稳定业务数据 API。若必须依赖内部 class 或元素顺序，这些假设集中在一个文件，配固定版本 fixture 和升级检查；禁止在 UI、Playback 和 Export 中复制选择器。
 
+展示改进：适配层采用固定 base / themeVariables 配色，关闭 useGradient，保留经典输出与字体/布局参数。不能为了主题效果放宽 SVG 安全检查。独立 showcase.html 为 Vite 第二个构建入口，复用本适配层、mountPlayer 与 exportHtml；章节仅调用现有 SEEK 和原生分支 / Focus 控件，不拥有第二套 Playback。
+
 ### 路线决策
 
 M0 已通过：采用 Mermaid 12.1.0 + 薄适配层。具体事件 ID、相邻标签、Note、参与者与 case 的结构假设，以及安全边界和浏览器限制见 [M0 验证记录](validation/M0.md)。播放器读取 SeqShow 自己的 data 属性。
