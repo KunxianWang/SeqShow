@@ -2,7 +2,7 @@
 
 日期：2026-10-07。结果：已实现部分 PASS；Firefox 与 §9.3 新增提案 NOT RUN。
 
-工作分支：ffang/ui-design，基于 main 的 51cae2e，仅本地提交，未推送、未合并。设计依据见 [design/README.md](../../design/README.md)。
+工作分支：ffang/ui-design，基于 main 的 51cae2e；最初只作本地实现与验证，随后完成 d4ad48f 布局修复。用户明确批准合并后，独立复验、素材更新与合入范围见 [UI 合并记录](UI-V02-MERGE.md)。设计依据见 [design/README.md](../../design/README.md)。
 
 ## 范围
 

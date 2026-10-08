@@ -153,6 +153,8 @@ M4 当前检查：138 项 Vitest（新增 3 项数据编码）、29 项 Chromium
 
 M5 在适配层限额修复后通过 138 项 Vitest、Windows Chromium 30 项 / Linux Firefox 30 项 production E2E、Windows WebKit 6 项重点检查（登录分支、键盘、390px 中文、下载 / 离线动作一致性、四项上限），及 Chromium / WebKit 各 18 场景 / 27 路径 / 132 状态的 M0 回归。需求与具体命令见 [M5](validation/M5.md)，不覆盖前面的历史结果。
 
+UI v0.2 与长正文 / 多分支修复后，当前默认 Chromium production E2E 为 35 项，Vitest 为 138 项；最终 d4ad48f 应用代码独立复验全部通过，另独立通过 WebKit 新增布局回归 2 项。实现阶段另有 WebKit 8 项与两个引擎的 M0 记录；来源、具体命令及当前尚未复验 Firefox 的限制见 [UI 合并记录](validation/UI-V02-MERGE.md)。
+
 M1 的 npm ci、版本、初始化与浏览器命令已在 README 核验。Firefox/WebKit 项目均保留；扩展运行先 build，再使用 `npx playwright test --project=webkit` 或 `--project=firefox`。默认 E2E 只执行 Chromium 的完整 E01–E12 主流程，不声称执行所有浏览器。Windows WebKit 使用串行 worker，默认 90 秒、较长动作对照 180 秒；断网文件使用远程请求拦截。Windows Firefox 仍无法启动，Firefox 通过范围为 Linux，不声称真实 Safari / iOS 设备通过。
 
 typecheck 覆盖 src、tests 的 TypeScript 与 Vite/Vitest/Playwright 配置；Node .mjs 构建/验证脚本通过 lint 和真实运行核验，不开启 checkJs。构建成功不能代替类型检查。

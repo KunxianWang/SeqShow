@@ -1,0 +1,59 @@
+{
+  "stage": "UI v0.2 approved main integration",
+  "date": "2026-10-07",
+  "timezone": "America/Los_Angeles",
+  "reviewedApplicationCommit": "d4ad48fc7c1c2658efd77fe3e1eeb25decacc62c",
+  "mainBeforeMerge": "51cae2e513ce60abd56570f3ac7ef627273c0172",
+  "branch": "ffang/ui-design",
+  "authorization": "User explicitly requested merging to main and a detailed progress report.",
+  "typecheck": "passed",
+  "lint": "passed",
+  "unit": {
+    "passed": 138
+  },
+  "independentProductionE2E": {
+    "chromium": {
+      "scope": "full suite",
+      "stats": {
+        "startTime": "2026-10-08T05:11:45.457Z",
+        "duration": 36224.007000000005,
+        "expected": 35,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    "webkit": {
+      "scope": "2 new layout regressions only",
+      "stats": {
+        "startTime": "2026-10-08T05:13:14.460Z",
+        "duration": 28632.692,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  },
+  "freshApplicationChecksAtMerge": "Not repeated: reviewed application source is unchanged.",
+  "demo": {
+    "frames": 10,
+    "durationMs": 17400,
+    "offlineRemoteRequests": 0,
+    "inlineRuntimeMatchesFinalBuild": true,
+    "gifBytes": 668118,
+    "gifSha256": "75bca087a4cad67df9ccc8306fad0656051df3a16586774c92a322ccc2e81031"
+  },
+  "pendingDesignItems": [
+    "P-1 source line numbers",
+    "P-2 line and UTF-16 counts",
+    "P-3 segmented progress",
+    "P-4 mobile sticky dock",
+    "P-5 Mermaid theme alignment"
+  ],
+  "limitations": [
+    "UI v0.2 Firefox has not been rerun; historical M5 Linux Firefox results do not validate the new UI.",
+    "Windows Firefox mozglue launch issue remains; real Safari/iOS and screen-reader testing have not been performed.",
+    "Public hosting, GitHub Release, outreach and real adoption/star validation have not been performed."
+  ]
+}

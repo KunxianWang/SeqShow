@@ -6,13 +6,13 @@ Present Mermaid sequence diagrams, step by step.
 
 可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus；也可以下载单文件 HTML，发给同事直接离线讲解。无需账号、服务端或 AI API。
 
-**技术 MVP 已完成（M0–M5）并合入 main**，验收记录见 [M5](docs/validation/M5.md)，后续宽图与长消息修复见 [联合复核](docs/validation/REVIEW-M5-MERGE-2026-10-07.md)。尚未公开部署或发布 Release。
+**技术 MVP（M0–M5）与 UI v0.2 已完成并合入 main**。功能验收见 [M5](docs/validation/M5.md)，界面范围和最终复验见 [UI 合并记录](docs/validation/UI-V02-MERGE.md)。尚未公开部署或发布 Release。
 
 内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
 
 ![SeqShow：逐步讲解、切换失败路径、Focus 与单文件离线播放](demo/seqshow.gif)
 
-17 秒真实操作状态演示。也可查看 [静态预览](docs/validation/m5-login-failure-focus.png)或下载下方离线文件。
+17 秒真实操作状态演示，已使用 UI v0.2 重新捕获。也可查看 [静态预览](docs/validation/ui-v02-merged-failure-player.png)或下载下方离线文件。
 
 ## 先试一次
 
@@ -75,7 +75,7 @@ npm test
 npm run test:e2e
 ```
 
-npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 33 项 Chromium 编辑器及离线检查，覆盖 E01–E12、同时达到四项输入上限，以及宽图文字尺寸和长消息箭头可见性。Firefox/WebKit 项目保留：
+npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 35 项 Chromium 编辑器及离线检查，覆盖 E01–E12、同时达到四项输入上限、宽图文字尺寸、长消息箭头可见性，以及长正文和十个 alt 下播放控件的可见性。Firefox/WebKit 项目保留：
 
 ```sh
 npx playwright install firefox webkit
@@ -84,7 +84,7 @@ npx playwright test --project=webkit
 npx playwright test --project=firefox
 ```
 
-M5 的命令、需求覆盖、实际浏览器范围和限制统一见 [验收记录](docs/validation/M5.md)。Chromium 生产检查在 Windows 运行，Firefox 在 WSL Ubuntu 24.04 运行；本机 Windows Firefox 测试二进制有 mozglue 启动错误，不能据此声称 Windows Firefox 已通过。WebKit 是 Playwright 测试引擎，其 file:// 离线检查拦截远程请求；它不等同于真实 Safari 或 iOS 设备验收。Linux 需要浏览器系统依赖与可显示中文的本地字体；可按 [Playwright 官方安装说明](https://playwright.dev/docs/browsers#install-system-dependencies)准备。
+M5 的命令、需求覆盖、实际浏览器范围和限制见 [验收记录](docs/validation/M5.md)，最新 UI 的范围见 [UI 合并记录](docs/validation/UI-V02-MERGE.md)。Chromium 生产检查在 Windows 运行；M5 的 Firefox 检查在 WSL Ubuntu 24.04 运行，UI v0.2 尚未复验 Firefox，历史结果不代表新版 UI 已通过。本机 Windows Firefox 测试二进制有 mozglue 启动错误。WebKit 是 Playwright 测试引擎，其 file:// 离线检查拦截远程请求；它不等同于真实 Safari 或 iOS 设备验收。Linux 需要浏览器系统依赖与可显示中文的本地字体；可按 [Playwright 官方安装说明](https://playwright.dev/docs/browsers#install-system-dependencies)准备。
 
 导出时选择各条路径，点击 Export HTML 下载 `seqshow-presentation.html`；将这一个文件发给收件人，用浏览器直接打开即可。打开时从总览暂停开始，保留选择并允许改选。文件包含参与者、消息与 Note 标签；原始源码及注释不会默认附带。断网承诺针对导出文件，首次访问编辑器仍需要应用静态资源。
 
@@ -120,6 +120,7 @@ M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture�
 | [M4 验证](docs/validation/M4.md) | 独立 HTML、真实下载、播放一致性与导出安全 |
 | [M5 验证](docs/validation/M5.md) | 需求与 DoD、生产浏览器、输入上限与发布准备 |
 | [M5 后联合复核](docs/validation/REVIEW-M5-MERGE-2026-10-07.md) | 宽图、长消息修复及最终代码的独立复验 |
+| [UI v0.2 合并记录](docs/validation/UI-V02-MERGE.md) | 新界面、布局修复、独立复验与更新后的演示素材 |
 | [发布准备](docs/release/launch.md) | 演示素材、介绍与 Release 草稿、试用反馈模板 |
 | [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
 
@@ -127,7 +128,7 @@ MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布�
 
 ## 开发流程
 
-M0–M5、发布前展示材料和 GPT-6 后续修复已按本次用户授权，经 ffang/m5-review-integration 合入 main；范围和复验见联合复核记录。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
+M0–M5、发布前展示材料和 GPT-6 后续修复已按用户授权，经 ffang/m5-review-integration 合入 main；UI v0.2 与布局修复随后按本次授权，经 ffang/ui-design 合入 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
 
 ## 许可证
 

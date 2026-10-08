@@ -301,6 +301,8 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 
 当前：M0–M5、发布前素材与 GPT-6 后续修复经独立复验，按本次明确授权通过 ffang/m5-review-integration 合入 main。复验使用最终 f49d717 应用代码，记录见 [联合复核](../../validation/REVIEW-M5-MERGE-2026-10-07.md)。后续合并仍须单独批准。
 
+随后 UI v0.2 与长正文 / 多分支布局修复完成，d4ad48f 应用代码独立复验后，按本次用户明确授权经 ffang/ui-design 合入 main；演示 GIF 与离线登录示例也已更新，见 [UI 合并记录](../../validation/UI-V02-MERGE.md)。设计 P-1–P-5 增补项未实现，新版 UI 的 Firefox 复验未运行。
+
 P01–P10 / DoD、浏览器最低范围、性能采样、文档与素材均有实际证据。技术 MVP 计划已移至 completed；公开发布与采用验证不因此完成。
 
 剩余：公开入口、Release、真实用户采用和传播进入 [U0](../active/u0.md)，尚未开始。Windows Firefox 启动失败、WebKit setOffline/file:// 差异、Windows 驱动延迟与 Mermaid 大 chunk 已如实记录；Linux Firefox 已实测通过，真实 Safari / iOS 仍不属于已验证平台。
