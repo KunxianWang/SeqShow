@@ -106,6 +106,8 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
       nodes = [shape];
     }
     nodes.forEach(node => node.setAttribute('data-seq-step', step.id));
+    // The player anchors its step marker to this shape without knowing Mermaid's DOM.
+    (step.kind === 'message' ? shape : shape.querySelector('rect.note')!).setAttribute('data-seq-shape', step.id);
   }
   if (svg.querySelectorAll('[data-et="control-structure"]').length !== controls.length) throw new Error('SVG alternative count mismatch');
   for (const { ordinal, alternative } of controls) {
@@ -117,6 +119,13 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
       throw new Error(`SVG alternative frame mismatch: ${alternative.id}`);
     }
     group.setAttribute('data-seq-alternative', alternative.id);
+    // Frame: two vertical borders plus top border, case divider and bottom border.
+    const frame = Array.from(group.querySelectorAll('line.loopLine'));
+    const horizontal = frame.filter(line => line.getAttribute('y1') === line.getAttribute('y2'))
+      .sort((a, b) => Number(a.getAttribute('y1')) - Number(b.getAttribute('y1')));
+    if (horizontal.length !== 3) throw new Error(`SVG alternative frame mismatch: ${alternative.id}`);
+    frame.forEach(line => line.setAttribute('data-seq-frame', alternative.id));
+    horizontal[1].setAttribute('data-seq-divider', alternative.id);
     alternative.cases.forEach((branch, index) => {
       const texts = titles[index];
       if (!texts.length || normalize(Array.from(texts, title => title.textContent).join('')) !== normalize(`[${branch.label}]`)) throw new Error(`SVG case label mismatch: ${branch.id}`);

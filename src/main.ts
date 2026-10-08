@@ -15,6 +15,7 @@ const example = document.querySelector<HTMLSelectElement>('[data-example]')!;
 const replace = document.querySelector<HTMLDialogElement>('[data-replace]')!;
 const error = document.querySelector<HTMLElement>('[data-error]')!;
 const sourceState = document.querySelector<HTMLElement>('[data-source-state]')!;
+const sourceChip = document.querySelector<HTMLElement>('[data-source-chip]')!;
 const root = document.querySelector<HTMLElement>('[data-player]')!;
 const notice = root.querySelector<HTMLElement>('[data-preview-state]')!;
 const download = root.querySelector<HTMLButtonElement>('[data-export]')!;
@@ -47,6 +48,8 @@ function update() {
   else if (stale) notice.textContent = successful ? 'Source changed — render to update. Last successful render shown for reference.' : 'Render your source to prepare a presentation.';
   else notice.textContent = 'Ready to present · choose a path, then press Play or Next.';
   sourceState.textContent = busy ? 'Preparing preview' : failed ? 'Check the diagnostic below' : stale ? 'Source changed' : 'Rendered';
+  sourceChip.dataset.state = state;
+  sourceChip.textContent = { busy: 'Rendering', error: 'Error', stale: 'Source changed', ready: 'Rendered' }[state];
   if (!successful) root.querySelector<HTMLElement>('[data-status]')!.textContent = busy ? 'Preparing diagram…' : 'No presentation yet.';
 }
 

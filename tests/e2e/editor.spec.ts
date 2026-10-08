@@ -60,12 +60,17 @@ test('E01 custom source plays, goes back and reports real endpoints', async ({ p
   await page.locator('[data-action="next"]').click();
   await expect(page.locator('[data-status]')).toHaveText('1 / 2 — hello');
   await expect(page.locator('[data-step-details]')).toHaveText('A → B');
+  await expect(page.locator('[data-step-kind]')).toHaveText('Message');
+  await expect(page.locator('.step-badge')).toHaveText('1');
   await expect(page.locator('line[data-phase="current"]')).toHaveCount(1);
   await page.locator('[data-action="next"]').click();
   await expect(page.locator('[data-status]')).toHaveText('2 / 2 — world');
   await expect(page.locator('[data-step-details]')).toHaveText('B → A');
   await page.locator('[data-action="previous"]').click();
   await expect(page.locator('[data-status]')).toHaveText('1 / 2 — hello');
+  await page.locator('[data-action="reset"]').click();
+  await expect(page.locator('.step-badge')).toBeHidden();
+  await expect(page.locator('[data-step-kind]')).toBeHidden();
 });
 
 test('E02/E03 unequal branches reset, pause and keep geometry stable', async ({ page }) => {
@@ -99,11 +104,14 @@ test('E04 self calls, repeated messages and every Note placement map independent
     await expect(current).toHaveCount(index === 1 || index === 2 ? 2 : 1);
     if (index === 1 || index === 2) {
       await expect(page.locator('path[data-phase="current"]')).toHaveCount(1);
-      await expect(page.locator('[data-step-details]')).toHaveText('API → API');
+      await expect(page.locator('[data-step-details]')).toHaveText('Validation service → Validation service');
+      await expect(page.locator('[data-step-kind]')).toHaveText('Self call');
     }
+    await expect(page.locator('.step-badge')).toHaveText(String(index + 1));
     expect(await geometry(page)).toEqual(baseline);
   }
-  await expect(page.locator('[data-step-details]')).toHaveText('Note · API, DB');
+  await expect(page.locator('[data-step-kind]')).toHaveText('Note');
+  await expect(page.locator('[data-step-details]')).toHaveText('Over Validation service, Rules store');
 });
 
 test('E05 dirty and failed drafts retain the old preview, locate errors and recover', async ({ page }) => {

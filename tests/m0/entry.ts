@@ -32,16 +32,16 @@ document.querySelector<HTMLButtonElement>('[data-export]')!.onclick = () => {
   link.download = `seqshow-${current.id}.html`; link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 };
-function exportCurrent() { return exportHtml(root.querySelector('svg')!, current.model, player.snapshot().choices, runtime, css); }
+function exportCurrent() { return exportHtml(root.querySelector<SVGSVGElement>('[data-diagram] svg')!, current.model, player.snapshot().choices, runtime, css); }
 function geometry() {
-  const svg = root.querySelector('svg')!;
+  const svg = root.querySelector<SVGSVGElement>('[data-diagram] svg')!;
   return { viewBox: svg.getAttribute('viewBox'), boxes: Array.from(svg.querySelectorAll('g, line, rect, path, text, circle'), node => {
     const box = (node as SVGGraphicsElement).getBBox();
     return [node.localName, box.x, box.y, box.width, box.height];
   }) };
 }
 function negativeChecks() {
-  const svg = root.querySelector('svg')!;
+  const svg = root.querySelector<SVGSVGElement>('[data-diagram] svg')!;
   const rejected: string[] = [];
   const attempt = (name: string, mutation: (clone: SVGSVGElement) => void, check: (clone: SVGSVGElement) => void) => {
     const clone = svg.cloneNode(true) as SVGSVGElement; mutation(clone);

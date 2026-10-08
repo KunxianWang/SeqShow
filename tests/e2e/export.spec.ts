@@ -67,7 +67,7 @@ const snapshot = (page: Page) => page.locator('[data-player]').evaluate(root => 
   buttons: Array.from(root.querySelectorAll<HTMLButtonElement>('[data-action]'), node => [node.dataset.action, node.textContent, node.disabled, node.getAttribute('aria-pressed')]),
   phases: Array.from(root.querySelectorAll('svg [data-seq-step],svg [data-seq-participant],svg [data-seq-case]'), node =>
     [node.getAttribute('data-seq-step'), node.getAttribute('data-phase'), node.getAttribute('data-active'), node.getAttribute('data-selected')]),
-  focus: root.querySelector('svg')!.getAttribute('data-focus'),
+  focus: root.querySelector('[data-diagram] svg')!.getAttribute('data-focus'),
 }));
 
 async function loginActions(page: Page, frozen = false) {
@@ -163,7 +163,7 @@ for (const width of [360, 390, 768, 1280]) {
       expect(await saved.viewer.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       const box = await geometry(saved.viewer), scroll = await saved.viewer.evaluate(() => scrollY);
       await saved.viewer.locator('[data-action="next"]').click();
-      await expect(saved.viewer.locator('[data-step-details]')).toHaveText('U → API');
+      await expect(saved.viewer.locator('[data-step-details]')).toHaveText('手机用户与订单页面 → 订单接口服务');
       expect(await saved.viewer.locator('[data-status]').textContent()).toContain('https://example.com:8080/orders?source=web&version=1');
       await saved.viewer.locator('[data-action="focus"]').click();
       expect(await geometry(saved.viewer)).toEqual(box);

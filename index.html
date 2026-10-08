@@ -9,12 +9,13 @@
 <body>
   <main class="app" data-app>
     <header class="app-header">
-      <div><h1>SeqShow</h1><p>Turn sequence diagrams into step-by-step presentations.</p></div>
+      <h1 class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>SeqShow</h1>
+      <p class="tagline">Turn sequence diagrams into step-by-step presentations.</p>
       <a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </header>
     <div class="workspace">
-      <section class="editor-panel" aria-label="Diagram editor">
-        <div class="panel-heading"><h2>Source</h2><span class="eyebrow">Mermaid sequence diagram</span></div>
+      <section class="panel editor-panel" aria-label="Diagram editor">
+        <div class="panel-heading"><h2>Source</h2><span class="state-chip" data-source-chip aria-hidden="true"></span></div>
         <label for="example">Example</label>
         <select id="example" data-example></select>
         <label class="source-label" for="source">Mermaid source</label>
@@ -37,16 +38,22 @@ end</pre>
           <p>Limits: 50,000 UTF-16 units · 20 participants · 200 messages / Notes across all paths · 10 alt blocks.</p>
         </details>
         <details class="syntax"><summary>Unsupported syntax</summary><p>Nested alt, opt / loop / par, activation, create / destroy, autonumber, rect, other arrows, multiple statements on one line, HTML / rich text, frontmatter, directives and click / links.</p></details>
-        <p class="help" id="source-help">Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</p>
+        <p class="help privacy" id="source-help">Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</p>
       </section>
-      <section class="preview-panel" data-player aria-label="Presentation player" tabindex="0">
+      <section class="panel preview-panel" data-player aria-label="Presentation player" tabindex="0">
         <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
         <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
-        <p class="path-help">Presentation paths only; conditions are not evaluated.</p>
         <div data-controls></div>
-        <div data-status role="status" aria-live="polite">Loading example…</div>
-        <div data-diagram><p class="placeholder">Your presentation will appear here.</p></div>
-        <p class="help">Focus the player to use ← Previous · → Next · Space Play / Pause · Home Reset.</p>
+        <p class="path-help">This is a presentation path; conditions are not evaluated.</p>
+        <div class="stage">
+          <span class="stage-tag" aria-hidden="true"></span>
+          <div data-diagram><p class="placeholder">Your presentation will appear here.</p></div>
+        </div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite">Loading example…</div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help">Player keys: <kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p></div>
+        </div>
         <p data-export-error role="alert"></p>
       </section>
     </div>
