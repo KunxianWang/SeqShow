@@ -4,6 +4,7 @@ import { mkdir, writeFile, copyFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { stripVTControlCharacters } from 'node:util';
 
 const output = resolve('artifacts/showcase');
 await mkdir(output, { recursive: true });
@@ -15,7 +16,10 @@ try {
     const timeout = setTimeout(() => reject(new Error('Showcase preview did not start')), 15_000);
     server.once('error', error => { clearTimeout(timeout); reject(error); });
     server.once('exit', code => { clearTimeout(timeout); reject(new Error(`Preview exited: ${code}`)); });
-    server.stdout.on('data', data => { if (data.toString().includes('127.0.0.1:4177')) { clearTimeout(timeout); accept(); } });
+    // Strip ANSI colours: with FORCE_COLOR set, Vite styles the port and splits the URL.
+    server.stdout.on('data', data => {
+      if (stripVTControlCharacters(data.toString()).includes('127.0.0.1:4177')) { clearTimeout(timeout); accept(); }
+    });
     server.stderr.on('data', data => process.stderr.write(data));
   });
   browser = await chromium.launch();

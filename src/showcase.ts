@@ -34,7 +34,25 @@ const chapters = [
     description: '把图、路径和播放器装进一个 HTML 文件。发给同事，直接打开；没有网络，也能继续播放、回退和选分支。',
     action: '下载这份离线演示 ↓', cue: '下载后直接打开 HTML；离线承诺针对导出文件，当前展示页首次加载需要静态资源。', target: 'Order update · shipped' },
 ];
+const services = document.querySelector<HTMLElement>('[data-services]')!;
 let chapter = 0, disposed = false;
+
+// Service radar: mirror the current step's endpoints above the diagram, so the audience
+// keeps its bearings even when the step is scrolled far from the participant headers.
+function lightServices() {
+  if (!player || !compiled) return;
+  const { index, choices } = player.snapshot();
+  const step = deriveSteps(compiled.model, choices)[index - 1];
+  const roles = new Map<string, string>();
+  if (step?.kind === 'message' && step.from === step.to) roles.set(step.from, 'SELF');
+  else if (step?.kind === 'message') { roles.set(step.from, 'FROM'); roles.set(step.to, 'TO'); }
+  else step?.participants.forEach(id => roles.set(id, 'NOTE'));
+  for (const item of services.querySelectorAll<HTMLElement>('li')) {
+    const role = roles.get(item.dataset.participant!);
+    if (role) item.dataset.role = role; else delete item.dataset.role;
+  }
+}
+const radar = new MutationObserver(lightServices);
 let player: ReturnType<typeof mountPlayer> | undefined;
 let compiled: { model: SequenceDocument; svg: SVGSVGElement } | undefined;
 
@@ -61,6 +79,7 @@ function showChapter(index: number) {
   for (const button of document.querySelectorAll<HTMLElement>('[data-chapter]')) {
     if (Number(button.dataset.chapter) === chapter) button.setAttribute('aria-current', 'step');
     else button.removeAttribute('aria-current');
+    button.toggleAttribute('data-done', Number(button.dataset.chapter) < chapter);
   }
   previous.disabled = chapter === 0; next.disabled = chapter === chapters.length - 1;
   document.querySelector<HTMLElement>('[data-chapter-count]')!.textContent = `0${chapter + 1} / 05`;
@@ -110,14 +129,17 @@ async function prepare() {
     if (!model.ok) throw new Error(model.diagnostics[0].message);
     const svg = await renderSequence(model.document);
     if (disposed) return;
-    const services = document.querySelector<HTMLElement>('[data-services]')!;
     services.replaceChildren(...model.document.participants.map((participant, index) => {
       const item = document.createElement('li');
       const number = document.createElement('span'); number.textContent = `0${index + 1}`;
-      item.append(number, participant.label); return item;
+      const name = document.createElement('b'); name.textContent = participant.label;
+      item.title = participant.label; item.dataset.participant = participant.id;
+      item.append(number, name); return item;
     }));
     root.querySelector<HTMLElement>('[data-diagram]')!.replaceChildren(svg);
     player = mountPlayer(root, model.document); compiled = { model: model.document, svg };
+    radar.observe(root.querySelector('[data-status]')!, { childList: true, subtree: true, characterData: true });
+    lightServices();
     root.dataset.state = 'ready'; showChapter(chapter);
   } catch (reason) {
     if (disposed) return;
@@ -138,5 +160,5 @@ const syncFullscreen = () => { fullscreen.textContent = document.fullscreenEleme
 document.addEventListener('fullscreenchange', syncFullscreen);
 void prepare();
 if (import.meta.hot) import.meta.hot.dispose(() => {
-  disposed = true; player?.destroy(); document.removeEventListener('fullscreenchange', syncFullscreen);
+  disposed = true; radar.disconnect(); player?.destroy(); document.removeEventListener('fullscreenchange', syncFullscreen);
 });

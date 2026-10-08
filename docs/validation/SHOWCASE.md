@@ -38,6 +38,37 @@ Windows，Node 22.14.0，固定锁文件，无新依赖。时间以原始报告�
 - 两条支付路径切换和 Focus 对比的 SVG viewBox / shape bbox 未改变；导出保留两个所选分支，总览暂停开始，延迟履约路径实际播放到对应消息。
 - GIF 是选定状态的截图动画；产品未新增视频或 GIF 导出。
 
+## 视觉重做（ffang/showcase-redesign）
+
+按用户“现有展示一般，需要更美观的”要求，在 `ffang/showcase-redesign`（基于 `ffang/showcase` 的 6da2413）重做展示页视觉；旧版保留在 `ffang/showcase` 便于对比。章节内容、播放器、案例、导出和所有测试钩子不变。
+
+问题：原版左侧 340 px 讲解栏与多层标题、统计、说明挤占空间，1440×900 下图区仅约 310 px 高，“看见全貌”只露出 3.5 个服务；整页白底细边框，层次弱。
+
+改动：
+
+- 发布会式深色外框（`#0A1020`，细网格与蓝色光晕），播放器保留浅色主题，作为白色舞台占满剩余高度；桌面一屏完成。
+- 五章节改为顶部进度条（当前章白底、已完成章蓝色编号）；讲解改为一条横向讲解带：标题单行、渐变强调、说明与唯一主操作。
+- 服务条改为“服务雷达”：按当前步骤标出 FROM / TO / SELF / NOTE，总览清空；通过监听 `[data-status]` 变化，用 `deriveSteps` 与播放器快照计算，不改共享播放器。
+- 播放控件与步骤说明合并为一行；路径标题单行、Other path 过长时截断，两个选择框对齐。
+- 外框文字对比度：主文字 18.1:1、说明 12.8:1、弱文字 7.4:1、强调色 8.8:1（均在 `#0A1020` 上）；`#64748B` 不用于深色背景。
+
+实测图区高度（chapter 2 起点）：1440×900 为 410 px（原约 310 px），1920×1080 为 608 px 且六个服务按自然宽度全部可见，1280×720 为 338 px、Next 底边 655 px；768 / 390 无全页横向溢出。
+
+检查：
+
+| 命令 / 操作 | 结果 |
+| --- | --- |
+| `npm run typecheck`、`npm run lint` | PASS |
+| `npm test` | PASS，140 项 |
+| `npm run test:e2e` | PASS，40 项 Chromium（showcase 套件新增服务雷达断言后单独复跑 5 项 PASS） |
+| `npx playwright test tests/e2e/showcase.spec.ts --project=webkit` | PASS，5 项（含服务雷达断言） |
+| `node scripts/capture-showcase.mjs` | PASS，8 个状态、全屏进入 / 退出、真实离线文件、远程请求 0 |
+| `python scripts/assemble-demo.py --captures artifacts/showcase --output demo/showcase.gif --width 1040 --height 850` | PASS，8 帧，1,466,889 bytes（深色渐变使体积由 826,379 增大）；已查看 contact-sheet |
+
+`capture-showcase.mjs` 首次运行超时：本会话环境设置了 `FORCE_COLOR=3`，Vite 给端口加了 ANSI 颜色，脚本按 `127.0.0.1:4177` 子串匹配失败。改为先用 `util.stripVTControlCharacters` 去掉控制字符再匹配；超时期间没有用旧帧冒充新素材，GIF 在新帧捕获后重新生成。
+
+新增截图：[1280×720](showcase-1280x720.png)、[1920×1080 Focus](showcase-1920-focus.png)、[390 支付恢复](showcase-390.png)；[总览](showcase-overview.png)与[支付恢复](showcase-recovery.png)由捕获脚本更新。
+
 ## 剩余范围
 
 Firefox 本轮 NOT RUN；真实 Safari / iOS、屏幕阅读器与软键盘 NOT RUN。WebKit 通过不等于这些设备通过。设计 P-1–P-4 后置；P-5 按本轮授权实现固定 base 路线，Note 配色采用淡蓝而非原提案黄色。

@@ -20,9 +20,14 @@ test('showcase chapters operate the real player and preserve geometry through br
   await expect(page.locator('[data-status]')).toHaveText('2 / 20 — POST /orders + idempotency key');
   await page.locator('[data-demonstrate]').click();
   await expect(page.locator('[data-step-kind]')).toHaveText('Self call');
+  // The service radar mirrors the current step's endpoints and clears at the overview.
+  await expect(page.locator('[data-services] li[data-role]')).toHaveCount(1);
+  await expect(page.locator('[data-services] li[data-role="SELF"]')).toHaveAttribute('title', 'Order API');
   await chapter(page, 2); await page.locator('[data-demonstrate]').click();
   await expect(page.locator('[data-status]')).toHaveText('8 / 24 — Declined · insufficient funds');
   await expect(page.locator('[data-branch="alt:1"]')).toHaveValue('alt:1:second');
+  await expect(page.locator('[data-services] li[data-role="FROM"]')).toHaveAttribute('title', 'Payment');
+  await expect(page.locator('[data-services] li[data-role="TO"]')).toHaveAttribute('title', 'Order API');
   await page.locator('[data-action="next"]').click();
   await expect(page.locator('[data-status]')).toHaveText('9 / 24 — Retry with another payment method');
   await page.locator('[data-demonstrate]').click();
@@ -35,6 +40,7 @@ test('showcase chapters operate the real player and preserve geometry through br
   await expect(page.locator('[data-status]')).toHaveText(focused!);
   expect(await geometry()).toEqual(initial);
   await chapter(page, 0); await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 20');
+  await expect(page.locator('[data-services] li[data-role]')).toHaveCount(0);
   await page.locator('[data-chapter-next]').click(); await expect(page.locator('[data-chapter-count]')).toHaveText('02 / 05');
   await page.locator('[data-chapter-prev]').click(); await expect(page.locator('[data-chapter-prev]')).toBeDisabled();
   await page.screenshot({ path: 'artifacts/showcase/desktop.png', fullPage: true });
