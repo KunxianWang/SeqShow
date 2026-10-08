@@ -1,8 +1,8 @@
 # SeqShow 测试与验收策略
 
-状态：验收策略基线；M0–M4 阶段验收已建立，M5 完整产品与发布验收尚未执行。更新：2026-10-07。
+状态：验收策略基线；M0–M5 技术验收已完成，最终需求映射、平台范围与限制见 [M5](validation/M5.md)。公开发布与 U0 单独推进。更新：2026-10-07。
 
-需求编号来自 [PRODUCT](PRODUCT.md)，模块边界来自 [ARCHITECTURE](ARCHITECTURE.md)，视觉与操作规则来自 [DESIGN](DESIGN.md)。真实执行证据写入 [mvp.md](exec-plans/active/mvp.md)。
+需求编号来自 [PRODUCT](PRODUCT.md)，模块边界来自 [ARCHITECTURE](ARCHITECTURE.md)，视觉与操作规则来自 [DESIGN](DESIGN.md)。真实执行证据写入 [mvp.md](exec-plans/completed/mvp.md)。
 
 ## 1. 验证原则
 
@@ -150,7 +150,9 @@ M4 当前检查：138 项 Vitest（新增 3 项数据编码）、29 项 Chromium
 | npm run build | production 静态产物及可内联的离线播放器运行包 |
 | npm run preview | 对已构建产物启动本地 preview |
 
-M1 的 npm ci、版本、初始化与浏览器命令已在 README 核验。Firefox/WebKit 项目均保留；扩展运行先 build，再使用 `npx playwright test --project=webkit` 或 `--project=firefox`。默认 E2E 使用 Chromium，不声称执行了所有浏览器或 E01–E12。Windows WebKit 使用串行 worker 与 90 秒用例上限，其断网文件验证延续 M0 的远程请求拦截；Firefox 启动失败仍未验证。
+M5 在适配层限额修复后通过 138 项 Vitest、Windows Chromium 30 项 / Linux Firefox 30 项 production E2E、Windows WebKit 6 项重点检查（登录分支、键盘、390px 中文、下载 / 离线动作一致性、四项上限），及 Chromium / WebKit 各 18 场景 / 27 路径 / 132 状态的 M0 回归。需求与具体命令见 [M5](validation/M5.md)，不覆盖前面的历史结果。
+
+M1 的 npm ci、版本、初始化与浏览器命令已在 README 核验。Firefox/WebKit 项目均保留；扩展运行先 build，再使用 `npx playwright test --project=webkit` 或 `--project=firefox`。默认 E2E 只执行 Chromium 的完整 E01–E12 主流程，不声称执行所有浏览器。Windows WebKit 使用串行 worker，默认 90 秒、较长动作对照 180 秒；断网文件使用远程请求拦截。Windows Firefox 仍无法启动，Firefox 通过范围为 Linux，不声称真实 Safari / iOS 设备通过。
 
 typecheck 覆盖 src、tests 的 TypeScript 与 Vite/Vitest/Playwright 配置；Node .mjs 构建/验证脚本通过 lint 和真实运行核验，不开启 checkJs。构建成功不能代替类型检查。
 

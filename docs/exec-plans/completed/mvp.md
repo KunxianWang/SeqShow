@@ -1,6 +1,6 @@
 # SeqShow MVP 执行计划
 
-状态：D0、M0–M4 已完成；M5 尚未开始。
+状态：D0、M0–M5 COMPLETE；技术 MVP 已验收，U0 NOT STARTED。工作分支尚未合并或公开发布。
 
 更新日期：2026-10-07。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户随后明确要求“合并到 main 然后继续”：本轮将 M0–M2 快进合入并推送 main（a705464），再从 main 创建 ffang/m3-editor 完成 M3。正式编辑器使用真实解析模型；随后 M4 离线导出已在独立工作分支验收；M5 完整验收尚未执行，不声称完整 MVP 已实现。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户明确要求“合并到 main 然后继续”后，将 M0–M2 合入 main（a705464），再完成 M3。随后按用户明确授权将 M3 与 GPT-6 修复一起合入 main（340110d）；M4 与 M5 已在工作分支完成验收，尚未取得本次合并或公开发布批准。技术 MVP 退出证据见 [M5](../../validation/M5.md)。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -54,7 +54,7 @@ U0 实际使用与 GitHub 传播验证（独立后续阶段）
 | M2 | COMPLETE | 子集 Parser、Model、纯 Playback | P02、P03、P04、P06、P09 |
 | M3 | COMPLETE | 编辑器与共享播放器、案例、响应式 | P01、P04、P05、P06、P08、P10 |
 | M4 | COMPLETE | 单文件导出与 file:// 离线验收 | P07、P09 |
-| M5 | NOT STARTED | 完整检查、真实视觉核验、README | P01–P10 |
+| M5 | COMPLETE | 完整检查、真实视觉核验、README 与离线演示 | P01–P10 / DoD |
 | U0 | NOT STARTED | 自带输入、真实采用、二次使用与 stars | 产品验证，不阻断代码 MVP |
 
 状态仅使用 NOT STARTED / IN PROGRESS / IN REVIEW / COMPLETE / BLOCKED。里程碑未完成不能为了让计划好看标 COMPLETE。
@@ -184,13 +184,13 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 
 ### 任务
 
-- [ ] typecheck、lint、unit/integration、production build 全部通过。
-- [ ] Playwright 对 production preview 执行 E01–E12；执行 TESTING 的 Firefox/WebKit 最低范围并记录限制。
-- [ ] 人工查看关键布局、Focus、分支、错误和离线产物，保存证据位置。
-- [ ] README 中的环境、命令、语法范围、限制与实际实现一致。
-- [ ] 在公开发布前核验名称/包名/仓库地址与开源许可证，使用真实 demo 或预览素材；本阶段不自动发布。
-- [ ] 检查 P01–P10 与 PRODUCT DoD，处理所有影响范围的已知失败。
-- [ ] 更新 AGENTS 当前阶段及本计划摘要，记录剩余非 MVP 项。
+- [x] typecheck、lint、unit/integration、production build 全部通过。
+- [x] Playwright 对 production preview 执行 E01–E12；执行 TESTING 的 Firefox/WebKit 最低范围并记录限制。
+- [x] 人工查看关键布局、Focus、分支、错误和离线产物，保存证据位置。
+- [x] README 中的环境、命令、语法范围、限制与实际实现一致。
+- [x] 在公开发布前核验名称/包名/仓库地址与开源许可证，使用真实 demo 或预览素材；本阶段不自动发布。
+- [x] 检查 P01–P10 与 PRODUCT DoD，处理所有影响范围的已知失败。
+- [x] 更新 AGENTS 当前阶段及本计划摘要，记录剩余非 MVP 项。
 
 ### 退出条件
 
@@ -286,12 +286,19 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 | 2026-10-07 | M4 | WebKit 导出五项；npm run test:m0 | PASS | WebKit 动作对照、多/空路径、390px 中文、构造数据通过；Chromium M0 18 场景/27 路径/132 状态/14 负向，远程请求 0 |
 | 2026-10-07 | M4 | 查看真实下载文件与六份离线布局截图 | PASS | 初始总览/暂停/Focus、URL 文本、箭头/自调用/Note 保留，窄屏控件和长图仅内部滚动；见 M4.md |
 
+| 2026-10-07 | M5 | typecheck、lint、Vitest、production build + Chromium E2E | PASS | 最终修复后 138 项单元/集成、30 项 Chromium production；没有失败、跳过或 flaky |
+| 2026-10-07 | M5 | Windows Firefox 启动与 SideBySide 日志 | NOT RUN（应用用例） | spawn UNKNOWN、mozglue 程序集缺失；没有修改 Windows 系统或删除 Firefox 项目 |
+| 2026-10-07 | M5 | WSL Node 22.14 官方包哈希、npm ci、Firefox 安装、补系统库与中文字体、production E2E | PASS | Linux Firefox 155.0，最终 30 项；首轮缺中文字体的截图没有作为合格证据 |
+| 2026-10-07 | M5 | 原始 46,085 字符长标签图及四项输入上限检查 | FAIL → FIXED | 序列化长度超过 Mermaid 默认限额，适配层 maxTextSize 改用生成长度；不放宽原始限额或 SVG 安全边界 |
+| 2026-10-07 | M5 | WebKit 最低范围 + 上限；node scripts/m0.mjs --browsers=chromium,webkit | PASS | WebKit production 6 项；两引擎各 18 场景/27 路径/132 状态/14 负向，远程尝试 0 |
+| 2026-10-07 | M5 | 200 步两组实测、真实截图、重新断网打开 demo/login.html、P01–P10/DoD/README/许可证核验 | PASS | 长标签 Render 约 1.56 秒；六份已查看截图、离线演示初始失败路径与 0/6→6/6；见 M5 与 JSON 摘要 |
+
 后续记录真实命令、环境、失败原因和证据路径；不把未来动作复制成已执行记录。
 
 ## 15. 当前下一步与剩余任务
 
 当前：M0–M3 与 GPT-6 修复已按上次明确授权合入并推送 main（340110d）；M4 在 ffang/m4-offline-export 完成，尚未合并。后续合并仍须单独批准。
 
-下一任务：M5，核对完整 P01–P10 / DoD、浏览器最低范围、实际性能与发布准备；不因 M4 通过自动发布或完成整个 MVP。
+M5 已在 ffang/m5-release-validation 完成，包含未合并的 M4；P01–P10 / DoD、浏览器最低范围、性能采样、文档与素材均有实际证据。技术 MVP 计划移至 completed，不代表已经合并或公开发布。
 
-剩余：M5 完整应用与发布验收；U0 的用户采用和传播验证。Firefox 启动失败、WebKit setOffline/file:// 差异以及 Windows 驱动延迟已记录；M4 离线导出通过不代表完整 MVP 或 M5 发布验收完成。
+剩余：所有者审阅并明确批准本次合并；公开入口、Release、真实用户采用和传播进入 [U0](../active/u0.md)，尚未开始。Windows Firefox 启动失败、WebKit setOffline/file:// 差异、Windows 驱动延迟与 Mermaid 大 chunk 已如实记录；Linux Firefox 已实测通过，真实 Safari / iOS 仍不属于已验证平台。

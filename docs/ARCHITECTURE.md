@@ -2,7 +2,7 @@
 
 状态：v0.1 架构基线；M0–M4 已完成；Parser、纯 Playback、正式编辑器与离线导出通过阶段验收，完整发布验收属于 M5。更新：2026-10-07。
 
-产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/active/mvp.md)。
+产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/completed/mvp.md)。
 
 ## 1. 架构目标与取舍
 
@@ -57,7 +57,7 @@ docs/
   ARCHITECTURE.md
   DESIGN.md
   TESTING.md
-  exec-plans/active/mvp.md
+  exec-plans/completed/mvp.md
   research/                  已有调研资料
 src/
   main.ts                    Web 编辑、Render、案例选择、下载
@@ -262,10 +262,10 @@ M4 的 exportHtml 在生成前调用 initialPlayback 校验并补全 choices；a
 - Mermaid strict 的安全行为以配置文档为准，导出仍有自己的数据嵌入边界：[securityLevel](https://mermaid.js.org/config/schema-docs/config-properties-securitylevel.html)。
 - 应用 production build 生成静态产物，preview 用于本地核验：[Vite 静态部署说明](https://vite.dev/guide/static-deploy.html)。本阶段不发布站点。
 
-## 14. 尚未完成的技术验证
+## 14. 技术验证结果与剩余限制
 
-- 接近输入上限时的真实浏览器性能；M2 已覆盖语义限额与 Parser→SVG 常规/边界 fixture，不把限额当作性能承诺。
+- M5 已实际测量两组 20 参与者 / 200 消息 / 10 alt 图，并在 production 回归中同时达到四项输入上限，见 [M5](validation/M5.md)。原始源码仍由 Parser 限额；适配层的 maxTextSize 使用序列化输入长度，避免安全 ID、实体及折行扩张触发 Mermaid 的默认 50,000 字符限额。不把采样值当作跨设备速度保证。
 - M3 的异步过期结果、初始渲染失败、旧结果标识、恢复与六案例已通过 Chromium，见 [M3 记录](validation/M3.md)；M4 已验证 Web/导出的动作序列一致、分支保留、错误与数据编码，见 [M4 记录](validation/M4.md)。
-- 单文件已通过 Chromium 和 WebKit 重点 file:// 检查；Firefox 未验证，M5 的完整发布浏览器范围仍需核对。
+- M5 的 Windows Chromium / Linux Firefox 全套 production，以及 Windows WebKit 最低范围已通过；单文件的真实 file://、下载和离线动作已核验。Windows Firefox 仍因 mozglue 无法启动，实际 Safari / iOS 设备未验证。源码、样例字体与各平台结果明确记录，没有移除浏览器项目。
 
-这些待验证项不等于产品范围待定。M0 与后续真实检查必须把结果、截图路径和取舍写入执行计划。
+MVP 技术计划已完成，公开发布与真实用户采用另列 U0；所有后续检查仍须记录实际结果、截图路径和限制。

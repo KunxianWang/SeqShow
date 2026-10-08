@@ -1,0 +1,124 @@
+{
+  "stage": "M5",
+  "status": "passed",
+  "verifiedAt": "2026-10-08T00:13:07.877Z",
+  "displayDate": "2026-10-07 America/Los_Angeles",
+  "branch": "ffang/m5-release-validation",
+  "sourceBase": "4cd6b427e274760c68e8908cceac83f8932ff728",
+  "mainUnchanged": "340110dcb5e66d84bdb02f58b51f5707f63bf28d",
+  "node": "v22.14.0",
+  "mermaid": "12.1.0",
+  "playwright": "1.63.0",
+  "unit": {
+    "passed": 138,
+    "failed": 0,
+    "files": 6
+  },
+  "production": [
+    {
+      "file": "chromium-e2e",
+      "platform": "Windows",
+      "stats": {
+        "startTime": "2026-10-08T00:04:29.198Z",
+        "duration": 28049.18,
+        "expected": 30,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "firefox-linux-e2e",
+      "platform": "WSL Ubuntu 24.04",
+      "stats": {
+        "startTime": "2026-10-08T00:04:49.648Z",
+        "duration": 37504.029,
+        "expected": 30,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-e2e",
+      "platform": "Windows",
+      "stats": {
+        "startTime": "2026-10-08T00:05:43.597Z",
+        "duration": 224779.09,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "m0": {
+    "status": "passed",
+    "browsers": [
+      {
+        "name": "chromium",
+        "version": "153.0.8010.12",
+        "fixtures": 18,
+        "paths": 27,
+        "states": 132,
+        "negativeChecks": 14,
+        "remoteRequests": 0
+      },
+      {
+        "name": "webkit",
+        "version": "26.6",
+        "fixtures": 18,
+        "paths": 27,
+        "states": 132,
+        "negativeChecks": 14,
+        "remoteRequests": 0
+      }
+    ]
+  },
+  "manualQa": {
+    "browser": "153.0.8010.12",
+    "platform": "win32",
+    "measurements": [
+      {
+        "sourceUtf16": 8085,
+        "labelLength": 20,
+        "participants": 20,
+        "allSteps": 200,
+        "alternatives": 10,
+        "selectedSteps": 100,
+        "renderMs": 292.8856999999998,
+        "exportMs": 251.76900000000023,
+        "nextMedianMs": 33.46090000000004,
+        "nextP95Ms": 36.81840000000011,
+        "viewBox": "-50 -10 5372 13285",
+        "remoteAttempts": 0
+      },
+      {
+        "sourceUtf16": 46085,
+        "labelLength": 210,
+        "participants": 20,
+        "allSteps": 200,
+        "alternatives": 10,
+        "selectedSteps": 100,
+        "renderMs": 1564.7626,
+        "exportMs": 146.11169999999765,
+        "nextMedianMs": 137.80209999999897,
+        "nextP95Ms": 252.3732999999993,
+        "viewBox": "-50 -10 5632 52385",
+        "remoteAttempts": 0
+      }
+    ]
+  },
+  "hashes": {
+    "package-lock.json": "190ee0c7f501a2461bbd02cd05570972a4b6699095c9a04938c58600cffee098",
+    "src/renderer/mermaid-adapter.ts": "e95252cd56f299777efee011a1a96c2f1c178f573df2879868651eebf8bfc488",
+    "tests/e2e/editor.spec.ts": "c8ea24f25d2f72b18ba9cdee236b40670b9bec3cc414d29fde65cc138bb3915f",
+    "demo/login.html": "83254d310775f8fb0cd5aae7d4131edb5920b2216295ed8f5081d0f0b80b92fe"
+  },
+  "knownLimits": [
+    "Windows Firefox cannot start: mozglue assembly missing; Linux Firefox tested",
+    "WebKit remote-request interception used for file://; not actual Safari/iOS testing",
+    "Mermaid build chunk warning remains",
+    "No hosted deployment, release, user outreach or star validation performed"
+  ]
+}

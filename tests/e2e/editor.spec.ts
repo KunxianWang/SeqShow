@@ -270,6 +270,35 @@ test('six examples are renderable and the two independent alternatives have four
   }
 });
 
+test('supported input at all four limits still renders after safe serialization expands it', async ({ page }) => {
+  const lines = ['sequenceDiagram', ...Array.from({ length: 20 }, (_, i) => `participant P${i}`)];
+  let step = 0;
+  for (let block = 0; block < 10; block++) {
+    for (const branch of ['alt', 'else']) {
+      lines.push(`${branch} path ${block} ${branch}`);
+      for (let i = 0; i < 10; i++, step++) {
+        lines.push(`P${step % 20}->>P${(step + 1) % 20}: ${step} ${'中文 &;# '.repeat(30)}`);
+      }
+    }
+    lines.push('end');
+  }
+  const body = lines.join('\n');
+  expect(body.length).toBeLessThan(49_997);
+  const source = `${body}\n%%${'x'.repeat(50_000 - body.length - 3)}`;
+  expect(source.length).toBe(50_000);
+  await open(page); await renderSource(page, source);
+  await expect(page.locator('[data-source]')).toHaveValue(source);
+  await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 100');
+  await expect(page.locator('[data-branch]')).toHaveCount(10);
+  await expect(page.locator('svg foreignObject')).toHaveCount(0);
+  const baseline = await geometry(page);
+  await page.locator('[data-branch="alt:1"]').selectOption('alt:1:second');
+  await page.locator('[data-action="next"]').click();
+  await expect(page.locator('[data-status]')).toContainText('1 / 100 — 10 中文 &;#');
+  expect(await geometry(page)).toEqual(baseline);
+  await expect(page.locator('[data-export]')).toBeEnabled();
+});
+
 for (const width of [360, 390, 768, 1280]) {
   test(`E08 Chinese layout at ${width}px has readable SVG and only internal overflow`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });

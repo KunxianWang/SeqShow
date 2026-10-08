@@ -4,11 +4,46 @@ Present Mermaid sequence diagrams, step by step.
 
 把已有 Mermaid 时序图转换为可以逐步讲解、选择分支、聚焦并离线分享的技术演示。
 
-**当前状态：M0–M4 已完成。** 可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus。源码编辑、错误定位与恢复、示例替换保护、键盘和响应式布局已实现；单文件 HTML 的分支保留、安全编码、离线操作与播放一致性已通过 M4；完整产品及发布准备仍属于 M5。
+可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus；也可以下载单文件 HTML，发给同事直接离线讲解。无需账号、服务端或 AI API。
+
+**技术 MVP 已完成（M0–M5）**，验收记录见 [M5](docs/validation/M5.md)。工作分支上的 M4 / M5 尚未合并或公开发布。
 
 内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
 
-![SeqShow 编辑器与演示预览](docs/validation/m3-login-1280.png)
+![SeqShow：选择失败分支并聚焦当前消息](docs/validation/m5-login-failure-focus.png)
+
+## 先试一次
+
+运行下方生产预览命令，打开 [本地演示页](http://127.0.0.1:4173/)。选择登录成功/失败路径，点击 Next 或 Play。路径只表示讲解选择，SeqShow 不判断条件是否成立。
+
+也可以下载 [现成的离线登录演示](demo/login.html)，保存为 `.html` 后用浏览器打开；初始为失败路径、总览暂停，可换路径和开启 Focus。GitHub 文件页展示源码，需要下载文件在本地打开。
+
+播放器获得焦点后，使用 ← / → 切步、Space 播放或暂停、Home 重置；编辑器内这些键保留编辑行为。
+
+## 支持的 Mermaid 子集
+
+一行一条语句，以 `sequenceDiagram` 开始。例如粘贴：
+
+```mermaid
+sequenceDiagram
+actor U as 用户
+participant API as 登录服务
+U->>API: POST /login
+API->>API: Verify password
+alt authenticated
+  API-->>U: Session
+  Note over U,API: 登录成功
+else unauthorized
+  API-->>U: 401
+  Note right of API: 请重新登录
+end
+```
+
+支持 participant / actor、as 别名、隐式参与者、`->>` / `-->>`、自调用、重复消息、Note left of / right of / over 一个或两个参与者、中文与纯文本长标签，以及多个独立顶层 alt/else。每条消息或 Note 是一步；未选分支不进入播放步骤。ID 使用 ASCII 字母或下划线开头，后接字母、数字、下划线或连字符；中文名称用 as 标签。
+
+暂不支持嵌套 alt、第三条 case、opt / loop / par、activation、create / destroy、autonumber、rect、其他箭头、分号拼接多语句、HTML / 富文本、frontmatter、配置 directives、click / links 或其他图类型。普通整行 %% 注释可用，%%{…} 指令会被拒绝；详见 [产品语法规范](docs/PRODUCT.md)。
+
+输入上限：50,000 UTF-16 单位、20 个参与者、全图所有路径合计 200 条消息 / Note、10 个 alt。超限给出诊断，不截断。大型图需要更多渲染时间和图内滚动；实测与环境见 [M5 验收](docs/validation/M5.md)。
 
 ## 开发与生产预览
 
@@ -19,14 +54,14 @@ npm ci
 npm run dev
 ```
 
-开发地址：http://127.0.0.1:5173。生产预览：
+开发地址：[127.0.0.1:5173](http://127.0.0.1:5173/)。生产预览：
 
 ```sh
 npm run build
 npm run preview
 ```
 
-预览地址：http://127.0.0.1:4173。端口采用严格模式，启动前先停止旧预览。开发与 production 均从共享源码生成内联播放器；修改播放器后，页面和导出运行包一起更新。生产构建输出 dist/ 静态文件与独立的 dist/export-player.js。
+预览地址：[127.0.0.1:4173](http://127.0.0.1:4173/)。端口采用严格模式，启动前先停止旧预览。开发与 production 均从共享源码生成内联播放器；修改播放器后，页面和导出运行包一起更新。生产构建输出 dist/ 静态文件与独立的 dist/export-player.js。尚未提供公开托管演示站点。
 
 ## 检查
 
@@ -38,7 +73,7 @@ npm test
 npm run test:e2e
 ```
 
-npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 29 项 Chromium 编辑器及离线检查，覆盖 E01–E12 的主流程；M5 完整发布验收尚未完成。Firefox/WebKit 项目仍保留：
+npm test 为非 watch 的 Vitest 检查。test:e2e 先构建 production，再在隔离的 4174 预览上执行 30 项 Chromium 编辑器及离线检查，覆盖 E01–E12 和同时达到四项输入上限的回归。Firefox/WebKit 项目保留：
 
 ```sh
 npx playwright install firefox webkit
@@ -47,7 +82,7 @@ npx playwright test --project=webkit
 npx playwright test --project=firefox
 ```
 
-M4 当前通过 138 项单元/集成、29 项 Chromium production 以及 5 项 WebKit 导出重点检查：登录动作一致性、多个分支、空路径、390px 中文和恶意构造数据。WebKit 离线文件使用远程请求拦截；未运行 WebKit 全套。Firefox 测试浏览器在本机无法启动，未验证。实际命令、截图与限制见 [M4 验证](docs/validation/M4.md)；此前联合基线见 [复核记录](docs/validation/REVIEW-MERGE-2026-10-07.md)。
+M5 的命令、需求覆盖、实际浏览器范围和限制统一见 [验收记录](docs/validation/M5.md)。Chromium 生产检查在 Windows 运行，Firefox 在 WSL Ubuntu 24.04 运行；本机 Windows Firefox 测试二进制有 mozglue 启动错误，不能据此声称 Windows Firefox 已通过。WebKit 是 Playwright 测试引擎，其 file:// 离线检查拦截远程请求；它不等同于真实 Safari 或 iOS 设备验收。Linux 需要浏览器系统依赖与可显示中文的本地字体；可按 [Playwright 官方安装说明](https://playwright.dev/docs/browsers#install-system-dependencies)准备。
 
 导出时选择各条路径，点击 Export HTML 下载 `seqshow-presentation.html`；将这一个文件发给收件人，用浏览器直接打开即可。打开时从总览暂停开始，保留选择并允许改选。文件包含参与者、消息与 Note 标签；原始源码及注释不会默认附带。断网承诺针对导出文件，首次访问编辑器仍需要应用静态资源。
 
@@ -75,19 +110,20 @@ M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture�
 | [技术架构](docs/ARCHITECTURE.md) | Parser、模型、播放、渲染与导出边界 |
 | [交互设计](docs/DESIGN.md) | 编辑器、预览、Focus、控件与错误状态 |
 | [测试策略](docs/TESTING.md) | 单元、集成、浏览器与离线验收 |
-| [MVP 执行计划](docs/exec-plans/active/mvp.md) | 里程碑、决策、进度与验证记录 |
+| [MVP 执行计划](docs/exec-plans/completed/mvp.md) | 里程碑、决策、进度与验证记录 |
 | [M0 验证](docs/validation/M0.md) | 渲染/离线证明、截图与浏览器限制 |
 | [M1 验证](docs/validation/M1.md) | 工具链、清洁安装与 production 证据 |
 | [M2 验证](docs/validation/M2.md) | 子集解析、纯状态、双浏览器与真实离线文件 |
 | [M3 验证](docs/validation/M3.md) | 编辑器、六案例、错误恢复、键盘与响应式证据 |
 | [M4 验证](docs/validation/M4.md) | 独立 HTML、真实下载、播放一致性与导出安全 |
+| [M5 验证](docs/validation/M5.md) | 需求与 DoD、生产浏览器、输入上限与发布准备 |
 | [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
 
 MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布局、Focus 和独立 HTML 导出。CLI、Agent skill、AI 生成、云分享与视频导出后置。
 
 ## 开发流程
 
-用户已批准将 M0–M2 合入 main（a705464）。M3 在 ffang/m3-editor 开发，GPT-6 修复来自 kxw/code-review-parser；本次联合复核通过后，按用户明确授权经 ffang/m3-review-integration 一起合入 main。M4 在 ffang/m4-offline-export 开发，尚未合并 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。
+M0–M3 和 GPT-6 修复已按用户授权合入 main（340110d）。M4 位于 ffang/m4-offline-export；M5 从该分支继续，位于 ffang/m5-release-validation，包含尚未合并的 M4。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
 
 ## 许可证
 

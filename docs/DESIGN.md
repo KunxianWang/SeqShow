@@ -1,6 +1,6 @@
 # SeqShow UI / UX 规范
 
-状态：v0.1 交互设计基线；M3 编辑器与 M4 离线导出体验已实现并验收，M5 发布验收尚未完成。更新：2026-10-07。
+状态：v0.1 交互设计基线；M3 编辑器、M4 离线导出与 M5 技术验收已完成。浏览器实际范围与限制见 [M5](validation/M5.md)，公开发布单独推进。更新：2026-10-07。
 
 范围与步骤语义见 [PRODUCT](PRODUCT.md)，数据与生命周期见 [ARCHITECTURE](ARCHITECTURE.md)，验收见 [TESTING](TESTING.md)。
 

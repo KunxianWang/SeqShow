@@ -2,7 +2,7 @@
 
 状态：v0.1 产品设计基线；M0–M4 已完成；源码编辑、分支播放、错误恢复与离线导出通过阶段验收，M5 完整产品与发布验收仍待完成。更新：2026-10-07。
 
-本文件定义产品范围和完成标准。技术实现见 [ARCHITECTURE](ARCHITECTURE.md)，交互见 [DESIGN](DESIGN.md)，验证见 [TESTING](TESTING.md)，执行见 [mvp.md](exec-plans/active/mvp.md)。
+本文件定义产品范围和完成标准。技术实现见 [ARCHITECTURE](ARCHITECTURE.md)，交互见 [DESIGN](DESIGN.md)，验证见 [TESTING](TESTING.md)，执行见 [mvp.md](exec-plans/completed/mvp.md)。
 
 ## 1. 产品承诺
 
@@ -80,7 +80,7 @@ P02 与 P03 是受限 Mermaid 兼容，不宣称完整支持。P10 的部分案�
 
 ### 5.2 输入限额
 
-首版上限：源码 50,000 个 UTF-16 code units；参与者 20 个；全图 Message + Note 合计 200 个；顶层 alt block 10 个。超限给出明确错误，不截断。限额是保护浏览器交互的产品边界，尚非性能实测结果；调整时同步测试与说明。
+首版上限：源码 50,000 个 UTF-16 code units；参与者 20 个；全图 Message + Note 合计 200 个；顶层 alt block 10 个。超限给出明确错误，不截断。限额是保护浏览器交互的产品边界，不是速度保证；上限回归与实际测量见 [M5](validation/M5.md)，调整时同步测试与说明。
 
 ### 5.3 分支与步骤语义
 
@@ -137,14 +137,14 @@ sequenceDiagram
 
 ## 9. Definition of Done
 
-- [ ] P01–P10 全部具有 TESTING 定义的验收证据。
-- [ ] 上述登录分支案例、重复消息、自调用、Note、中文长文本都可正确映射并播放。
-- [ ] Focus Mode 的步骤、计数、上下文和分支一致，切步无重新布局。
-- [ ] 错误输入不丢失源码，不显示旧图为新图的成功结果，修正后可恢复。
-- [ ] 导出产物断网运行且不加载网络资源，功能与 Web 的播放语义一致。
-- [ ] typecheck、lint、unit/integration、Playwright E2E、production build 按 TESTING 通过；浏览器范围和任何已知限制如实记录。
-- [ ] README 包含真实安装/运行步骤、语法范围、示例、限制、许可证说明和演示方式。
-- [ ] mvp.md 各实现里程碑记录完成证据与剩余问题；未实施用户测试和未获得 stars 不伪装为完成。
+- [x] P01–P10 全部具有 TESTING 定义的验收证据。
+- [x] 上述登录分支案例、重复消息、自调用、Note、中文长文本都可正确映射并播放。
+- [x] Focus Mode 的步骤、计数、上下文和分支一致，切步无重新布局。
+- [x] 错误输入不丢失源码，不显示旧图为新图的成功结果，修正后可恢复。
+- [x] 导出产物断网运行且不加载网络资源，功能与 Web 的播放语义一致。
+- [x] typecheck、lint、unit/integration、Playwright E2E、production build 按 TESTING 通过；浏览器范围和任何已知限制如实记录。
+- [x] README 包含真实安装/运行步骤、语法范围、示例、限制、许可证说明和演示方式。
+- [x] mvp.md 各实现里程碑记录完成证据与剩余问题；未实施用户测试和未获得 stars 不伪装为完成。
 
 ## 10. 发布后的产品验证
 

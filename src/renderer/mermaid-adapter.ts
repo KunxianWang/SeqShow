@@ -142,15 +142,19 @@ export function bindSteps(svg: SVGSVGElement, document: SequenceDocument) {
 
 let renderId = 0;
 export async function renderSequence(document: SequenceDocument): Promise<SVGSVGElement> {
+  const { source } = serialize(document);
   mermaid.initialize({
     startOnLoad: false, securityLevel: 'strict', theme: 'default', look: 'classic',
+    // Parser limits the original input; safe IDs, entities and line breaks can
+    // expand the generated source beyond Mermaid's default 50,000 characters.
+    maxTextSize: source.length,
     fontFamily: 'Arial, sans-serif',
     sequence: {
       mirrorActors: false, wrap: false, arrowMarkerAbsolute: false,
       height: Math.max(65, ...document.participants.map(actor => labelLines(actor.label).length * 20 + 20)),
     },
   });
-  const { svg: markup } = await mermaid.render(`seqshow_${++renderId}`, serialize(document).source);
+  const { svg: markup } = await mermaid.render(`seqshow_${++renderId}`, source);
   const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
   if (parsed.querySelector('parsererror')) throw new Error('Invalid SVG XML');
   const svg = window.document.importNode(parsed.documentElement, true) as unknown as SVGSVGElement;
