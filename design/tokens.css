@@ -1,0 +1,95 @@
+/*
+ * SeqShow design tokens — v0.2 视觉提案
+ * 单一浅色主题（DESIGN §8）。系统字体，不加载网络字体。
+ * 对比度数值见 design/README.md §4。
+ */
+:root {
+  /* Surface */
+  --ss-bg: #F8FAFC;
+  --ss-surface: #FFFFFF;
+  --ss-surface-sunken: #F1F5F9;
+  --ss-border: #E2E8F0;
+  --ss-border-strong: #CBD5E1;
+
+  /* Text */
+  --ss-text: #0F172A;          /* 17.85:1 on white */
+  --ss-text-2: #475569;        /* 7.58:1 */
+  --ss-text-3: #64748B;        /* 4.76:1, 最弱可用文字 */
+
+  /* Accent */
+  --ss-accent: #2563EB;        /* 5.17:1；白字在其上 5.17:1 */
+  --ss-accent-strong: #1D4ED8; /* hover / 文字链接 6.70:1 */
+  --ss-accent-soft: #EFF6FF;
+  --ss-accent-border: #BFDBFE;
+  --ss-focus-ring: #2563EB;
+
+  /* Status */
+  --ss-danger: #B91C1C;        /* on soft 5.91:1 */
+  --ss-danger-soft: #FEF2F2;
+  --ss-danger-border: #FECACA;
+  --ss-warning: #9A3412;       /* on soft 6.88:1 */
+  --ss-warning-soft: #FFF7ED;
+  --ss-warning-border: #FED7AA;
+  --ss-success: #15803D;       /* on soft 4.79:1 */
+  --ss-success-soft: #F0FDF4;
+  --ss-info: #1E40AF;          /* on accent-soft 8.01:1 */
+
+  /* Diagram — 线条状态（文字另行保证 ≥ 4.5:1） */
+  --ss-d-line: #334155;        /* 未进入播放时的正常线条 10.35:1 */
+  --ss-d-current: #2563EB;
+  --ss-d-past: #475569;
+  --ss-d-future: #8796AC;      /* 3.00:1，满足非文本图形 3:1 */
+  --ss-d-inactive: #B4C0D0;    /* 1.84:1，仅用于未选 case；靠斜纹 + 标签表达 */
+  --ss-d-text: #0F172A;
+  --ss-d-text-muted: #475569;
+  --ss-d-text-inactive: #64748B;
+  --ss-d-actor-bg: #FFFFFF;
+  --ss-d-actor-border: #CBD5E1;
+  --ss-d-actor-active-bg: #EFF6FF;
+  --ss-d-note-bg: #FFFBEB;
+  --ss-d-note-border: #A16207;
+  --ss-d-frame: #94A3B8;
+  --ss-d-hatch: #E2E8F0;
+
+  /* Typography */
+  --ss-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --ss-font-mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", Menlo, monospace;
+  --ss-font-diagram: Arial, sans-serif; /* 与 Mermaid 布局测量一致，改动需复验 fixture */
+  --ss-text-xs: 12px;
+  --ss-text-sm: 13px;
+  --ss-text-md: 14px;
+  --ss-text-base: 15px;
+  --ss-text-lg: 18px;
+  --ss-text-xl: 22px;
+  --ss-leading: 1.55;
+
+  /* Space (4px grid) */
+  --ss-space-1: 4px;
+  --ss-space-2: 8px;
+  --ss-space-3: 12px;
+  --ss-space-4: 16px;
+  --ss-space-5: 20px;
+  --ss-space-6: 24px;
+  --ss-space-8: 32px;
+
+  /* Shape */
+  --ss-radius-sm: 6px;
+  --ss-radius-md: 8px;
+  --ss-radius-lg: 12px;
+  --ss-radius-pill: 999px;
+  --ss-shadow-panel: 0 1px 2px rgb(15 23 42 / 4%), 0 1px 3px rgb(15 23 42 / 6%);
+  --ss-shadow-dock: 0 -1px 0 var(--ss-border), 0 -6px 16px rgb(15 23 42 / 6%);
+  --ss-shadow-dialog: 0 20px 48px rgb(15 23 42 / 18%);
+
+  /* Controls */
+  --ss-control-h: 36px;        /* 桌面 */
+  --ss-control-h-touch: 44px;  /* < 600px */
+
+  /* Motion */
+  --ss-duration: 160ms;
+  --ss-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --ss-duration: 0ms; }
+}

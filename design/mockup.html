@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeqShow UI Mockup</title>
+<meta name="description" content="SeqShow v0.2 visual design proposal — interactive mockup. Not the production app.">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* ───────────── Mockup shell (design review only, not product UI) ───────────── */
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { display: flex; flex-direction: column; background: #E2E8F0; color: var(--ss-text); font: var(--ss-text-base)/var(--ss-leading) var(--ss-font); }
+[hidden] { display: none !important; }
+.rv { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding: 10px 16px; background: #0F172A; color: #CBD5E1; font-size: 12px; }
+.rv strong { color: #fff; font-size: 13px; }
+.rv-group { display: flex; align-items: center; gap: 8px; }
+.rv-group > span { color: #94A3B8; }
+.rv-seg { display: inline-flex; border: 1px solid #334155; border-radius: 6px; overflow: hidden; }
+.rv-seg button, .rv-btn { font: inherit; color: #CBD5E1; background: transparent; border: 0; padding: 5px 10px; cursor: pointer; }
+.rv-seg button + button { border-left: 1px solid #334155; }
+.rv-seg button[aria-pressed="true"] { background: #2563EB; color: #fff; }
+.rv-seg button:disabled { color: #475569; cursor: not-allowed; }
+.rv-btn { border: 1px solid #334155; border-radius: 6px; }
+.rv button:focus-visible { outline: 2px solid #93C5FD; outline-offset: 1px; }
+.rv-note { margin-left: auto; color: #94A3B8; }
+.canvas { flex: 1; overflow: auto; padding: 20px; }
+.frame { container: ss / inline-size; width: 100%; margin: 0 auto; background: var(--ss-bg); border-radius: 10px; box-shadow: 0 8px 30px rgb(15 23 42 / 12%); }
+.frame[data-w="1280"] { width: 1280px; }
+.frame[data-w="768"] { width: 768px; }
+.frame[data-w="390"] { width: 390px; }
+
+/* ───────────── SeqShow app ───────────── */
+.ss-app { max-width: 1600px; margin: 0 auto; padding: 0 28px 28px; }
+.ss-app :focus-visible { outline: 2px solid var(--ss-focus-ring); outline-offset: 2px; }
+.ic { width: 16px; height: 16px; flex: none; }
+@keyframes ss-spin { to { transform: rotate(360deg); } }
+.ic-spin { animation: ss-spin .9s linear infinite; }
+
+/* App bar */
+.ss-appbar { display: flex; align-items: center; gap: 16px; min-height: 64px; }
+.ss-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ss-text); text-decoration: none; font-size: var(--ss-text-lg); font-weight: 700; letter-spacing: -.01em; }
+.ss-tagline { min-width: 0; padding-left: 16px; border-left: 1px solid var(--ss-border-strong); color: var(--ss-text-2); font-size: var(--ss-text-md); }
+.ss-gh { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--ss-radius-sm); color: var(--ss-accent-strong); font-size: var(--ss-text-md); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.ss-gh:hover { background: var(--ss-accent-soft); }
+.ss-offline { display: none; align-items: center; gap: 6px; padding: 3px 10px; border-radius: var(--ss-radius-pill); background: var(--ss-surface-sunken); color: var(--ss-text-2); font-size: var(--ss-text-xs); font-weight: 600; }
+
+/* Workspace + panels */
+.ss-workspace { display: grid; grid-template-columns: minmax(280px, 36fr) minmax(0, 64fr); gap: 20px; align-items: start; }
+.ss-panel { min-width: 0; padding: 20px; background: var(--ss-surface); border: 1px solid var(--ss-border); border-radius: var(--ss-radius-lg); box-shadow: var(--ss-shadow-panel); }
+.ss-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: var(--ss-control-h); margin-bottom: 16px; }
+.ss-panel-head h2 { margin: 0; font-size: 16px; font-weight: 650; }
+
+/* Status chip */
+.ss-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: var(--ss-radius-pill); background: var(--ss-success-soft); color: var(--ss-success); font-size: var(--ss-text-xs); font-weight: 600; white-space: nowrap; }
+.ss-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+[data-state="stale"] .ss-chip { background: var(--ss-warning-soft); color: var(--ss-warning); }
+[data-state="error"] .ss-chip { background: var(--ss-danger-soft); color: var(--ss-danger); }
+[data-state="busy"] .ss-chip { background: var(--ss-accent-soft); color: var(--ss-info); }
+
+/* Fields */
+.ss-field { display: grid; gap: 6px; margin-bottom: 16px; }
+.ss-field-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.ss-label { font-size: var(--ss-text-sm); font-weight: 600; }
+.ss-meta { color: var(--ss-text-3); font-size: var(--ss-text-xs); font-variant-numeric: tabular-nums; }
+.ss-select { appearance: none; width: 100%; min-width: 0; height: var(--ss-control-h); padding: 0 34px 0 12px; border: 1px solid var(--ss-border-strong); border-radius: var(--ss-radius-sm); color: var(--ss-text); font: inherit; font-size: var(--ss-text-md); text-overflow: ellipsis;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 16px; cursor: pointer; }
+.ss-select:hover:not(:disabled) { border-color: var(--ss-text-3); }
+.ss-select:disabled { background-color: var(--ss-surface-sunken); color: var(--ss-text-3); cursor: not-allowed; }
+
+/* Code editor: native textarea + passive line-number gutter */
+.ss-code { display: flex; height: clamp(340px, 46vh, 560px); overflow: hidden; resize: vertical; border: 1px solid var(--ss-border-strong); border-radius: var(--ss-radius-md); background: var(--ss-bg); }
+.ss-code:focus-within { border-color: var(--ss-accent); box-shadow: 0 0 0 3px rgb(37 99 235 / 18%); }
+.ss-gutter { flex: none; min-width: 44px; margin: 0; padding: 14px 10px 40px 8px; overflow: hidden; border-right: 1px solid var(--ss-border); background: var(--ss-surface-sunken); color: var(--ss-text-3); font: 13px/1.7 var(--ss-font-mono); text-align: right; user-select: none; }
+.ss-gutter span { display: block; }
+.ss-gutter .is-error { margin: 0 -10px 0 -8px; padding: 0 10px 0 8px; background: var(--ss-danger-soft); color: var(--ss-danger); font-weight: 700; box-shadow: inset 3px 0 var(--ss-danger); }
+.ss-code textarea { flex: 1; min-width: 0; padding: 14px; border: 0; outline: none; resize: none; background: transparent; color: var(--ss-text); font: 13px/1.7 var(--ss-font-mono); tab-size: 4; white-space: pre; overflow: auto; }
+.ss-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 16px; }
+.ss-hint { color: var(--ss-text-2); font-size: var(--ss-text-sm); }
+
+/* Buttons */
+.ss-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--ss-control-h); padding: 0 14px; border: 1px solid var(--ss-border-strong); border-radius: var(--ss-radius-sm); background: #fff; color: var(--ss-text); font: inherit; font-size: var(--ss-text-md); font-weight: 600; white-space: nowrap; cursor: pointer;
+  transition: background-color var(--ss-duration) var(--ss-ease), border-color var(--ss-duration) var(--ss-ease); }
+.ss-btn:hover:not(:disabled) { background: var(--ss-surface-sunken); border-color: var(--ss-text-3); }
+.ss-btn:disabled { background: var(--ss-surface-sunken); border-color: var(--ss-border); color: var(--ss-text-3); cursor: not-allowed; }
+.ss-btn-primary { background: var(--ss-accent); border-color: var(--ss-accent); color: #fff; }
+.ss-btn-primary:hover:not(:disabled) { background: var(--ss-accent-strong); border-color: var(--ss-accent-strong); }
+.ss-btn-ghost { border-color: transparent; background: transparent; color: var(--ss-text-2); }
+.ss-linkbtn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; border: 0; background: none; color: inherit; font: inherit; font-size: var(--ss-text-sm); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* Diagnostic */
+.ss-diagnostic { margin: 0 0 16px; padding: 12px 14px; border: 1px solid var(--ss-danger-border); border-left: 4px solid var(--ss-danger); border-radius: var(--ss-radius-md); background: var(--ss-danger-soft); color: #7F1D1D; }
+.ss-diag-head { display: flex; align-items: center; gap: 8px; color: var(--ss-danger); font-size: var(--ss-text-sm); font-weight: 700; }
+.ss-diagnostic p { margin: 6px 0 0; font-size: var(--ss-text-sm); }
+.ss-diagnostic code { font-family: var(--ss-font-mono); font-size: .95em; }
+.ss-diag-code { display: flex; gap: 12px; margin: 8px 0; padding: 8px 10px; overflow-x: auto; border: 1px solid var(--ss-danger-border); border-radius: var(--ss-radius-sm); background: #fff; color: var(--ss-text); font: 12px/1.6 var(--ss-font-mono); white-space: pre; }
+.ss-diag-code .ln { color: var(--ss-danger); font-weight: 700; }
+.ss-diag-code mark { background: #FEE2E2; color: inherit; text-decoration: underline wavy var(--ss-danger); text-underline-offset: 3px; }
+.ss-diagnostic .ss-linkbtn { margin-top: 8px; color: var(--ss-danger); }
+
+/* Disclosure + footnote */
+.ss-disclosure { margin-top: 4px; padding: 12px 0 0; border-top: 1px solid var(--ss-border); }
+.ss-disclosure + .ss-disclosure { margin-top: 12px; }
+.ss-disclosure summary { display: flex; align-items: center; gap: 8px; list-style: none; font-size: var(--ss-text-md); font-weight: 600; cursor: pointer; }
+.ss-disclosure summary::-webkit-details-marker { display: none; }
+.ss-disclosure summary::before { content: ""; width: 6px; height: 6px; border: solid var(--ss-text-2); border-width: 0 2px 2px 0; transform: rotate(-45deg); transition: transform var(--ss-duration) var(--ss-ease); }
+.ss-disclosure[open] summary::before { transform: rotate(45deg); }
+.ss-disclosure p { color: var(--ss-text-2); font-size: var(--ss-text-sm); }
+.ss-disclosure pre { overflow-x: auto; padding: 12px; border-radius: var(--ss-radius-sm); background: var(--ss-bg); border: 1px solid var(--ss-border); font: 12px/1.7 var(--ss-font-mono); }
+.ss-footnote { display: flex; gap: 8px; margin: 16px 0 0; padding: 10px 12px; border-radius: var(--ss-radius-md); background: var(--ss-surface-sunken); color: var(--ss-text-2); font-size: var(--ss-text-xs); }
+.ss-footnote .ic { margin-top: 2px; }
+
+/* Player: notice */
+.ss-notice { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--ss-accent-border); border-radius: var(--ss-radius-md); background: var(--ss-accent-soft); color: var(--ss-info); font-size: var(--ss-text-sm); }
+.ss-notice .ic { margin-top: 2px; }
+[data-state="stale"] .ss-notice { border-color: var(--ss-warning-border); background: var(--ss-warning-soft); color: var(--ss-warning); }
+[data-state="error"] .ss-notice { border-color: var(--ss-danger-border); background: var(--ss-danger-soft); color: var(--ss-danger); }
+
+/* Player: path bar */
+.ss-pathbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 16px; }
+.ss-paths { display: flex; flex-wrap: wrap; gap: 12px; flex: 1 1 300px; min-width: 0; }
+.ss-path { display: grid; gap: 4px; flex: 1 1 220px; min-width: 0; max-width: 380px; }
+.ss-path .ss-field-row { font-size: var(--ss-text-xs); }
+.ss-path-name { color: var(--ss-text-2); font-weight: 700; letter-spacing: .02em; }
+.ss-other { color: var(--ss-text-3); overflow-wrap: anywhere; }
+.ss-switch { display: inline-flex; align-items: center; gap: 8px; height: var(--ss-control-h); padding: 0 12px 0 8px; border: 1px solid var(--ss-border-strong); border-radius: var(--ss-radius-pill); background: #fff; color: var(--ss-text); font: inherit; font-size: var(--ss-text-md); font-weight: 600; cursor: pointer; }
+.ss-switch:disabled { color: var(--ss-text-3); background: var(--ss-surface-sunken); cursor: not-allowed; }
+.ss-switch:disabled .ss-switch-track { opacity: .45; }
+.ss-switch-track { position: relative; width: 30px; height: 18px; border-radius: var(--ss-radius-pill); background: var(--ss-border-strong); transition: background-color var(--ss-duration) var(--ss-ease); }
+.ss-switch-track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgb(15 23 42 / 30%); transition: transform var(--ss-duration) var(--ss-ease); }
+.ss-switch[aria-pressed="true"] .ss-switch-track { background: var(--ss-accent); }
+.ss-switch[aria-pressed="true"] .ss-switch-track::after { transform: translateX(12px); }
+.ss-path-note { display: flex; align-items: center; gap: 6px; margin: 10px 0 12px; color: var(--ss-text-2); font-size: var(--ss-text-xs); }
+
+/* Player: stage */
+.ss-stage-wrap { position: relative; }
+.ss-stage { max-height: clamp(420px, 70vh, 720px); overflow: auto; padding: 20px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: var(--ss-surface); }
+.ss-stage svg { display: block; width: 100%; min-width: 720px; max-width: 920px; height: auto; margin: 0 auto; transition: opacity var(--ss-duration) var(--ss-ease), filter var(--ss-duration) var(--ss-ease); }
+.ss-stage-tag { position: absolute; top: 10px; left: 10px; z-index: 1; display: none; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--ss-border-strong); border-radius: var(--ss-radius-pill); background: #fff; box-shadow: var(--ss-shadow-panel); color: var(--ss-text-2); font-size: var(--ss-text-xs); font-weight: 700; }
+[data-state="stale"] .ss-stage-tag, [data-state="error"] .ss-stage-tag, [data-state="busy"] .ss-stage-tag { display: inline-flex; }
+[data-state="stale"] .ss-stage svg, [data-state="error"] .ss-stage svg { filter: grayscale(1); opacity: .6; }
+[data-state="busy"] .ss-stage svg { opacity: .35; }
+
+/* Player: presenter dock */
+.ss-dock { display: grid; gap: 12px; margin-top: 12px; padding: 14px 16px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: var(--ss-surface); }
+.ss-caption { display: flex; align-items: flex-start; gap: 16px; min-height: 58px; }
+.ss-counter { flex: none; display: flex; align-items: baseline; gap: 4px; min-width: 76px; padding-right: 16px; border-right: 1px solid var(--ss-border); color: var(--ss-text-2); font-size: var(--ss-text-md); font-variant-numeric: tabular-nums; }
+.ss-counter b { color: var(--ss-text); font-size: 28px; line-height: 1.1; }
+.ss-caption-body { flex: 1; min-width: 0; }
+.ss-caption-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: var(--ss-text-2); font-size: var(--ss-text-xs); }
+.ss-kind { padding: 2px 8px; border-radius: var(--ss-radius-pill); background: var(--ss-accent-soft); color: var(--ss-accent-strong); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.ss-kind[data-kind="overview"] { background: var(--ss-surface-sunken); color: var(--ss-text-2); }
+.ss-route { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.ss-pchip { padding: 1px 7px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-sm); background: var(--ss-bg); color: var(--ss-text); font-weight: 600; }
+.ss-caption-text { margin: 4px 0 0; color: var(--ss-text); font-size: var(--ss-text-lg); font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.ss-caption[data-overview] .ss-caption-text { color: var(--ss-text-2); font-weight: 500; font-size: var(--ss-text-base); }
+.ss-progress { display: flex; gap: 3px; height: 6px; }
+.ss-progress i { flex: 1; border-radius: 3px; background: var(--ss-border); transition: background-color var(--ss-duration) var(--ss-ease); }
+.ss-progress i.past { background: #94A3B8; }
+.ss-progress i.current { background: var(--ss-accent); }
+.ss-transport { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.ss-transport-main { display: flex; flex-wrap: wrap; gap: 8px; }
+.ss-btn-play { min-width: 104px; }
+.ss-keys { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--ss-text-3); font-size: var(--ss-text-xs); }
+.ss-keys kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom-width: 2px; border-radius: 4px; background: #fff; color: var(--ss-text-2); font: 11px/1.5 var(--ss-font-mono); }
+.ss-player:focus-visible { outline: 2px solid var(--ss-focus-ring); outline-offset: 3px; }
+
+/* Exported-file surface */
+.ss-export-foot { display: none; margin: 16px 0 0; color: var(--ss-text-3); font-size: var(--ss-text-xs); text-align: center; }
+[data-view="export"] .ss-editor, [data-view="export"] .ss-tagline, [data-view="export"] .ss-gh,
+[data-view="export"] [data-export], [data-view="export"] .ss-notice { display: none; }
+[data-view="export"] .ss-offline { display: inline-flex; }
+[data-view="export"] .ss-export-foot { display: block; }
+[data-view="export"] .ss-workspace { grid-template-columns: minmax(0, 1fr); max-width: 1120px; margin: 0 auto; }
+
+/* Replace dialog */
+.ss-dialog { max-width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-lg); box-shadow: var(--ss-shadow-dialog); color: var(--ss-text); font-family: var(--ss-font); }
+.ss-dialog::backdrop { background: rgb(15 23 42 / 40%); }
+.ss-dialog h2 { margin: 0 0 8px; font-size: 17px; }
+.ss-dialog p { margin: 0 0 20px; color: var(--ss-text-2); font-size: var(--ss-text-md); }
+.ss-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.ss-dialog :focus-visible { outline: 2px solid var(--ss-focus-ring); outline-offset: 2px; }
+
+/* ───────────── Diagram (inline SVG, stands in for Mermaid output) ───────────── */
+.d text { fill: var(--ss-d-text); font-family: var(--ss-font-diagram); font-size: 14px; }
+.d .d-msg text { text-anchor: middle; }
+.d .ln { fill: none; stroke: var(--ss-d-line); stroke-width: 1.5; marker-end: url(#m-line); transition: stroke var(--ss-duration) var(--ss-ease), stroke-width var(--ss-duration) var(--ss-ease); }
+.d .dashed { stroke-dasharray: 5 4; }
+.d .d-life { stroke: var(--ss-border-strong); stroke-width: 1.25; }
+.d .d-box { fill: var(--ss-d-actor-bg); stroke: var(--ss-d-actor-border); stroke-width: 1.25; }
+.d .d-halo { fill: transparent; stroke: transparent; }
+.d .d-figure { fill: #fff; stroke: var(--ss-d-line); stroke-width: 1.5; }
+.d .d-actor text { text-anchor: middle; }
+.d .d-note rect { fill: var(--ss-d-note-bg); stroke: var(--ss-d-note-border); stroke-width: 1; }
+.d .d-note text { text-anchor: middle; }
+.d .d-frame { fill: none; stroke: var(--ss-d-frame); stroke-width: 1; stroke-dasharray: 3 3; }
+.d .d-tab { fill: var(--ss-surface-sunken); stroke: var(--ss-d-frame); stroke-width: 1; }
+.d .d-tab-text { font-size: 12px; font-weight: 700; fill: var(--ss-d-text-muted); }
+.d .d-case-bg { fill: transparent; }
+.d .d-case-label { fill: var(--ss-d-text-muted); font-size: 13px; text-anchor: middle; }
+.d .d-other { display: none; }
+.d .d-other rect { fill: #fff; stroke: var(--ss-d-inactive); }
+.d .d-other text { fill: var(--ss-d-text-inactive); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-anchor: middle; }
+.d [data-case-bg][data-selected="false"] { fill: url(#hatch); }
+.d [data-case][data-selected="false"] .d-other { display: inline; }
+.d [data-case][data-selected="false"] .d-case-label { fill: var(--ss-d-text-inactive); }
+
+/* Step phases (mirrors data-phase from player.ts) */
+.d [data-phase="inactive"] .ln { stroke: var(--ss-d-inactive); marker-end: url(#m-inactive); }
+.d [data-phase="inactive"] text { fill: var(--ss-d-text-inactive); }
+.d [data-phase="inactive"] rect { fill: #F8FAFC; stroke: var(--ss-d-inactive); stroke-dasharray: 3 3; }
+.d[data-focus="true"] [data-phase="past"] .ln { stroke: var(--ss-d-past); marker-end: url(#m-past); }
+.d[data-focus="true"] [data-phase="future"] .ln { stroke: var(--ss-d-future); stroke-width: 1.25; marker-end: url(#m-future); }
+.d[data-focus="true"] [data-phase="future"] text { fill: var(--ss-d-text-muted); }
+.d[data-focus="true"] [data-phase="future"] rect { stroke: var(--ss-d-future); }
+.d [data-phase="current"] .ln { stroke: var(--ss-d-current); stroke-width: 2.75; marker-end: url(#m-current); }
+.d [data-phase="current"] text { fill: var(--ss-accent-strong); font-weight: 700; }
+.d [data-phase="current"] rect { fill: var(--ss-accent-soft); stroke: var(--ss-d-current); stroke-width: 2.5; }
+.d [data-active="true"] .d-box, .d [data-active="true"] .d-halo { fill: var(--ss-d-actor-active-bg); stroke: var(--ss-d-current); stroke-width: 2; }
+.d [data-active="true"] text { fill: var(--ss-accent-strong); font-weight: 700; }
+.d [data-active="true"] .d-figure { stroke: var(--ss-d-current); stroke-width: 2; }
+.d [data-active="true"] .d-life { stroke: #93C5FD; stroke-width: 2; }
+.d .d-badge { display: none; }
+.d .d-badge.on { display: inline; }
+.d .d-badge circle { fill: var(--ss-d-current); stroke: #fff; stroke-width: 2; }
+.d .d-badge text { fill: #fff; font-size: 11px; font-weight: 700; text-anchor: middle; }
+
+/* ───────────── Responsive (container queries stand in for @media in the real app) ───────────── */
+@container ss (max-width: 959px) {
+  .ss-workspace { grid-template-columns: minmax(0, 1fr); }
+  .ss-code { height: 340px; }
+}
+@container ss (max-width: 600px) {
+  .ss-app { padding: 0 12px 16px; }
+  .ss-appbar { flex-wrap: wrap; gap: 2px 12px; padding: 12px 0; }
+  .ss-tagline { order: 3; flex-basis: 100%; padding: 0; border: 0; font-size: var(--ss-text-sm); }
+  .ss-panel { padding: 16px; border-radius: 10px; }
+  .ss-btn, .ss-select, .ss-switch { height: var(--ss-control-h-touch); }
+  .ss-stage { max-height: 420px; padding: 12px; }
+  .ss-dock { position: sticky; bottom: 0; z-index: 2; margin-inline: -4px; padding: 12px; box-shadow: var(--ss-shadow-dock); }
+  .ss-counter { min-width: 60px; padding-right: 12px; }
+  .ss-counter b { font-size: 22px; }
+  .ss-caption { gap: 12px; }
+  .ss-caption-text { font-size: var(--ss-text-base); }
+  .ss-keys { display: none; }
+  .ss-transport-main { width: 100%; }
+  .ss-transport-main .ss-btn { flex: 1; padding: 0 8px; }
+  .ss-btn-play { flex: 2 !important; }
+  .ss-opt-label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ic-spin { animation: none; }
+  .ss-stage { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5.6v12.8a.7.7 0 0 0 1.05.6l10.2-6.4a.7.7 0 0 0 0-1.2L8.05 5A.7.7 0 0 0 7 5.6z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1" fill="currentColor"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.5"/><path d="M3.5 3.5v5h5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 4 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17h.01"/></symbol>
+    <symbol id="i-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="11" width="15" height="10" rx="2"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/></symbol>
+    <symbol id="i-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.2-8.56"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v10H4zM9 20h6M12 16v4"/></symbol>
+  </defs>
+</svg>
+
+<!-- Design-review toolbar: not part of SeqShow -->
+<div class="rv" role="region" aria-label="Design review controls">
+  <strong>SeqShow · UI mockup v0.2</strong>
+  <div class="rv-group"><span>Viewport</span>
+    <div class="rv-seg" data-rv="viewport">
+      <button type="button" data-value="fluid" aria-pressed="true">Fluid</button>
+      <button type="button" data-value="1280" aria-pressed="false">1280</button>
+      <button type="button" data-value="768" aria-pressed="false">768</button>
+      <button type="button" data-value="390" aria-pressed="false">390</button>
+    </div>
+  </div>
+  <div class="rv-group"><span>State</span>
+    <div class="rv-seg" data-rv="state">
+      <button type="button" data-value="ready" aria-pressed="true">Ready</button>
+      <button type="button" data-value="stale" aria-pressed="false">Source changed</button>
+      <button type="button" data-value="error" aria-pressed="false">Error</button>
+      <button type="button" data-value="busy" aria-pressed="false">Rendering</button>
+    </div>
+  </div>
+  <div class="rv-group"><span>Surface</span>
+    <div class="rv-seg" data-rv="view">
+      <button type="button" data-value="web" aria-pressed="true">Web app</button>
+      <button type="button" data-value="export" aria-pressed="false">Exported file</button>
+    </div>
+  </div>
+  <button type="button" class="rv-btn" data-rv-dialog>Replace dialog</button>
+  <span class="rv-note">Static diagram: only the login example is drawn.</span>
+</div>
+
+<div class="canvas">
+<div class="frame" data-w="fluid">
+<div class="ss-app" data-state="ready" data-view="web">
+
+  <header class="ss-appbar">
+    <a class="ss-brand" href="#" aria-label="SeqShow">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>
+      SeqShow
+    </a>
+    <span class="ss-tagline">Turn sequence diagrams into step-by-step presentations.</span>
+    <span class="ss-offline"><svg class="ic" aria-hidden="true"><use href="#i-offline"/></svg>Offline presentation</span>
+    <a class="ss-gh" href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">GitHub <svg class="ic" aria-hidden="true"><use href="#i-external"/></svg></a>
+  </header>
+
+  <div class="ss-workspace">
+
+    <!-- ───── Editor ───── -->
+    <section class="ss-panel ss-editor" aria-label="Diagram editor">
+      <div class="ss-panel-head"><h2>Source</h2><span class="ss-chip" data-chip>Rendered</span></div>
+
+      <div class="ss-field">
+        <label class="ss-label" for="example">Example</label>
+        <select class="ss-select" id="example" data-example></select>
+      </div>
+
+      <div class="ss-field">
+        <div class="ss-field-row"><label class="ss-label" for="source">Mermaid source</label><span class="ss-meta" data-count></span></div>
+        <div class="ss-code">
+          <pre class="ss-gutter" aria-hidden="true" data-gutter></pre>
+          <textarea id="source" spellcheck="false" wrap="off" aria-describedby="source-help"></textarea>
+        </div>
+      </div>
+
+      <div class="ss-actions">
+        <button type="button" class="ss-btn ss-btn-primary" data-render>Render</button>
+        <span class="ss-hint" data-source-state role="status">Rendered</span>
+      </div>
+
+      <div class="ss-diagnostic" data-diag role="alert" hidden>
+        <div class="ss-diag-head"><svg class="ic" aria-hidden="true"><use href="#i-error"/></svg>Unsupported syntax · Line 9, column 5</div>
+        <p><code>opt</code> is valid Mermaid, but this version of SeqShow does not support it.</p>
+        <div class="ss-diag-code"><span class="ln">9</span><span>    <mark>opt</mark> remember me</span></div>
+        <p>Use one top-level <code>alt</code> / <code>else</code> with two cases, or remove the block.</p>
+        <button type="button" class="ss-linkbtn" data-jump>Go to line 9 <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </div>
+
+      <details class="ss-disclosure"><summary>Supported syntax</summary>
+        <p>One statement per line, starting with <code>sequenceDiagram</code>. Use ASCII participant IDs; labels and messages can be Chinese.</p>
+        <pre>actor U as User
+participant API
+U-&gt;&gt;API: Request
+API--&gt;&gt;U: Response
+Note over U,API: Plain text
+alt success
+  API--&gt;&gt;U: Done
+else failure
+  API--&gt;&gt;U: Error
+end</pre>
+        <p>Limits: 50,000 UTF-16 units · 20 participants · 200 messages / Notes · 10 alt blocks.</p>
+      </details>
+      <details class="ss-disclosure"><summary>Unsupported syntax</summary>
+        <p>Nested alt, opt / loop / par, activation, create / destroy, autonumber, rect, other arrows, multiple statements on one line, HTML / rich text, frontmatter, directives and click / links.</p>
+      </details>
+
+      <p class="ss-footnote" id="source-help"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span>Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</span></p>
+    </section>
+
+    <!-- ───── Player ───── -->
+    <section class="ss-panel ss-player" aria-label="Presentation player" tabindex="0" data-player>
+      <div class="ss-panel-head"><h2 data-player-title>Preview</h2>
+        <button type="button" class="ss-btn" data-export><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span data-export-label>Export HTML</span></button>
+      </div>
+
+      <p class="ss-notice" role="status" data-notice><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span></span></p>
+
+      <div class="ss-pathbar">
+        <div class="ss-paths">
+          <label class="ss-path">
+            <span class="ss-field-row"><span class="ss-path-name">Path 1 · alt</span><span class="ss-other" data-other></span></span>
+            <select class="ss-select" data-path>
+              <option value="auth">authenticated</option>
+              <option value="unauth">unauthorized</option>
+            </select>
+          </label>
+        </div>
+        <button type="button" class="ss-switch" aria-pressed="true" data-focus><span class="ss-switch-track" aria-hidden="true"></span>Focus</button>
+      </div>
+      <p class="ss-path-note"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>This is a presentation path; conditions are not evaluated.</p>
+
+      <div class="ss-stage-wrap">
+        <span class="ss-stage-tag" data-stage-tag></span>
+        <div class="ss-stage" data-diagram>
+          <svg class="d" id="diagram" viewBox="0 0 720 620" role="img" aria-label="Login sequence diagram" data-focus="false">
+            <defs>
+              <marker id="m-line" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" style="fill:var(--ss-d-line)"/></marker>
+              <marker id="m-current" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" style="fill:var(--ss-d-current)"/></marker>
+              <marker id="m-past" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" style="fill:var(--ss-d-past)"/></marker>
+              <marker id="m-future" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" style="fill:var(--ss-d-future)"/></marker>
+              <marker id="m-inactive" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" style="fill:var(--ss-d-inactive)"/></marker>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" style="fill:#F8FAFC"/><line x1="0" y1="0" x2="0" y2="8" style="stroke:var(--ss-d-hatch);stroke-width:3"/></pattern>
+            </defs>
+
+            <!-- case backgrounds (behind lifelines) -->
+            <rect class="d-case-bg" data-case-bg="auth" x="100" y="338" width="330" height="124"/>
+            <rect class="d-case-bg" data-case-bg="unauth" x="100" y="462" width="330" height="120"/>
+
+            <!-- participants -->
+            <g class="d-actor" data-participant="U">
+              <line class="d-life" x1="150" y1="104" x2="150" y2="606"/>
+              <rect class="d-halo" x="104" y="8" width="92" height="96" rx="10"/>
+              <circle class="d-figure" cx="150" cy="28" r="10"/>
+              <path class="d-figure" d="M150 38v20M134 46h32M150 58l-12 14M150 58l12 14"/>
+              <text x="150" y="94">Browser</text>
+            </g>
+            <g class="d-actor" data-participant="API">
+              <line class="d-life" x1="380" y1="88" x2="380" y2="606"/>
+              <rect class="d-box" x="320" y="40" width="120" height="48" rx="6"/>
+              <text x="380" y="69">API</text>
+            </g>
+            <g class="d-actor" data-participant="DB">
+              <line class="d-life" x1="610" y1="88" x2="610" y2="606"/>
+              <rect class="d-box" x="550" y="40" width="120" height="48" rx="6"/>
+              <text x="610" y="69">Database</text>
+            </g>
+
+            <!-- alt frame -->
+            <rect class="d-frame" x="100" y="338" width="330" height="244"/>
+            <path class="d-tab" d="M100 338h50v12l-8 8h-42z"/>
+            <text class="d-tab-text" x="113" y="353">alt</text>
+            <line class="d-frame" x1="100" y1="462" x2="430" y2="462"/>
+            <g data-case="auth">
+              <text class="d-case-label" x="265" y="356">[authenticated]</text>
+              <g class="d-other"><rect x="348" y="345" width="76" height="16" rx="8"/><text x="386" y="356.5">OTHER PATH</text></g>
+            </g>
+            <g data-case="unauth">
+              <text class="d-case-label" x="265" y="480">[unauthorized]</text>
+              <g class="d-other"><rect x="348" y="469" width="76" height="16" rx="8"/><text x="386" y="480.5">OTHER PATH</text></g>
+            </g>
+
+            <!-- steps -->
+            <g class="d-msg" data-step="s1"><text x="265" y="130">POST /login</text><line class="ln" x1="150" y1="140" x2="379" y2="140"/></g>
+            <g class="d-msg" data-step="s2"><text x="495" y="178">Find user</text><line class="ln" x1="380" y1="188" x2="609" y2="188"/></g>
+            <g class="d-msg" data-step="s3"><text x="495" y="226">User</text><line class="ln dashed" x1="610" y1="236" x2="381" y2="236"/></g>
+            <g class="d-msg" data-step="s4"><text x="440" y="276">Verify password</text><path class="ln" d="M380 284c62 0 62 28 2 28"/></g>
+            <g class="d-msg" data-step="a1"><text x="265" y="388">Session</text><line class="ln dashed" x1="380" y1="398" x2="151" y2="398"/></g>
+            <g class="d-note" data-step="a2"><rect x="130" y="412" width="270" height="34" rx="3"/><text x="265" y="434">Login succeeded</text></g>
+            <g class="d-msg" data-step="b1"><text x="265" y="512">401</text><line class="ln dashed" x1="380" y1="522" x2="151" y2="522"/></g>
+            <g class="d-note" data-step="b2"><rect x="130" y="536" width="270" height="34" rx="3"/><text x="265" y="558">Login failed</text></g>
+
+            <g class="d-badge" aria-hidden="true"><circle r="10"/><text y="4">1</text></g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="ss-dock">
+        <div class="ss-caption" role="status" aria-live="polite" data-caption>
+          <div class="ss-counter"><b data-index>0</b><span data-total>/ 6</span></div>
+          <div class="ss-caption-body">
+            <div class="ss-caption-meta"><span class="ss-kind" data-kind>Overview</span><span class="ss-route" data-route></span></div>
+            <p class="ss-caption-text" data-text></p>
+          </div>
+        </div>
+        <div class="ss-progress" aria-hidden="true" data-progress></div>
+        <div class="ss-transport">
+          <div class="ss-transport-main">
+            <button type="button" class="ss-btn" data-act="prev" aria-label="Previous"><svg class="ic" aria-hidden="true"><use href="#i-prev"/></svg><span class="ss-opt-label">Previous</span></button>
+            <button type="button" class="ss-btn ss-btn-primary ss-btn-play" data-act="toggle" aria-label="Play"><svg class="ic" aria-hidden="true"><use href="#i-play" data-play-icon/></svg><span data-play-label>Play</span></button>
+            <button type="button" class="ss-btn" data-act="next" aria-label="Next"><span class="ss-opt-label">Next</span><svg class="ic" aria-hidden="true"><use href="#i-next"/></svg></button>
+            <button type="button" class="ss-btn ss-btn-ghost" data-act="reset" aria-label="Reset"><svg class="ic" aria-hidden="true"><use href="#i-reset"/></svg><span class="ss-opt-label">Reset</span></button>
+          </div>
+          <div class="ss-keys" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> step <kbd>Space</kbd> play <kbd>Home</kbd> reset</div>
+        </div>
+      </div>
+      <p class="ss-export-foot">Made with SeqShow · This file runs offline and makes no network requests.</p>
+    </section>
+  </div>
+
+  <dialog class="ss-dialog" data-replace aria-labelledby="replace-title">
+    <h2 id="replace-title">Replace current source?</h2>
+    <p>You have changed the source. Loading this example will replace your draft.</p>
+    <div class="ss-dialog-actions">
+      <button type="button" class="ss-btn" data-cancel>Cancel</button>
+      <button type="button" class="ss-btn ss-btn-primary" data-confirm>Replace current source</button>
+    </div>
+  </dialog>
+</div>
+</div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const app = $('.ss-app'), frame = $('.frame'), svg = $('#diagram'), stage = $('[data-diagram]');
+  const editor = $('#source'), gutter = $('[data-gutter]');
+
+  /* ── Sources ── */
+  const loginSource = `sequenceDiagram
+    actor U as Browser
+    participant API
+    participant DB as Database
+    U->>API: POST /login
+    API->>DB: Find user
+    DB-->>API: User
+    API->>API: Verify password
+    alt authenticated
+        API-->>U: Session
+        Note over U,API: Login succeeded
+    else unauthorized
+        API-->>U: 401
+        Note over U,API: Login failed
+    end`;
+  const staleSource = loginSource.replace('Find user', 'Find user by email');
+  const errorSource = loginSource.replace('    alt authenticated', `    opt remember me
+        API-->>U: Set cookie
+    end
+    alt authenticated`);
+  const examples = [
+    ['login', 'Login · success / failure', loginSource],
+    ['request', 'API request · first steps', 'sequenceDiagram\n    participant Client\n    participant API as Health API\n    Client->>API: GET /health\n    API-->>Client: 200 OK'],
+    ['cache', 'Cache · unequal paths', 'sequenceDiagram\n    actor U as User\n    participant Cache\n    participant DB as Database\n    U->>Cache: Look up profile\n    alt cache hit\n        Cache-->>U: Cached profile\n    else cache miss\n        Cache->>DB: Read profile\n        DB-->>Cache: Profile\n        Cache-->>U: Fresh profile\n    end\n    Note over U,Cache: Profile ready'],
+    ['job', 'Background job · two choices', 'sequenceDiagram\n    participant Client\n    participant Worker\n    Client->>Worker: Submit job\n    Client->>Client: Update job status'],
+    ['validation', 'Validation · self calls / Notes', 'sequenceDiagram\n    participant API as Validation service\n    API->>API: Validate\n    API->>API: Validate'],
+    ['chinese', '中文订单 · 长文本与别名', 'sequenceDiagram\n    actor U as 手机用户与订单页面\n    participant API as 订单接口服务\n    U->>API: 提交订单：商品、数量与配送地址\n    API-->>U: 订单已创建：等待支付'],
+  ];
+  const exampleSelect = $('[data-example]');
+  for (const [id, title] of examples) exampleSelect.append(new Option(title, id));
+
+  /* ── Diagram model (mirrors core/model for the login example) ── */
+  const STEPS = {
+    s1: { kind: 'Message', text: 'POST /login', route: ['Browser', 'API'], ids: ['U', 'API'], badge: [128, 140] },
+    s2: { kind: 'Message', text: 'Find user', route: ['API', 'Database'], ids: ['API', 'DB'], badge: [358, 188] },
+    s3: { kind: 'Message', text: 'User', route: ['Database', 'API'], ids: ['DB', 'API'], badge: [632, 236] },
+    s4: { kind: 'Self call', text: 'Verify password', route: ['API', 'API'], ids: ['API'], badge: [358, 298] },
+    a1: { kind: 'Message', text: 'Session', route: ['API', 'Browser'], ids: ['API', 'U'], badge: [402, 398] },
+    a2: { kind: 'Note', text: 'Login succeeded', over: ['Browser', 'API'], ids: ['U', 'API'], badge: [115, 429] },
+    b1: { kind: 'Message', text: '401', route: ['API', 'Browser'], ids: ['API', 'U'], badge: [402, 522] },
+    b2: { kind: 'Note', text: 'Login failed', over: ['Browser', 'API'], ids: ['U', 'API'], badge: [115, 553] },
+  };
+  const PATHS = { auth: ['s1', 's2', 's3', 's4', 'a1', 'a2'], unauth: ['s1', 's2', 's3', 's4', 'b1', 'b2'] };
+  const CASE_LABEL = { auth: 'authenticated', unauth: 'unauthorized' };
+
+  /* ── Player state ── */
+  let index = 0, path = 'auth', playing = false, timer, focus = true, enabled = true, focusEnabled = true;
+  let baseline = loginSource, loadedExample = 'login', pendingExample = '';
+  const btn = Object.fromEntries($$('[data-act]').map(b => [b.dataset.act, b]));
+  const focusBtn = $('[data-focus]'), pathSelect = $('[data-path]');
+
+  const stop = () => { clearInterval(timer); timer = undefined; playing = false; };
+  function act(type) {
+    if (!enabled && type !== 'pause') return;
+    const n = PATHS[path].length;
+    if (type === 'prev') { stop(); index = Math.max(0, index - 1); }
+    else if (type === 'next') { stop(); index = Math.min(n, index + 1); }
+    else if (type === 'reset') { stop(); index = 0; }
+    else if (type === 'pause') stop();
+    else if (type === 'toggle') {
+      if (playing) stop();
+      else {
+        if (index === 0 || index === n) index = 1;
+        playing = index < n;
+        if (playing) timer = setInterval(() => act('tick'), 1500);
+      }
+    } else if (type === 'tick') { index = Math.min(n, index + 1); if (index === n) stop(); }
+    update();
+  }
+
+  const chip = text => Object.assign(document.createElement('span'), { className: 'ss-pchip', textContent: text });
+
+  function update() {
+    const steps = PATHS[path], current = steps[index - 1];
+    for (const id of Object.keys(STEPS)) {
+      const pos = steps.indexOf(id);
+      svg.querySelector(`[data-step="${id}"]`).dataset.phase =
+        id === current ? 'current' : pos < 0 ? 'inactive' : pos < index - 1 ? 'past' : 'future';
+    }
+    for (const el of $$('[data-case], [data-case-bg]', svg)) el.dataset.selected = String((el.dataset.case || el.dataset.caseBg) === path);
+    const active = current ? STEPS[current].ids : [];
+    for (const el of $$('[data-participant]', svg)) el.dataset.active = String(active.includes(el.dataset.participant));
+    svg.dataset.focus = String(focus && index > 0);
+    const badge = $('.d-badge', svg);
+    badge.classList.toggle('on', !!current);
+    if (current) { badge.setAttribute('transform', `translate(${STEPS[current].badge.join(' ')})`); $('text', badge).textContent = index; }
+
+    // Caption
+    const caption = $('[data-caption]');
+    $('[data-index]').textContent = index;
+    $('[data-total]').textContent = `/ ${steps.length}`;
+    const kind = $('[data-kind]'), route = $('[data-route]'), text = $('[data-text]');
+    caption.toggleAttribute('data-overview', !current);
+    if (!current) {
+      kind.textContent = 'Overview'; kind.dataset.kind = 'overview';
+      route.replaceChildren('No current step · all paths keep their original layout');
+      text.textContent = 'Press Play or Next to start presenting.';
+    } else {
+      const step = STEPS[current];
+      kind.textContent = step.kind; kind.dataset.kind = step.kind.toLowerCase();
+      route.replaceChildren(...(step.over ? ['Over', ...step.over.map(chip)] : [chip(step.route[0]), '→', chip(step.route[1])]));
+      text.textContent = step.text;
+    }
+    caption.setAttribute('aria-live', playing ? 'off' : 'polite');
+    $('[data-progress]').replaceChildren(...steps.map((_, i) => {
+      const seg = document.createElement('i');
+      if (i < index - 1) seg.className = 'past'; else if (i === index - 1) seg.className = 'current';
+      return seg;
+    }));
+    $('[data-other]').textContent = `Other path: ${CASE_LABEL[path === 'auth' ? 'unauth' : 'auth']}`;
+
+    // Controls
+    btn.prev.disabled = !enabled || index === 0;
+    btn.next.disabled = !enabled || index === steps.length;
+    btn.toggle.disabled = !enabled || steps.length === 0;
+    btn.reset.disabled = !enabled;
+    btn.toggle.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    $('[data-play-label]').textContent = playing ? 'Pause' : 'Play';
+    $('[data-play-icon]').setAttribute('href', playing ? '#i-pause' : '#i-play');
+    focusBtn.disabled = !focusEnabled;
+    focusBtn.setAttribute('aria-pressed', String(focus));
+    pathSelect.disabled = !enabled;
+    if (current && enabled) reveal();
+  }
+
+  // Keep the current step inside the stage; only the stage scrolls (DESIGN §4).
+  function reveal() {
+    const boxes = $$('[data-phase="current"]', svg).map(el => el.getBoundingClientRect());
+    const view = stage.getBoundingClientRect();
+    const item = { left: Math.min(...boxes.map(b => b.left)), right: Math.max(...boxes.map(b => b.right)),
+      top: Math.min(...boxes.map(b => b.top)), bottom: Math.max(...boxes.map(b => b.bottom)) };
+    const left = item.left < view.left || item.right > view.right ? stage.scrollLeft + (item.left + item.right - view.left - view.right) / 2 : stage.scrollLeft;
+    const top = item.top < view.top || item.bottom > view.bottom ? stage.scrollTop + (item.top + item.bottom - view.top - view.bottom) / 2 : stage.scrollTop;
+    if (left !== stage.scrollLeft || top !== stage.scrollTop) {
+      stage.scrollTo({ left, top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+  }
+
+  for (const b of Object.values(btn)) b.addEventListener('click', () => act(b.dataset.act));
+  focusBtn.addEventListener('click', () => { if (focusEnabled) { focus = !focus; update(); } });
+  pathSelect.addEventListener('change', () => { stop(); path = pathSelect.value; index = 0; update(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) act('pause'); });
+  $('[data-player]').addEventListener('keydown', event => {
+    const t = event.target;
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey
+      || t.closest('textarea, input, select, [contenteditable]')
+      || (event.code === 'Space' && (event.repeat || t.closest('button')))) return;
+    const map = { ArrowLeft: btn.prev, ArrowRight: btn.next, Space: btn.toggle, Home: btn.reset };
+    const target = map[event.code];
+    if (target) { event.preventDefault(); if (!target.disabled) target.click(); }
+  });
+
+  /* ── Editor ── */
+  const ERROR_LINE = 9;
+  function syncGutter() {
+    const lines = editor.value.split('\n');
+    gutter.replaceChildren(...lines.map((_, i) => {
+      const s = document.createElement('span'); s.textContent = i + 1;
+      if (app.dataset.state === 'error' && i + 1 === ERROR_LINE) s.className = 'is-error';
+      return s;
+    }));
+    gutter.scrollTop = editor.scrollTop;
+    $('[data-count]').textContent = `${lines.length} lines · ${editor.value.length.toLocaleString('en-US')} / 50,000`;
+  }
+  editor.addEventListener('scroll', () => { gutter.scrollTop = editor.scrollTop; });
+  editor.addEventListener('input', () => { if (app.dataset.state !== 'busy') setState('stale', { keepSource: true }); else syncGutter(); });
+
+  const NOTICE = {
+    ready: ['#i-check', 'Ready to present · choose a path, then press Play or Next.'],
+    stale: ['#i-alert', 'Source changed — render to update. Last successful render shown for reference.'],
+    error: ['#i-error', 'Last successful render — the current source could not be rendered.'],
+    busy: ['#i-spinner', 'Rendering…'],
+  };
+  const CHIP = { ready: 'Rendered', stale: 'Source changed', error: 'Error', busy: 'Rendering' };
+  const SOURCE_STATE = { ready: 'Rendered', stale: 'Source changed', error: 'Check the diagnostic above', busy: 'Preparing preview' };
+
+  function setState(state, { keepSource = false } = {}) {
+    if (!keepSource) {
+      const next = state === 'error' ? errorSource : state === 'stale' ? staleSource : state === 'ready' ? loginSource : editor.value;
+      if (editor.value !== next) editor.value = next;
+      if (state === 'ready') baseline = loginSource;
+    }
+    app.dataset.state = state;
+    $('[data-chip]').textContent = CHIP[state];
+    const notice = $('[data-notice]');
+    $('use', notice).setAttribute('href', NOTICE[state][0]);
+    $('svg', notice).classList.toggle('ic-spin', state === 'busy');
+    $('span', notice).textContent = NOTICE[state][1];
+    const tag = $('[data-stage-tag]');
+    tag.replaceChildren();
+    if (state === 'busy') tag.innerHTML = '<svg class="ic ic-spin" aria-hidden="true"><use href="#i-spinner"/></svg>Rendering…';
+    else if (state !== 'ready') tag.textContent = 'Last successful render';
+    const render = $('[data-render]');
+    render.disabled = state === 'busy';
+    render.textContent = state === 'busy' ? 'Rendering…' : 'Render';
+    $('[data-source-state]').textContent = SOURCE_STATE[state];
+    $('[data-diag]').hidden = state !== 'error';
+    exampleSelect.disabled = state === 'busy';
+    $('[data-export]').disabled = state !== 'ready';
+    enabled = state === 'ready'; focusEnabled = state !== 'busy';
+    if (!enabled) stop();
+    for (const b of $$('[data-rv="state"] button')) b.setAttribute('aria-pressed', String(b.dataset.value === state));
+    syncGutter(); update();
+  }
+
+  $('[data-render]').addEventListener('click', () => {
+    setState('busy', { keepSource: true });
+    setTimeout(() => {
+      const failed = /^\s*opt\b/m.test(editor.value);
+      if (!failed) { baseline = editor.value; index = 0; }
+      setState(failed ? 'error' : 'ready', { keepSource: true });
+    }, 700);
+  });
+  $('[data-jump]').addEventListener('click', () => {
+    const lines = editor.value.split('\n');
+    const offset = lines.slice(0, ERROR_LINE - 1).reduce((total, line) => total + line.length + 1, 0) + 4;
+    editor.focus(); editor.setSelectionRange(offset, offset + 3);
+  });
+
+  /* ── Example switching + replace dialog ── */
+  const dialog = $('[data-replace]');
+  function loadExample(id) {
+    const source = examples.find(e => e[0] === id)[2];
+    editor.value = source; baseline = source; loadedExample = id; exampleSelect.value = id;
+    $('[data-render]').click();
+  }
+  exampleSelect.addEventListener('change', () => {
+    if (editor.value.trim() && editor.value !== baseline) { pendingExample = exampleSelect.value; dialog.showModal(); }
+    else loadExample(exampleSelect.value);
+  });
+  const cancelReplace = () => { exampleSelect.value = loadedExample; pendingExample = ''; };
+  dialog.addEventListener('cancel', cancelReplace);
+  $('[data-cancel]').addEventListener('click', () => { cancelReplace(); dialog.close(); });
+  $('[data-confirm]').addEventListener('click', () => {
+    const id = pendingExample; dialog.close();
+    if (id) loadExample(id); else cancelReplace();
+  });
+
+  /* ── Export (simulated) ── */
+  $('[data-export]').addEventListener('click', event => {
+    const b = event.currentTarget;
+    b.disabled = true; b.setAttribute('aria-busy', 'true'); $('[data-export-label]').textContent = 'Exporting…';
+    setTimeout(() => { b.removeAttribute('aria-busy'); $('[data-export-label]').textContent = 'Export HTML'; b.disabled = app.dataset.state !== 'ready'; }, 700);
+  });
+
+  /* ── Design review toolbar ── */
+  function bindSeg(name, handler) {
+    for (const b of $$(`[data-rv="${name}"] button`)) b.addEventListener('click', () => {
+      for (const o of $$(`[data-rv="${name}"] button`)) o.setAttribute('aria-pressed', String(o === b));
+      handler(b.dataset.value);
+    });
+  }
+  bindSeg('viewport', value => { frame.dataset.w = value; });
+  bindSeg('state', value => setState(value));
+  bindSeg('view', value => {
+    app.dataset.view = value;
+    $('[data-player-title]').textContent = value === 'export' ? 'Presentation' : 'Preview';
+    for (const b of $$('[data-rv="state"] button')) b.disabled = value === 'export';
+    if (value === 'export') setState('ready');
+  });
+  $('[data-rv-dialog]').addEventListener('click', () => { pendingExample = ''; dialog.showModal(); });
+
+  editor.value = loginSource;
+  setState('ready');
+})();
+</script>
+</body>
+</html>
