@@ -1,6 +1,6 @@
 # SeqShow 技术架构
 
-状态：v0.1 架构基线；M0–M4 已完成；Parser、纯 Playback、正式编辑器与离线导出通过阶段验收，完整发布验收属于 M5。更新：2026-10-07。
+状态：v0.1 架构基线；M0–M5 技术验收已完成，证据见 [M5](validation/M5.md)。U0 发布前素材已准备，不改变本文件的模块与产品边界。更新：2026-10-07。
 
 产品范围以 [PRODUCT](PRODUCT.md) 为准；本文件负责模块与数据边界。M0 必须先验证 Mermaid 步骤映射路线，见 [执行计划](exec-plans/completed/mvp.md)。
 

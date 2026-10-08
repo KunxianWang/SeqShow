@@ -10,7 +10,9 @@ Present Mermaid sequence diagrams, step by step.
 
 内置六个原创案例：登录成功/失败、请求响应、缓存命中/未命中、后台任务的两个独立分支、Note/自调用/重复消息、中文订单长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
 
-![SeqShow：选择失败分支并聚焦当前消息](docs/validation/m5-login-failure-focus.png)
+![SeqShow：逐步讲解、切换失败路径、Focus 与单文件离线播放](demo/seqshow.gif)
+
+17 秒真实操作状态演示。也可查看 [静态预览](docs/validation/m5-login-failure-focus.png)或下载下方离线文件。
 
 ## 先试一次
 
@@ -117,13 +119,14 @@ M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture�
 | [M3 验证](docs/validation/M3.md) | 编辑器、六案例、错误恢复、键盘与响应式证据 |
 | [M4 验证](docs/validation/M4.md) | 独立 HTML、真实下载、播放一致性与导出安全 |
 | [M5 验证](docs/validation/M5.md) | 需求与 DoD、生产浏览器、输入上限与发布准备 |
+| [发布准备](docs/release/launch.md) | 演示素材、介绍与 Release 草稿、试用反馈模板 |
 | [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
 
 MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布局、Focus 和独立 HTML 导出。CLI、Agent skill、AI 生成、云分享与视频导出后置。
 
 ## 开发流程
 
-M0–M3 和 GPT-6 修复已按用户授权合入 main（340110d）。M4 位于 ffang/m4-offline-export；M5 从该分支继续，位于 ffang/m5-release-validation，包含尚未合并的 M4。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
+M0–M3 和 GPT-6 修复已按用户授权合入 main（340110d）。M4 位于 ffang/m4-offline-export；M5 从该分支继续，位于 ffang/m5-release-validation。发布前展示材料位于 ffang/u0-launch-assets，包含尚未合并的 M4 / M5。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
 
 ## 许可证
 
