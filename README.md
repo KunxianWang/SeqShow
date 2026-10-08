@@ -32,12 +32,6 @@ git clone https://github.com/KunxianWang/SeqShow.git
 cd SeqShow
 ```
 
-The latest showcase and this guide are currently on `ffang/english-docs`, pending a merge into main. To try this version before that merge:
-
-```sh
-git switch ffang/english-docs
-```
-
 ### Step 2 — Install dependencies
 
 ```sh
