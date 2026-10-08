@@ -90,6 +90,7 @@ fixtures 放在 tests/fixtures，examples 的业务文本可复用，但期望�
 5. before/after 比较 SVG viewBox 与图内坐标；切步、Focus 和分支变更不得重新布局。浏览器滚动带来的屏幕坐标变化要与图内几何变化分开。
 6. 必要 defs/marker、虚线、箭头和 Note 在规范化后仍存在且可见；清理重复镜像或外部资源不破坏信息。
 7. 长文本、中文和移动视口实际渲染无重叠与裁切；不能只使用短英文 fixture。
+8. 20 个参与者的宽图在桌面/390px 及离线文件中保持可读文字尺寸，溢出限制在图内；超过容器高度的多行消息切步后，其箭头仍出现在容器可视范围内，页面位置和 viewBox 不变。回归见 tests/e2e/diagram-viewport.spec.ts。
 
 Mermaid 版本升级必须跑这些检查。API 调用成功或 SVG 字符串非空不算路线通过。
 

@@ -87,9 +87,16 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     for (const select of controls.querySelectorAll('select')) select.disabled = !enabled;
     focusButton.setAttribute('aria-pressed', String(focus));
     if (current && enabled) {
-      const element = svg.querySelector('[data-phase="current"]')!;
       const container = root.querySelector<HTMLElement>('[data-diagram]')!;
-      const item = element.getBoundingClientRect(), viewport = container.getBoundingClientRect();
+      const boxes = Array.from(svg.querySelectorAll('[data-phase="current"]'), element => element.getBoundingClientRect());
+      const item = { left: Math.min(...boxes.map(box => box.left)), right: Math.max(...boxes.map(box => box.right)),
+        top: Math.min(...boxes.map(box => box.top)), bottom: Math.max(...boxes.map(box => box.bottom)) };
+      // For an oversized step, reveal its lowest bound element. This keeps the
+      // end of a wrapped message visible without relying on renderer DOM order.
+      const anchor = boxes.reduce((lowest, box) => box.bottom > lowest.bottom ? box : lowest);
+      if (item.bottom - item.top > container.clientHeight) { item.top = anchor.top; item.bottom = anchor.bottom; }
+      if (item.right - item.left > container.clientWidth) { item.left = anchor.left; item.right = anchor.right; }
+      const viewport = container.getBoundingClientRect();
       const left = item.left < viewport.left || item.right > viewport.right
         ? container.scrollLeft + (item.left + item.right - viewport.left - viewport.right) / 2 : container.scrollLeft;
       const top = item.top < viewport.top || item.bottom > viewport.bottom

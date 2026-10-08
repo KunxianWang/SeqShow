@@ -160,6 +160,9 @@ export async function renderSequence(document: SequenceDocument): Promise<SVGSVG
   const svg = window.document.importNode(parsed.documentElement, true) as unknown as SVGSVGElement;
   assertSafeSvg(svg);
   bindSteps(svg, document);
+  // Preserve Mermaid's text scale for wide diagrams. The surrounding diagram
+  // container scrolls; shrinking all participants into the panel makes labels unreadable.
+  svg.style.minWidth = `${Math.max(600, svg.viewBox.baseVal.width)}px`;
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', 'Sequence diagram');
   return svg;
