@@ -68,7 +68,7 @@ try {
   } finally { await context.close(); }
   assert.deepEqual(requests, []); assert.deepEqual(errors, []);
   await writeFile(resolve(output, 'frames.json'), JSON.stringify({ frames, remoteRequests: requests, pageErrors: errors, fullscreen: 'passed' }, null, 2));
-  await copyFile(resolve(output, 'frame-00.png'), resolve('docs/validation/showcase-overview.png'));
-  await copyFile(resolve(output, 'frame-03.png'), resolve('docs/validation/showcase-recovery.png'));
+  await copyFile(resolve(output, 'frame-00.png'), resolve('demo/showcase-overview.png'));
+  await copyFile(resolve(output, 'frame-03.png'), resolve('demo/showcase-recovery.png'));
   console.log(`Showcase: ${frames.length} captured states, fullscreen passed, real offline file passed, remote requests ${requests.length}`);
 } finally { await browser?.close(); server.kill(); }

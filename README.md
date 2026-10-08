@@ -1,137 +1,283 @@
 # SeqShow
 
-Present Mermaid sequence diagrams, step by step.
+**Present Mermaid sequence diagrams, step by step.**
 
-把已有 Mermaid 时序图转换为可以逐步讲解、选择分支、聚焦并离线分享的技术演示。
+Paste a sequence diagram, choose a presentation path, and explain one interaction at a time. Use Focus to guide your audience, then share a single HTML file they can play offline.
 
-可以粘贴自己的 Mermaid 时序图，Render 后选择分支、逐步播放或开启 Focus；也可以下载单文件 HTML，发给同事直接离线讲解。无需账号、服务端或 AI API。
+No account, backend, or AI API key is required. Your diagram is processed in your browser.
 
-**技术 MVP（M0–M5）与 UI v0.2 已完成并合入 main**。功能验收见 [M5](docs/validation/M5.md)，界面范围和最终复验见 [UI 合并记录](docs/validation/UI-V02-MERGE.md)。尚未公开部署或发布 Release。
+![SeqShow interactive showcase: a six-service checkout flow](demo/showcase.gif)
 
-内置七个原创案例，新增六个服务协作的复杂订单：库存预留、支付恢复、outbox、事件去重与履约分支；另保留登录成功/失败、请求响应、缓存、后台任务、Note/自调用/重复消息与中文长文本。修改后旧预览会明确标识并禁用播放和导出；刷新页面不会保存草稿，请先复制源码。
+The showcase uses a real six-service flow with inventory reservation, payment recovery, an outbox, event deduplication, and fulfillment branches. It demonstrates 20 / 24-step paths, Focus, and offline export.
 
-![SeqShow：复杂订单流程的发布会式互动展示](demo/showcase.gif)
+## Start here
 
-20 秒真实操作状态演示：六个服务、20 / 24 步、支付路径切换、Focus 与离线导出。可看[静态预览](docs/validation/showcase-overview.png)与[展示讲稿](docs/release/showcase.md)。新增展示在 `ffang/showcase` 工作分支，尚未合入 main。
+- **Just want to see what it does?** Download the [checkout presentation](demo/checkout.html) or [login presentation](demo/login.html) and open it locally. No installation is required to view these files.
+- **Want to use your own diagram?** Follow the [step-by-step guide](#use-your-own-diagram-step-by-step).
+- **Want a guided product tour?** Start the app, then open [the local showcase](http://127.0.0.1:5173/showcase.html).
+- **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 先试一次
+There is no publicly hosted editor yet. Run the editor locally using the steps below. Exported presentations work without the editor or a running server.
 
-运行下方生产预览命令，打开 [本地演示页](http://127.0.0.1:4173/)。选择登录成功/失败路径，点击 Next 或 Play。路径只表示讲解选择，SeqShow 不判断条件是否成立。
+> GitHub displays HTML files as source code. Open a demo's file page, choose **Download raw file**, save it with its `.html` extension, and open the downloaded file in your browser. Clicking the GitHub file link alone does not run the player.
 
-第一次接触产品，建议打开[互动展示页](http://127.0.0.1:4173/showcase.html)：按五个章节体验，点击“全屏展示”用于分享或录屏。右上角“打开编辑器”载入同一复杂案例。也可下载[复杂订单离线演示](demo/checkout.html)，保留真实播放器；展示页自身仍需要应用静态资源。
+## Run the app
 
-也可以下载 [现成的离线登录演示](demo/login.html)，保存为 `.html` 后用浏览器打开；初始为失败路径、总览暂停，可换路径和开启 Focus。GitHub 文件页展示源码，需要下载文件在本地打开。
+You need Git, npm, and a supported Node.js version: Node 22.13+ within the 22.x series, Node 24.x, or Node 26+. Development has been verified with Node 22.14.0 and npm 10.9.2.
 
-播放器获得焦点后，使用 ← / → 切步、Space 播放或暂停、Home 重置；编辑器内这些键保留编辑行为。
+### Step 1 — Get the project
 
-## 支持的 Mermaid 子集
-
-一行一条语句，以 `sequenceDiagram` 开始。例如粘贴：
-
-```mermaid
-sequenceDiagram
-actor U as 用户
-participant API as 登录服务
-U->>API: POST /login
-API->>API: Verify password
-alt authenticated
-  API-->>U: Session
-  Note over U,API: 登录成功
-else unauthorized
-  API-->>U: 401
-  Note right of API: 请重新登录
-end
+```sh
+git clone https://github.com/KunxianWang/SeqShow.git
+cd SeqShow
 ```
 
-支持 participant / actor、as 别名、隐式参与者、`->>` / `-->>`、自调用、重复消息、Note left of / right of / over 一个或两个参与者、中文与纯文本长标签，以及多个独立顶层 alt/else。每条消息或 Note 是一步；未选分支不进入播放步骤。ID 使用 ASCII 字母或下划线开头，后接字母、数字、下划线或连字符；中文名称用 as 标签。
+The latest showcase and this guide are currently on `ffang/english-docs`, pending a merge into main. To try this version before that merge:
 
-暂不支持嵌套 alt、第三条 case、opt / loop / par、activation、create / destroy、autonumber、rect、其他箭头、分号拼接多语句、HTML / 富文本、frontmatter、配置 directives、click / links 或其他图类型。普通整行 %% 注释可用，%%{…} 指令会被拒绝；详见 [产品语法规范](docs/PRODUCT.md)。
+```sh
+git switch ffang/english-docs
+```
 
-输入上限：50,000 UTF-16 单位、20 个参与者、全图所有路径合计 200 条消息 / Note、10 个 alt。超限给出诊断，不截断。大型图需要更多渲染时间和图内滚动；实测与环境见 [M5 验收](docs/validation/M5.md)。
-
-## 开发与生产预览
-
-使用 Node 22（>=22.13）、Node 24 或 Node >=26，以及 npm。实测 Node 22.14.0 / npm 10.9.2；所有依赖固定在 package-lock.json。
+### Step 2 — Install dependencies
 
 ```sh
 npm ci
+```
+
+Use `npm ci` to install the versions recorded in the lockfile.
+
+### Step 3 — Start the editor
+
+```sh
 npm run dev
 ```
 
-开发地址：[127.0.0.1:5173](http://127.0.0.1:5173/)。生产预览：
+Keep the terminal running and open [http://127.0.0.1:5173/](http://127.0.0.1:5173/) in your browser.
+
+The editor automatically loads a login example. Once it is ready, click **Next** or **Play** to try it. You do not need to Render the initial example yourself.
+
+If you prefer a production build:
 
 ```sh
 npm run build
 npm run preview
 ```
 
-预览地址：[127.0.0.1:4173](http://127.0.0.1:4173/)。端口采用严格模式，启动前先停止旧预览。开发与 production 均从共享源码生成内联播放器；修改播放器后，页面和导出运行包一起更新。生产构建输出 dist/ 静态文件与独立的 dist/export-player.js。尚未提供公开托管演示站点。
+Open [http://127.0.0.1:4173/](http://127.0.0.1:4173/). The production showcase is at [http://127.0.0.1:4173/showcase.html](http://127.0.0.1:4173/showcase.html). Stop the server with Ctrl+C when finished.
 
-## 检查
+Ports are strict: if 5173 or 4173 is already occupied, stop the previous server or pass another port, for example `npm run dev -- --port 5175`, then open that port.
 
-```sh
-npx playwright install chromium
-npm run typecheck
-npm run lint
-npm test
-npm run test:e2e
+## Use your own diagram: step by step
+
+### Step 1 — Get the Mermaid source
+
+SeqShow accepts **Mermaid sequence diagram text**, beginning with `sequenceDiagram`.
+
+- From a Markdown document, copy the contents inside its Mermaid code block, without the opening/closing triple backticks.
+- From a `.mmd` or `.mermaid` file, open it in a text editor and copy the source.
+- From another Mermaid editor, copy the source text rather than its rendered image.
+
+SeqShow currently uses **copy and paste**, not file upload. It does not import PNG, SVG, PDF, draw.io files, or Mermaid flowcharts. If you only have an image, recreate it as supported Mermaid sequence source first.
+
+### Step 2 — Paste into Mermaid source
+
+Open the editor and replace the text in **Mermaid source** with your diagram. You can start with this working example:
+
+```mermaid
+sequenceDiagram
+    actor U as Browser
+    participant API as Login service
+    participant DB as Database
+    U->>API: POST /login
+    API->>DB: Find user
+    DB-->>API: User
+    API->>API: Verify password
+    alt authenticated
+        API-->>U: Session
+        Note over U,API: Login succeeded
+    else unauthorized
+        API-->>U: 401
+        Note over U,API: Login failed
+    end
 ```
 
-npm test 为非 watch 的 Vitest 检查（当前 140 项）。test:e2e 先构建 production，再在隔离的 4174 预览上执行 40 项 Chromium 检查，覆盖 E01–E12、四项输入上限、宽图/长正文、多分支、展示章节和离线下载。最新范围见[展示验收](docs/validation/SHOWCASE.md)。Firefox/WebKit 项目保留：
+Use one statement per line. Participant IDs such as `U`, `API`, and `DB` identify endpoints; `as` supplies their visible labels.
 
-```sh
-npx playwright install firefox webkit
-npm run build
-npx playwright test --project=webkit
-npx playwright test --project=firefox
-```
+Editing marks the existing preview **Source changed** and disables playback/export until you Render again. The old diagram may remain visible as a reference.
 
-M5 的命令、需求覆盖、实际浏览器范围和限制见 [验收记录](docs/validation/M5.md)，最新 UI 的范围见 [UI 合并记录](docs/validation/UI-V02-MERGE.md)。Chromium 生产检查在 Windows 运行；M5 的 Firefox 检查在 WSL Ubuntu 24.04 运行，UI v0.2 尚未复验 Firefox，历史结果不代表新版 UI 已通过。本机 Windows Firefox 测试二进制有 mozglue 启动错误。WebKit 是 Playwright 测试引擎，其 file:// 离线检查拦截远程请求；它不等同于真实 Safari 或 iOS 设备验收。Linux 需要浏览器系统依赖与可显示中文的本地字体；可按 [Playwright 官方安装说明](https://playwright.dev/docs/browsers#install-system-dependencies)准备。
+### Step 3 — Click Render
 
-导出时选择各条路径，点击 Export HTML 下载 `seqshow-presentation.html`；将这一个文件发给收件人，用浏览器直接打开即可。打开时从总览暂停开始，保留选择并允许改选。文件包含参与者、消息与 Note 标签；原始源码及注释不会默认附带。断网承诺针对导出文件，首次访问编辑器仍需要应用静态资源。
+Click **Render** and wait for **Ready to present**.
 
-## M0 验证页面
+The preview starts at **Overview · 0 / N**, where N is the number of messages and Notes on the selected path. Each message or Note becomes one step. Declarations, comments, and alt/else/end do not count.
 
-验证器保留 M0 场景并加入 M2 的真实解析场景，使用同一套已安装依赖：
+The example above has six steps on either path: four shared messages, one selected response, and one selected Note.
 
-```sh
-npm run m0:preview
-npm run test:m0
-```
+If rendering fails:
 
-M0 页面也使用 4173，不能和生产预览同时启动。可选择 fixture、播放所选路径、切换 Focus 和下载 HTML，暂不接受用户 Mermaid 输入。
+1. Read the diagnostic and the statement shown below the editor.
+2. Click a line/column diagnostic to locate the problem in the source.
+3. Correct the input, then click **Render** again.
 
-当前检查覆盖 18 个 fixture、27 条路径、132 个状态，包含不等长/空分支、特殊参与者 ID、语义绑定、稳定布局、计时器清理，以及在全新 Chromium 上下文中用 file:// 打开真实离线文件。HTML、截图与报告生成在 artifacts/m0/。
+Unsupported syntax is rejected rather than silently removed. If you already had a valid diagram, a failed Render labels it **Last successful render** and keeps playback/export disabled. Your source remains in the editor.
 
-可选扩展命令：`node scripts/m0.mjs --browsers=chromium,webkit`（PowerShell 中给参数加引号）。具体浏览器差异见 [M0 记录](docs/validation/M0.md)；它不代表发布兼容性认证。
+### Step 4 — Choose the path you want to explain
 
-## 项目文档
+For diagrams with alt/else, use the **Path** selectors above the diagram.
 
-| 文档 | 职责 |
+In the example, select **authenticated** to explain success or **unauthorized** to explain failure. Each top-level alt has its own selector.
+
+- Only the selected case contributes playback steps.
+- Changing a path pauses and returns to overview; the step count is recalculated.
+- Conditions are labels, **not evaluated expressions**. Selecting authenticated does not perform authentication.
+- Unselected cases remain visible as context, with muted styling and hatching, but are skipped during playback.
+
+The first case is selected by default. Diagrams without branches need no path selection.
+
+### Step 5 — Present one interaction at a time
+
+| Control | What it does |
 | --- | --- |
-| [AGENTS.md](AGENTS.md) | 仓库规则、导航与开发流程 |
-| [产品定义](docs/PRODUCT.md) | 用户、MVP 范围、语法与完成标准 |
-| [技术架构](docs/ARCHITECTURE.md) | Parser、模型、播放、渲染与导出边界 |
-| [交互设计](docs/DESIGN.md) | 编辑器、预览、Focus、控件与错误状态 |
-| [测试策略](docs/TESTING.md) | 单元、集成、浏览器与离线验收 |
-| [MVP 执行计划](docs/exec-plans/completed/mvp.md) | 里程碑、决策、进度与验证记录 |
-| [M0 验证](docs/validation/M0.md) | 渲染/离线证明、截图与浏览器限制 |
-| [M1 验证](docs/validation/M1.md) | 工具链、清洁安装与 production 证据 |
-| [M2 验证](docs/validation/M2.md) | 子集解析、纯状态、双浏览器与真实离线文件 |
-| [M3 验证](docs/validation/M3.md) | 编辑器、六案例、错误恢复、键盘与响应式证据 |
-| [M4 验证](docs/validation/M4.md) | 独立 HTML、真实下载、播放一致性与导出安全 |
-| [M5 验证](docs/validation/M5.md) | 需求与 DoD、生产浏览器、输入上限与发布准备 |
-| [M5 后联合复核](docs/validation/REVIEW-M5-MERGE-2026-10-07.md) | 宽图、长消息修复及最终代码的独立复验 |
-| [UI v0.2 合并记录](docs/validation/UI-V02-MERGE.md) | 新界面、布局修复、独立复验与更新后的演示素材 |
-| [发布准备](docs/release/launch.md) | 演示素材、介绍与 Release 草稿、试用反馈模板 |
-| [项目调研](docs/research/2026-10-06-github-project-opportunities.md) | 项目方向与竞品快照 |
+| **Next** | Pause and advance one step |
+| **Previous** | Pause and go back one step |
+| **Play / Pause** | Automatically advance every 1.5 seconds, or pause at the current step |
+| **Reset** | Return to overview while retaining your path choices |
+| **Focus** | Emphasize the current interaction and related participants |
 
-MVP 目标是浏览器应用、一种默认主题、单层 alt/else、稳定布局、Focus 和独立 HTML 导出。CLI、Agent skill、AI 生成、云分享与视频导出后置。
+The narration below the diagram shows the step number, type, endpoints, and full message or Note. Self-calls and Notes are steps too.
 
-## 开发流程
+Playback stops at the final step. Pressing Play at the end starts again from Step 1. Hiding the browser tab pauses playback.
 
-M0–M5、发布前展示材料和 GPT-6 后续修复已按用户授权，经 ffang/m5-review-integration 合入 main；UI v0.2 与布局修复随后按本次授权，经 ffang/ui-design 合入 main。后续更新继续使用 ffang 开头的分支。每次合并均须仓库所有者对本次合并明确批准，不自动合并。技术 MVP 验收与站点发布、真实用户采用及 stars 分开记录。
+Focus is on by default. Turning it off restores surrounding context while retaining the current-step marker; it does not change the step or chosen paths. The full diagram keeps the same layout while you present.
 
-## 许可证
+Wide diagrams scroll inside the preview. Long narration can also scroll within its own area, without hiding the playback controls.
 
-[MIT](LICENSE)，copyright 2026 Kunxian Wang。
+### Step 6 — Export and share
+
+1. Choose the paths you want the recipient to see initially.
+2. Click **Export HTML**.
+3. Save the downloaded `seqshow-presentation.html`.
+4. Open that file in a browser to check it.
+5. Send the **single HTML file** to your audience or colleagues.
+
+The recipient needs no Node.js, installation, account, server, or internet connection. The file contains the rendered diagram and shared player, with no CDN, remote fonts, or Mermaid runtime dependency.
+
+It opens paused at overview with your path choices retained and Focus on. Recipients can still play, pause, go back, reset, toggle Focus, and change paths.
+
+The export contains participant names, message text, and Notes. Original Mermaid source and comments are not included by default. Review diagram content before sharing it.
+
+### Step 7 — Keep the editable source
+
+Copy your Mermaid source to a local file or your existing documentation before closing or refreshing the editor.
+
+**Drafts are not saved across page reloads.** Exported HTML is a presentation, not a Mermaid source backup, and cannot currently be imported back into the editor.
+
+To revise a presentation later, paste your saved source, Render again, and export a new HTML file.
+
+## Explore the examples and showcase
+
+The **Example** menu contains seven examples:
+
+| Example | What to try |
+| --- | --- |
+| Checkout | Six services, payment success/recovery, fulfillment choices, 20 / 24 steps |
+| Login | Success/failure branches |
+| API request | A minimal two-message diagram |
+| Cache | Branches with different step counts |
+| Background job | Two independent path selections |
+| Validation | Self-calls, repeated messages, and Notes |
+| Chinese order | Unicode labels, aliases, and long text |
+
+If you have edited the source since the last load or successful Render, switching examples asks whether to **Replace current source**. Choose **Cancel** to retain your draft.
+
+For a presentation-style introduction, click **Showcase** in the editor. It opens a new tab and preserves your editor draft.
+
+The showcase has five interactive chapters: **Big picture → One step → Paths → Focus → Share**. Try the chapter's main action or use the real player controls directly. **Fullscreen** enters/exits browser fullscreen; **Open editor** loads the same checkout source in a new tab.
+
+Chapter switches restore the demo's default paths and chapter starting step. The Share action downloads a real offline HTML presentation; chapter headings and the dark showcase frame are not included in the export.
+
+[Overview screenshot](demo/showcase-overview.png) · [Payment recovery screenshot](demo/showcase-recovery.png) · [Offline checkout file](demo/checkout.html)
+
+The showcase itself needs the application's static assets. The downloaded HTML is the self-contained offline presentation.
+
+## Keyboard and accessibility
+
+Tab to the presentation player, then use:
+
+| Key | Action |
+| --- | --- |
+| ← | Previous |
+| → | Next |
+| Space | Play / Pause |
+| Home | Reset |
+
+The same keys keep their normal behavior in the source editor and form inputs. Native buttons remain operable through Tab, Enter, and Space.
+
+The player provides current-step text outside the SVG, visible focus indicators, and state/count announcements. Reduced-motion preferences disable visual transitions and animated scrolling without disabling playback.
+
+On narrow screens, the editor and preview stack vertically; the diagram scrolls internally.
+
+## Supported Mermaid syntax
+
+SeqShow supports a restricted subset of `sequenceDiagram`, not every Mermaid feature.
+
+| Syntax | Example |
+| --- | --- |
+| Participant | `participant API` |
+| Actor / alias | `actor U as User`, `participant DB as Database` |
+| Implicit participants | `A->>B: Request` without prior declarations |
+| Solid arrow | `A->>B: Request` |
+| Dashed arrow | `B-->>A: Response` |
+| Self-call | `A->>A: Validate` |
+| Left / right Note | `Note left of A: Text`, `Note right of A: Text` |
+| Note over one / two participants | `Note over A: Text`, `Note over A,B: Text` |
+| Alternative | `alt success` / `else failure` / `end` |
+| Full-line comment | `%% This is a comment` |
+
+Participant IDs begin with an ASCII letter or underscore, followed by letters, digits, underscores, or hyphens. Use aliases for display names with spaces or non-ASCII characters. Chinese labels/messages and long plain-text labels are supported. Notes must reference participants present in the document.
+
+Multiple independent top-level alt blocks are allowed; each has exactly two cases with nonempty labels. Nested alternatives and a third case are unsupported. A case may be empty, but the diagram must have at least one playable message or Note overall.
+
+Repeated messages remain separate steps. Wrapping long labels does not add steps. Solid/dashed arrows preserve their visual meaning; SeqShow does not infer business behavior from them.
+
+**Unsupported:** nested alt, opt / loop / par, activation/deactivation or +/- shorthand, create / destroy, autonumber, rect, other arrows, semicolon-joined statements, HTML / rich text / line-break markup, frontmatter, configuration directives such as `%%{init: ...}%%`, click / links, and other diagram types.
+
+Plain URLs in message text are labels, not automatically fetched resources or executable links.
+
+### Input limits
+
+| Item | Maximum |
+| --- | --- |
+| Source length | 50,000 UTF-16 code units |
+| Participants | 20 |
+| Messages + Notes | 200 across all paths combined |
+| Top-level alt blocks | 10 |
+
+Over-limit input produces a diagnostic; it is not truncated. Large supported diagrams may take longer to render and require more scrolling.
+
+## Troubleshooting and current limitations
+
+| Problem | What to do |
+| --- | --- |
+| Preview shows Source changed | Click Render before presenting or exporting |
+| Export HTML is disabled | Finish a successful Render of the current source and wait for rendering/export to complete |
+| Unsupported-syntax diagnostic | Compare your source against the supported subset; express the intended interactions using supported constructs |
+| Old diagram remains after an error | It is a reference, not a successful render of your new input; fix the diagnostic and Render again |
+| Downloaded demo opens as text | Download the raw file, keep the .html extension, then open it in a browser |
+| Screenshot or draw.io file will not import | Copy/recreate the Mermaid sequence source instead; image/file conversion is not provided |
+| Local server will not start | Check Node version and whether its port is already occupied |
+| Edits disappear after reload | Draft persistence is not implemented; save source outside the app |
+
+The editor is intended for modern browsers, with Chromium as the primary development target. Browser behavior can vary; Playwright WebKit checks are not certification for real Safari or iOS devices.
+
+Some parser diagnostic messages and the Chinese example's title currently remain in Chinese. The showcase and standard playback controls use English.
+
+The offline guarantee applies to exported HTML. Loading the editor or showcase for the first time requires their static assets. There is no AI generation, business execution, cloud sharing, or GIF/video export feature; the README GIF is a prepared demonstration.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, module locations, checks, and issue / pull request guidance.
+
+## License
+
+[MIT](LICENSE) · Copyright 2026 Kunxian Wang.

@@ -6,3 +6,8 @@ test-results/
 .env
 .env.*
 !.env.example
+
+# Local development notes, research, plans, and historical evidence.
+/AGENTS.md
+/docs/
+/design/
