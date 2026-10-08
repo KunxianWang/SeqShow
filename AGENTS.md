@@ -4,7 +4,7 @@
 
 SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的技术演示。
 
-当前仓库处于 **M0–M5 技术 MVP 已完成、U0 发布前素材已准备、公开发布与真实使用验证未开始**的阶段。已存在受限 Parser、纯 Playback、Mermaid 适配层、共享播放器、源码编辑器、六案例、响应式布局、键盘、错误恢复及单文件离线导出。最终需求 / DoD、三种引擎的实际平台范围、输入上限与发布准备见 [M5 验收](docs/validation/M5.md)；素材见 [发布草稿](docs/release/launch.md) 与 [U0 准备记录](docs/validation/U0-PREP.md)。M4 / M5 与发布前准备仍在工作分支，未自动合入 main、部署站点或发布 Release。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
+当前仓库处于 **M0–M5 技术 MVP 已完成、U0 发布前素材已准备、公开发布与真实使用验证未开始**的阶段。已存在受限 Parser、纯 Playback、Mermaid 适配层、共享播放器、源码编辑器、六案例、响应式布局、键盘、错误恢复及单文件离线导出。最终需求 / DoD、三种引擎的实际平台范围、输入上限与发布准备见 [M5 验收](docs/validation/M5.md)；素材见 [发布草稿](docs/release/launch.md) 与 [U0 准备记录](docs/validation/U0-PREP.md)。M4 / M5、发布素材及 GPT-6 后续修复按 2026-10-07 本次明确授权合入 main，复验见 [联合复核](docs/validation/REVIEW-M5-MERGE-2026-10-07.md)。尚未部署站点或发布 Release。目录名 scan-skill 是现有工作目录名，产品名为 SeqShow，不要据此实现 skill 扫描工具。
 
 ## 先读什么
 
@@ -22,6 +22,7 @@ SeqShow 将 Mermaid 时序图转换为可逐步讲解、播放并离线分享的
 | [docs/validation/M3.md](docs/validation/M3.md) | 编辑器、错误恢复、六案例、键盘与响应式验收 |
 | [docs/validation/M4.md](docs/validation/M4.md) | 真实下载、分支保留、离线动作一致性与安全边界 |
 | [docs/validation/M5.md](docs/validation/M5.md) | P01–P10 / DoD、浏览器平台、上限回归与发布准备 |
+| [docs/validation/REVIEW-M5-MERGE-2026-10-07.md](docs/validation/REVIEW-M5-MERGE-2026-10-07.md) | GPT-6 后续修复、独立复验及本次批准的合并范围 |
 | [docs/exec-plans/active/u0.md](docs/exec-plans/active/u0.md) | 未开始的公开发布、真实使用和传播验证 |
 | [docs/release/launch.md](docs/release/launch.md) | 已准备的真实 GIF、中英文介绍与 Release 草稿 |
 

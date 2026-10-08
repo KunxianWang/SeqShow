@@ -10,7 +10,8 @@
 | [静态截图](../validation/m5-login-failure-focus.png) | 不播放动画的预览；不能使用 GIF 的场合可替代 |
 | [离线登录演示](../../demo/login.html) | 下载为 HTML 并直接打开；GitHub 文件页本身不执行播放器 |
 | [M5 验收](../validation/M5.md) | 实际浏览器平台、支持子集、输入限额、已知限制与验证证据 |
-| [仓库](https://github.com/KunxianWang/SeqShow) | 最终发布入口；M4 / M5 和本轮素材尚未合入 main |
+| [后续修复联合复核](../validation/REVIEW-M5-MERGE-2026-10-07.md) | 宽图和长消息修复、独立复验与最终合并范围 |
+| [仓库](https://github.com/KunxianWang/SeqShow) | M4 / M5、素材和后续修复已按本次授权合入 main |
 
 目前没有公开托管演示 URL。草稿不填写虚构的在线入口，也不宣传下载文件页能直接在线运行。合并和发布必须按 AGENTS 取得本次批准；准备阶段不改仓库设置或创建 Release / tag。
 
@@ -68,7 +69,7 @@ npm run preview
 
 发布附件候选：demo/login.html。静态站点产物需从批准的最终提交重新构建；本准备分支未创建或上传 Release 附件。
 
-完整兼容边界见 M5：Windows Chromium 与 Linux Firefox 各 30 项 production E2E；Windows WebKit 通过 6 项重点检查。Windows Firefox 测试二进制仍有启动问题，真实 Safari / iOS 设备未验证。刷新编辑器不会保存草稿；原始源码和注释不默认写入导出文件，但图的标签会包含在文件中。
+完整兼容边界见 M5 与后续联合复核：M5 时 Windows Chromium 与 Linux Firefox 各 30 项 production E2E、Windows WebKit 6 项重点检查；后续修复的最终代码独立通过 Windows Chromium 全部 33 项，以及 Linux Firefox / Windows WebKit 各 9 项重点复验。Windows Firefox 测试二进制仍有启动问题，真实 Safari / iOS 设备未验证。刷新编辑器不会保存草稿；原始源码和注释不默认写入导出文件，但图的标签会包含在文件中。
 
 ## 试用反馈模板
 

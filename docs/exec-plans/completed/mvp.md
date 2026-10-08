@@ -1,6 +1,6 @@
 # SeqShow MVP 执行计划
 
-状态：D0、M0–M5 COMPLETE；技术 MVP 已验收，U0 NOT STARTED。工作分支尚未合并或公开发布。
+状态：D0、M0–M5 COMPLETE；技术 MVP 与后续修复已按本次批准合入 main。U0 素材已准备，公开发布与真实使用验证 NOT STARTED。
 
 更新日期：2026-10-07。工作目录：E:/PROJECT/scan-skill。不要创建第二层项目目录。
 
@@ -14,7 +14,7 @@
 4. [DESIGN.md](../../DESIGN.md)：分支、稳定布局、Focus、控件和错误生命周期。
 5. [TESTING.md](../../TESTING.md)：测试层次、E01–E12 与 production/离线验收。
 
-最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户明确要求“合并到 main 然后继续”后，将 M0–M2 合入 main（a705464），再完成 M3。随后按用户明确授权将 M3 与 GPT-6 修复一起合入 main（340110d）；M4 与 M5 已在工作分支完成验收，尚未取得本次合并或公开发布批准。技术 MVP 退出证据见 [M5](../../validation/M5.md)。
+最初授权是先建立规格和执行计划；D0 已完成。用户随后授权 M0、下一步 M1，并在 2026-10-07 要求继续 M2。用户明确要求“合并到 main 然后继续”后，将 M0–M2 合入 main（a705464），再完成 M3。随后按用户明确授权将 M3 与 GPT-6 修复一起合入 main（340110d）。M4 与 M5 在工作分支完成验收后，用户再次要求核查 GPT-6 修复并在通过后合并；本次累计范围与独立复验见 [联合复核](../../validation/REVIEW-M5-MERGE-2026-10-07.md)。公开发布尚未取得批准。技术 MVP 退出证据见 [M5](../../validation/M5.md)。
 
 仓库已由用户创建为 https://github.com/KunxianWang/SeqShow.git。用户随后授权将当前内容首次上传到 main；完成这次上传后，所有更新使用 ffang 开头的工作分支，每次合入目标分支都必须先取得用户对本次合并的明确同意。具体规则见 AGENTS。
 
@@ -299,8 +299,8 @@ E11/E12 和导出安全/一致性检查通过；无网络资源尝试；单文�
 
 ## 15. 当前下一步与剩余任务
 
-当前：M0–M3 与 GPT-6 修复已按上次明确授权合入并推送 main（340110d）；M4 在 ffang/m4-offline-export 完成，尚未合并。后续合并仍须单独批准。
+当前：M0–M5、发布前素材与 GPT-6 后续修复经独立复验，按本次明确授权通过 ffang/m5-review-integration 合入 main。复验使用最终 f49d717 应用代码，记录见 [联合复核](../../validation/REVIEW-M5-MERGE-2026-10-07.md)。后续合并仍须单独批准。
 
-M5 已在 ffang/m5-release-validation 完成，包含未合并的 M4；P01–P10 / DoD、浏览器最低范围、性能采样、文档与素材均有实际证据。技术 MVP 计划移至 completed，不代表已经合并或公开发布。
+P01–P10 / DoD、浏览器最低范围、性能采样、文档与素材均有实际证据。技术 MVP 计划已移至 completed；公开发布与采用验证不因此完成。
 
-剩余：所有者审阅并明确批准本次合并；公开入口、Release、真实用户采用和传播进入 [U0](../active/u0.md)，尚未开始。Windows Firefox 启动失败、WebKit setOffline/file:// 差异、Windows 驱动延迟与 Mermaid 大 chunk 已如实记录；Linux Firefox 已实测通过，真实 Safari / iOS 仍不属于已验证平台。
+剩余：公开入口、Release、真实用户采用和传播进入 [U0](../active/u0.md)，尚未开始。Windows Firefox 启动失败、WebKit setOffline/file:// 差异、Windows 驱动延迟与 Mermaid 大 chunk 已如实记录；Linux Firefox 已实测通过，真实 Safari / iOS 仍不属于已验证平台。
