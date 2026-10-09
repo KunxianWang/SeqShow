@@ -6,22 +6,24 @@ Paste a sequence diagram, choose a presentation path, and explain one interactio
 
 No account, backend, or AI API key is required. Your diagram is processed in your browser.
 
+**[Try the live editor](https://kunxianwang.github.io/SeqShow/) · [Take the interactive tour](https://kunxianwang.github.io/SeqShow/showcase.html)**
+
 ![SeqShow interactive showcase: a six-service checkout flow](demo/showcase.gif)
 
 The showcase uses a real six-service flow with inventory reservation, payment recovery, an outbox, event deduplication, and fulfillment branches. It demonstrates 20 / 24-step paths, Focus, and offline export.
 
 ## Start here
 
-- **Just want to see what it does?** Download the [checkout presentation](demo/checkout.html) or [login presentation](demo/login.html) and open it locally. No installation is required to view these files.
-- **Want to use your own diagram?** Follow the [step-by-step guide](#use-your-own-diagram-step-by-step).
-- **Want a guided product tour?** Start the app, then open [the local showcase](http://127.0.0.1:5173/showcase.html).
+- **Just want to see what it does?** Open the [interactive tour](https://kunxianwang.github.io/SeqShow/showcase.html). You can also download the [checkout presentation](demo/checkout.html) or [login presentation](demo/login.html) and open it locally.
+- **Want to use your own diagram?** Open the [live editor](https://kunxianwang.github.io/SeqShow/), then follow the [step-by-step guide](#use-your-own-diagram-step-by-step).
+- **Want to work locally?** Follow [Run the app locally](#run-the-app-locally) below.
 - **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-There is no publicly hosted editor yet. Run the editor locally using the steps below. Exported presentations work without the editor or a running server.
+The hosted editor requires no installation or sign-in. Exported presentations work without the editor or a running server. Diagram source stays in your browser.
 
 > GitHub displays HTML files as source code. Open a demo's file page, choose **Download raw file**, save it with its `.html` extension, and open the downloaded file in your browser. Clicking the GitHub file link alone does not run the player.
 
-## Run the app
+## Run the app locally
 
 You need Git, npm, and a supported Node.js version: Node 22.13+ within the 22.x series, Node 24.x, or Node 26+. Development has been verified with Node 22.14.0 and npm 10.9.2.
 
@@ -64,6 +66,8 @@ Ports are strict: if 5173 or 4173 is already occupied, stop the previous server 
 ## Use your own diagram: step by step
 
 ### Step 1 — Get the Mermaid source
+
+Open the [live editor](https://kunxianwang.github.io/SeqShow/) in your browser. No setup is required. The local editor works the same way if you prefer to run it yourself.
 
 SeqShow accepts **Mermaid sequence diagram text**, beginning with `sequenceDiagram`.
 
