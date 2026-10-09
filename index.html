@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Present Mermaid sequence diagrams, step by step.">
+  <title>SeqShow — Sequence presentations</title>
+  <script type="module" crossorigin src="./assets/app-C6IhI12P.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/chunk-Y2CYZVJY-DsF7k-Jl.js">
+  <link rel="modulepreload" crossorigin href="./assets/src-D_iIdUkB.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-VPRB5NB3-emkGCb0e.js">
+  <link rel="modulepreload" crossorigin href="./assets/dist-Bfr8PhAA.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-3YJQHVM4-CWrEFjSx.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-DUW6YSOI-Dgx8z5s3.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-4EA7E6EY-BCSoSPNR.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-HJ2JQQFS-DcR9rzRI.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-E2ZNV5FY-C-mO2qdQ.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-J5ZVWO5B-oDCd-gWO.js">
+  <link rel="modulepreload" crossorigin href="./assets/rough.esm-Dy-Kn_BL.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-XC4XBNZT-DjKMrokD.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-DBDB3WZW-txWxTYTD.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-NTY3LDVX-BTBScR-c.js">
+  <link rel="modulepreload" crossorigin href="./assets/path-fybaL0A-.js">
+  <link rel="modulepreload" crossorigin href="./assets/array-BifhSqXX.js">
+  <link rel="modulepreload" crossorigin href="./assets/line-B228uXr7.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-2BW5OAIV-CPXfiDm6.js">
+  <link rel="modulepreload" crossorigin href="./assets/export-AFyx9cgu.js">
+  <link rel="stylesheet" crossorigin href="./assets/export-BMNqxIQ5.css">
+  <link rel="stylesheet" crossorigin href="./assets/app-B5SyOdDs.css">
+</head>
+<body>
+  <main class="app" data-app>
+    <header class="app-header">
+      <h1 class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>SeqShow</h1>
+      <p class="tagline">Turn sequence diagrams into step-by-step presentations.</p>
+      <nav class="app-links" aria-label="Navigation"><a href="./showcase.html" target="_blank" rel="noopener">Showcase ↗</a><a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">GitHub ↗</a></nav>
+    </header>
+    <div class="workspace">
+      <section class="panel editor-panel" aria-label="Diagram editor">
+        <div class="panel-heading"><h2>Source</h2><span class="state-chip" data-source-chip aria-hidden="true"></span></div>
+        <label for="example">Example</label>
+        <select id="example" data-example></select>
+        <label class="source-label" for="source">Mermaid source</label>
+        <textarea id="source" data-source spellcheck="false" aria-describedby="source-help" wrap="off"></textarea>
+        <div class="editor-actions"><button class="primary" type="button" data-render>Preparing example…</button><span data-source-state role="status"></span></div>
+        <div data-error role="alert"></div>
+        <details class="syntax"><summary>Supported syntax</summary>
+          <p>One statement per line, starting with <code>sequenceDiagram</code>. Use ASCII participant IDs; labels and messages can be Chinese.</p>
+          <pre>actor U as User
+participant API
+U-&gt;&gt;API: Request
+API--&gt;&gt;U: Response
+Note over U,API: Plain text
+alt success
+  API--&gt;&gt;U: Done
+else failure
+  API--&gt;&gt;U: Error
+end</pre>
+          <p>Also: self calls; Note left of / right of / over one or two participants; multiple top-level alt blocks; whole-line %% comments.</p>
+          <p>Limits: 50,000 UTF-16 units · 20 participants · 200 messages / Notes across all paths · 10 alt blocks.</p>
+        </details>
+        <details class="syntax"><summary>Unsupported syntax</summary><p>Nested alt, opt / loop / par, activation, create / destroy, autonumber, rect, other arrows, multiple statements on one line, HTML / rich text, frontmatter, directives and click / links.</p></details>
+        <p class="help privacy" id="source-help">Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</p>
+      </section>
+      <section class="panel preview-panel" data-player aria-label="Presentation player" tabindex="0">
+        <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
+        <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
+        <div data-controls></div>
+        <p class="path-help">This is a presentation path; conditions are not evaluated.</p>
+        <div class="stage">
+          <span class="stage-tag" aria-hidden="true"></span>
+          <div data-diagram><p class="placeholder">Your presentation will appear here.</p></div>
+        </div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite">Loading example…</div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p></div>
+        </div>
+        <p data-export-error role="alert"></p>
+      </section>
+    </div>
+    <dialog data-replace aria-labelledby="replace-title">
+      <h2 id="replace-title">Replace current source?</h2>
+      <p>You have changed the source. Loading this example will replace your draft.</p>
+      <div class="dialog-actions"><button type="button" data-cancel>Cancel</button><button class="primary" type="button" data-confirm>Replace current source</button></div>
+    </dialog>
+  </main>
+</body>
+</html>

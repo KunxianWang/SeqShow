@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A live, hands-on tour of SeqShow: step-by-step playback, presentation paths, Focus and offline sharing on a real six-service flow.">
+  <title>SeqShow — Turn a flow into a story</title>
+  <script type="module" crossorigin src="./assets/showcase-BU9nco6e.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/chunk-Y2CYZVJY-DsF7k-Jl.js">
+  <link rel="modulepreload" crossorigin href="./assets/src-D_iIdUkB.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-VPRB5NB3-emkGCb0e.js">
+  <link rel="modulepreload" crossorigin href="./assets/dist-Bfr8PhAA.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-3YJQHVM4-CWrEFjSx.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-DUW6YSOI-Dgx8z5s3.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-4EA7E6EY-BCSoSPNR.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-HJ2JQQFS-DcR9rzRI.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-E2ZNV5FY-C-mO2qdQ.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-J5ZVWO5B-oDCd-gWO.js">
+  <link rel="modulepreload" crossorigin href="./assets/rough.esm-Dy-Kn_BL.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-XC4XBNZT-DjKMrokD.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-DBDB3WZW-txWxTYTD.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-NTY3LDVX-BTBScR-c.js">
+  <link rel="modulepreload" crossorigin href="./assets/path-fybaL0A-.js">
+  <link rel="modulepreload" crossorigin href="./assets/array-BifhSqXX.js">
+  <link rel="modulepreload" crossorigin href="./assets/line-B228uXr7.js">
+  <link rel="modulepreload" crossorigin href="./assets/chunk-2BW5OAIV-CPXfiDm6.js">
+  <link rel="modulepreload" crossorigin href="./assets/export-AFyx9cgu.js">
+  <link rel="stylesheet" crossorigin href="./assets/export-BMNqxIQ5.css">
+  <link rel="stylesheet" crossorigin href="./assets/showcase-VghME-IV.css">
+</head>
+<body class="sc-body">
+  <main class="sc">
+    <header class="sc-top">
+      <a class="sc-brand" href="./" aria-label="SeqShow editor"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#2563EB"/><path d="M8 7v14M20 7v14" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-linecap="round"/><path d="M8 11.5h10m-2.6-2.6 2.6 2.6-2.6 2.6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 17.5h-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 2.6"/></svg>SeqShow<span class="sc-tag">Showcase</span></a>
+      <ol class="sc-chapters" aria-label="Chapters">
+        <li><button type="button" data-chapter="0" aria-current="step"><span class="sc-n">01</span>Big picture</button></li>
+        <li><button type="button" data-chapter="1"><span class="sc-n">02</span>One step</button></li>
+        <li><button type="button" data-chapter="2"><span class="sc-n">03</span>Paths</button></li>
+        <li><button type="button" data-chapter="3"><span class="sc-n">04</span>Focus</button></li>
+        <li><button type="button" data-chapter="4"><span class="sc-n">05</span>Share</button></li>
+      </ol>
+      <nav class="sc-actions" aria-label="Showcase actions"><button type="button" data-fullscreen>Fullscreen ↗</button><a class="editor-link" href="./?example=checkout" target="_blank" rel="noopener">Open editor ↗</a></nav>
+    </header>
+
+    <section class="sc-story" aria-labelledby="chapter-title">
+      <div class="sc-copy" aria-live="polite">
+        <p class="sc-kicker" data-kicker>01 / THE BIG PICTURE</p>
+        <h1 id="chapter-title">Turn a flow<br> <em>into a story.</em></h1>
+      </div>
+      <p class="sc-description" data-description>One sequence diagram. Six services. Dozens of interactions. Where should your audience look first? Give every step its own moment.</p>
+      <div class="sc-cta"><button class="primary" type="button" data-demonstrate disabled>Preparing the demo…</button><p data-cue>Everything on this page is live — the diagram and controls all work.</p></div>
+    </section>
+
+    <section class="sc-stage" aria-label="Interactive order flow demo">
+      <section class="sc-player" data-player tabindex="0" aria-label="Presentation player" aria-busy="true">
+        <div class="sc-stage-head">
+          <div class="sc-title">
+            <h2><span class="sc-live"><i></i>LIVE</span>An order’s journey<span class="sc-sub">Checkout → Fulfillment</span></h2>
+            <p class="path-help">Presentation paths only; conditions are not evaluated and no real services are called.</p>
+          </div>
+          <div data-controls></div>
+        </div>
+        <ol class="service-map" data-services aria-label="The six services in this demo"></ol>
+        <div data-diagram><p class="loading">Preparing a six-service flow…</p></div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite">Preparing diagram…</div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play</p></div>
+        </div>
+      </section>
+      <p class="showcase-error" data-error role="alert"></p>
+    </section>
+
+    <footer class="sc-foot">
+      <p>Every message comes from Mermaid source · <code>sequenceDiagram</code></p>
+      <div class="sc-pager"><button type="button" data-chapter-prev disabled aria-label="Previous chapter">←</button><span data-chapter-count>01 / 05</span><button type="button" data-chapter-next aria-label="Next chapter">→</button></div>
+      <a href="https://github.com/KunxianWang/SeqShow" target="_blank" rel="noopener noreferrer">Open source on GitHub ↗</a>
+    </footer>
+  </main>
+</body>
+</html>
