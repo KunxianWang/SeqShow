@@ -59,6 +59,23 @@ A->>A: finish`, paths: [
     { choices: { 'alt:1': 'alt:1:first' }, ids: ['step:1', 'step:3'] },
     { choices: { 'alt:1': 'alt:1:second' }, ids: ['step:2', 'step:3'] },
   ] },
+  { id: 'compat-keyword-labels', source: `sequenceDiagram
+title Login -> Session: overview
+box Client -> Server: zone
+participant A
+end
+participant B
+Note over A,B: retry -> backoff: 2s
+loop poll -> wait: 5s
+alt user -> admin: ok
+A->>B: request
+else timeout -> retry: pending
+B-->>A: response
+end
+end`, paths: [
+    { choices: { 'alt:1': 'alt:1:first' }, ids: ['step:1', 'step:2'] },
+    { choices: { 'alt:1': 'alt:1:second' }, ids: ['step:1', 'step:3'] },
+  ] },
 ] satisfies { id: string; source: string; paths: Fixture['paths'] }[];
 
 export const compatibilityFixtures = compatibilitySources.map(({ id, source, paths }) => {

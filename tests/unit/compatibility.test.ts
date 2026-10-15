@@ -34,6 +34,42 @@ test('standard named box colors remain colors, while ordinary group names remain
 });
 
 test.each([
+  ['Note', 'Note over A,B: retry -> backoff: 2s', undefined, ['retry -> backoff: 2s']],
+  ['title', 'title Login -> Session: overview\nA->>B: request', 'Login -> Session: overview', ['request']],
+  ['loop', 'loop poll -> wait: 5s\nA->>B: request\nend', undefined, ['request']],
+  ['alt', 'alt user -> admin: ok\nA->>B: request\nelse timeout -> retry: pending\nB-->>A: response\nend', undefined, ['request', 'response']],
+])('%s labels containing arrows and colons remain statement data', (kind, body, title, texts) => {
+  const result = parseSequence('sequenceDiagram\nparticipant A\nparticipant B\n' + body);
+  expect(result.ok).toBe(true);
+  if (!result.ok) throw new Error(JSON.stringify(result.diagnostics));
+  expect(result.document.participants.map(actor => actor.id)).toEqual(['A', 'B']);
+  expect(result.document.title).toBe(title);
+  expect(allSteps(result.document).map(step => step.text)).toEqual(texts);
+  if (kind === 'Note') expect(result.document.nodes[0]).toMatchObject({ kind: 'note', participants: ['A', 'B'] });
+  if (kind === 'loop') expect(result.document.nodes[0]).toMatchObject({ kind: 'loop', label: 'poll -> wait: 5s' });
+  if (kind === 'alt') expect(alternatives(result.document)[0].cases.map(branch => branch.label)).toEqual(['user -> admin: ok', 'timeout -> retry: pending']);
+});
+
+test('box labels containing arrows and colons do not become message endpoints', () => {
+  const result = parseSequence('sequenceDiagram\nbox Client -> Server: zone\nparticipant A\nend\nA->>B: request');
+  expect(result).toMatchObject({ ok: true, document: { boxes: [
+    { color: 'transparent', label: 'Client -> Server: zone', participants: ['A'] },
+  ], participants: [{ id: 'A' }, { id: 'B' }] } });
+});
+
+test.each([
+  ['rect gray -> blue: background', 'UNSUPPORTED'],
+  ['activate A -> B: label', 'SYNTAX'],
+  ['deactivate A -> B: label', 'SYNTAX'],
+  ['autonumber custom -> value: label', 'UNSUPPORTED'],
+  ['opt retry -> wait: 5s', 'UNSUPPORTED'],
+])('malformed or unsupported keyword statements never succeed as messages: %s', (statement, code) => {
+  expect(parseSequence('sequenceDiagram\n' + statement + '\nA->>B: request')).toMatchObject({
+    ok: false, diagnostics: [{ code, line: 2 }],
+  });
+});
+
+test.each([
   ['"A \\"quoted\\" title"', 'A "quoted" title'],
   ["'Alice''s diagram'", "Alice's diagram"],
 ])('quoted frontmatter titles retain their plain-text value', (value, title) => {

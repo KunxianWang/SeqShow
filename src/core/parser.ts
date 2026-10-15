@@ -9,6 +9,7 @@ const message = /^(.+?)[ \t]*(-->>|->>|-->|->)[ \t]*([+-]?)(.+?): ?(.*)$/u;
 const note = /^Note[ \t]+(left[ \t]+of|right[ \t]+of|over)[ \t]+([^:]+): ?(.*)$/iu;
 const unsupportedKeywords = 'opt|par|and|critical|break|option|create|destroy|rectify|click|links?|endbox';
 const unsupported = new RegExp(`^(?:${unsupportedKeywords})\\b`, 'u');
+const statementKeyword = new RegExp(`^(?:participant|actor|title|loop|alt|else|rect|box|autonumber|${unsupportedKeywords})(?=[ \\t]|$)`, 'u');
 const markup = /<\/?[A-Za-z][^>]*>|<!--|<!DOCTYPE|`[^`]*`/iu;
 const br = /<br\s*\/?>/giu;
 const idValid = (id: string) => /^[^\s\d:;,<>+{}()[\]]/u.test(id) && !/[:;,<>+{}()[\]\r\n\t]/u.test(id);
@@ -100,7 +101,11 @@ export function parseSequence(source: string): ParseResult {
       problem('UNSUPPORTED', 'Use one statement per line; joined statements are not supported.',
         { ...location, column: location.column + (joined?.index ?? line.indexOf(';')) }); continue;
     }
-    const matchedMessage = message.exec(line);
+    const keyword = statementKeyword.exec(line) ?? /^(?:Note|activate|deactivate)(?=[ \t]|$)/iu.exec(line);
+    // Statement bodies may contain arrows and colons. Only an arrow immediately
+    // after the keyword denotes a bare keyword participant (e.g. alt ->> else).
+    const keywordMessage = keyword && /^(?:-->>|->>|-->|->)/u.test(line.slice(keyword[0].length).trimStart());
+    const matchedMessage = !keyword || keywordMessage ? message.exec(line) : null;
     const declared = declaration.exec(line);
     if (currentBox && !declared && trimmed !== 'end') return fail('BRANCH_STRUCTURE', 'A box contains participant declarations only.', location);
     if (!matchedMessage && /^(?:alt|loop|rect)(?:[ \t]|$)/u.test(line)) {
