@@ -32,6 +32,7 @@ Open http://127.0.0.1:5173/. See the README for the complete user guide and prod
 | `src/renderer/` | Mermaid layout, semantic SVG bindings, SVG safety |
 | `src/player.ts`, `src/player.css` | Shared browser and offline player |
 | `src/main.ts`, `src/styles.css` | Source editor, preview lifecycle, downloads |
+| `src/source-input.ts` | Pure Markdown sequence-block extraction and import limits |
 | `src/showcase.ts`, `src/showcase.css` | Guided interactive showcase |
 | `src/export.ts` | Single-file HTML generation and safe data embedding |
 | `src/examples.ts` | Built-in diagrams |
@@ -56,7 +57,7 @@ npm run test:e2e
 
 The last command builds production and tests it using an isolated preview at port 4174. It requires that port to be free. Reports are written to `artifacts/e2e/`; failed runs retain traces.
 
-For Mermaid adapter changes, also run `npm run test:m0`. This fixture harness uses port 4173, so stop a production preview using that port first.
+For Mermaid adapter changes, also run `npm run test:m0`. Automated fixture checks use an available local port. Interactive `npm run m0:preview` uses port 4173. To isolate a fixture, use `npm run test:m0 -- --fixtures=compat-wrap-break`; full regression is still required before submitting an adapter change.
 
 Firefox and WebKit projects are available after installing their browsers. Build first, then run `npx playwright test --project=webkit` or `--project=firefox`. System dependencies and platform support vary; record what you actually ran and any failure or untested scope.
 

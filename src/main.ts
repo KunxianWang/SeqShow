@@ -8,6 +8,7 @@ import type { SequenceDocument } from './core/model';
 import { renderSequence } from './renderer/mermaid-adapter';
 import { mountPlayer } from './player';
 import { exportHtml } from './export';
+import { sequenceBlocks, MAX_FILE_BYTES, type SourceBlock } from './source-input';
 
 const editor = document.querySelector<HTMLTextAreaElement>('[data-source]')!;
 const render = document.querySelector<HTMLButtonElement>('[data-render]')!;
@@ -27,6 +28,26 @@ let player: ReturnType<typeof mountPlayer> | undefined;
 let successful: { source: string; model: SequenceDocument; svg: SVGSVGElement } | undefined;
 let busy = false, stale = true, failed = false, exporting = false, disposed = false;
 let revision = 0, baseline = initialExample.source, loadedExample = initialExample.id, pendingExample = '';
+const draftState = document.querySelector<HTMLElement>('[data-draft-state]')!;
+const inputState = document.querySelector<HTMLElement>('[data-input-state]')!;
+const fileInput = document.querySelector<HTMLInputElement>('[data-source-file]')!;
+const markdownDialog = document.querySelector<HTMLDialogElement>('[data-markdown]')!;
+const blockSelect = document.querySelector<HTMLSelectElement>('[data-markdown-block]')!;
+const blockPreview = document.querySelector<HTMLElement>('[data-markdown-preview]')!;
+const draftKey = 'seqshow:source-draft';
+let draftTimer: ReturnType<typeof setTimeout> | undefined;
+let draftDirty = false;
+let pendingSource: (() => void) | undefined;
+let blocks: SourceBlock[] = [];
+let sourceLineOffset = 0;
+let restoredSource: string | undefined;
+draftState.textContent = 'No local draft yet. Edits are saved in this browser when storage is available.';
+try { restoredSource = localStorage.getItem(draftKey) ?? undefined; }
+catch { draftState.textContent = 'Local storage is unavailable. Use Save source to keep your work.'; }
+if (restoredSource !== undefined && restoredSource.length > INPUT_LIMITS.source) {
+  draftState.textContent = 'The stored draft exceeds the source limit and was not loaded. You can clear the saved draft.';
+  restoredSource = undefined;
+}
 
 for (const item of examples) {
   const option = document.createElement('option');
@@ -34,6 +55,38 @@ for (const item of examples) {
 }
 editor.value = initialExample.source;
 example.value = initialExample.id;
+if (restoredSource !== undefined && restoredSource.length <= INPUT_LIMITS.source) {
+  if (!new URLSearchParams(location.search).has('example')) {
+    editor.value = restoredSource; baseline = restoredSource; example.value = '';
+    draftState.textContent = 'Restored the draft saved in this browser. Save source for a file backup.';
+  } else {
+    draftState.textContent = 'An earlier draft is available. Restore it or discard it before saving this example automatically.';
+    const restore = document.createElement('button'); restore.type = 'button'; restore.textContent = 'Restore earlier draft';
+    restore.onclick = () => { const source = restoredSource!; pendingSource = () => { restoredSource = undefined; restore.remove(); applySource(source); }; replace.showModal(); };
+    draftState.after(restore);
+  }
+}
+if (!new URLSearchParams(location.search).has('example')) restoredSource = undefined;
+
+function saveDraft() {
+  clearTimeout(draftTimer);
+  if (!draftDirty || restoredSource !== undefined) return;
+  if (editor.value.length > INPUT_LIMITS.source) { draftState.textContent = 'Draft is too large for automatic storage. Use Save source.'; return; }
+  try {
+    if (editor.value) localStorage.setItem(draftKey, editor.value); else localStorage.removeItem(draftKey);
+    draftDirty = false;
+    draftState.textContent = editor.value ? 'Draft saved in this browser. Save source for a file backup.' : 'No saved draft.';
+  } catch { draftState.textContent = 'Could not save the local draft. Use Save source to keep your work.'; }
+}
+document.querySelector<HTMLButtonElement>('[data-clear-draft]')!.onclick = () => {
+  clearTimeout(draftTimer);
+  try {
+    localStorage.removeItem(draftKey); restoredSource = undefined; draftDirty = false;
+    document.querySelector('.draft-tools button:not([data-clear-draft])')?.remove();
+    draftState.textContent = 'Saved draft cleared. The source in the editor is unchanged.';
+  } catch { draftState.textContent = 'Could not clear local storage. Browser storage settings may block access.'; }
+};
+window.addEventListener('pagehide', saveDraft);
 
 function update() {
   const state = busy ? 'busy' : failed ? 'error' : stale ? 'stale' : 'ready';
@@ -58,14 +111,18 @@ function update() {
 
 function changed() {
   revision++; stale = true; failed = false;
+  draftDirty = true;
+  sourceLineOffset = 0;
   error.replaceChildren(); exportError.textContent = '';
+  clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 300);
   update();
 }
 editor.addEventListener('input', changed);
 
 function showDiagnostic(diagnostic: Diagnostic, source: string) {
+  const card = document.createElement('div');
   const link = document.createElement('button'); link.type = 'button';
-  link.textContent = `Line ${diagnostic.line}, column ${diagnostic.column}: ${diagnostic.message}`;
+  link.textContent = `Line ${diagnostic.line}, column ${diagnostic.column}${sourceLineOffset ? ` (Markdown line ${diagnostic.line + sourceLineOffset})` : ''}: ${diagnostic.message}`;
   link.onclick = () => {
     const lines = source.split(/\r\n|\n|\r/u);
     // Textareas normalize line endings to LF; locations remain UTF-16 based.
@@ -81,7 +138,7 @@ function showDiagnostic(diagnostic: Diagnostic, source: string) {
     LIMIT_ALTERNATIVES: `At least ${INPUT_LIMITS.alternatives + 1} alt blocks; maximum ${INPUT_LIMITS.alternatives}.`,
   };
   const hint = document.createElement('p'); hint.textContent = diagnostic.hint ?? detectedCounts[diagnostic.code] ?? diagnostic.code;
-  error.replaceChildren(link, statement, hint);
+  card.append(link, statement, hint); error.append(card);
 }
 
 async function prepare() {
@@ -92,7 +149,7 @@ async function prepare() {
     const result = parseSequence(source);
     if (!result.ok) {
       stale = true; failed = true;
-      showDiagnostic(result.diagnostics[0], source);
+      for (const diagnostic of result.diagnostics) showDiagnostic(diagnostic, source);
       return;
     }
     const svg = await renderSequence(result.document);
@@ -117,7 +174,16 @@ function loadExample(id: string) {
   editor.value = item.source; baseline = item.source; loadedExample = id; example.value = id;
   changed(); void prepare();
 }
-function cancelReplacement() { example.value = loadedExample; pendingExample = ''; }
+function applySource(source: string, offset = 0) {
+  editor.value = source; loadedExample = ''; example.value = '';
+  changed(); sourceLineOffset = offset; saveDraft(); void prepare();
+}
+function cancelReplacement() { example.value = loadedExample; pendingExample = ''; pendingSource = undefined; }
+function offerSource(source: string, offset = 0) {
+  if (editor.value.trim() && editor.value !== baseline) {
+    pendingSource = () => applySource(source, offset); replace.showModal();
+  } else applySource(source, offset);
+}
 example.onchange = () => {
   if (editor.value.trim() && editor.value !== baseline) {
     pendingExample = example.value; replace.showModal();
@@ -126,7 +192,79 @@ example.onchange = () => {
 replace.oncancel = cancelReplacement;
 document.querySelector<HTMLButtonElement>('[data-cancel]')!.onclick = () => { cancelReplacement(); replace.close(); };
 document.querySelector<HTMLButtonElement>('[data-confirm]')!.onclick = () => {
+  if (pendingSource) { const accept = pendingSource; pendingSource = undefined; replace.close(); accept(); return; }
   const id = pendingExample; pendingExample = ''; replace.close(); loadExample(id);
+};
+
+function showBlocks(text: string) {
+  try {
+    blocks = sequenceBlocks(text);
+    if (!blocks.length) { inputState.textContent = 'No fenced Mermaid sequenceDiagram was found. Paste sequence source or choose another document.'; return; }
+    blockSelect.replaceChildren();
+    blocks.forEach((block, index) => {
+      const option = document.createElement('option'); option.value = String(index);
+      option.textContent = `Diagram ${index + 1} · Markdown line ${block.line}`; blockSelect.append(option);
+    });
+    if (blocks.length > 1) {
+      const choose = document.createElement('option'); choose.value = ''; choose.textContent = 'Choose a diagram'; choose.disabled = true; blockSelect.prepend(choose); blockSelect.value = '';
+    }
+    previewBlock(); markdownDialog.showModal();
+  } catch (reason) { inputState.textContent = String(reason); }
+}
+function previewBlock() {
+  const selected = blockSelect.value === '' ? undefined : blocks[Number(blockSelect.value)];
+  blockPreview.textContent = selected?.source ?? 'Choose a diagram to preview its source.';
+  document.querySelector<HTMLButtonElement>('[data-markdown-confirm]')!.disabled = !selected;
+}
+blockSelect.onchange = previewBlock;
+document.querySelector<HTMLButtonElement>('[data-markdown-cancel]')!.onclick = () => markdownDialog.close();
+document.querySelector<HTMLButtonElement>('[data-markdown-confirm]')!.onclick = () => {
+  const block = blocks[Number(blockSelect.value)]; markdownDialog.close();
+  if (block.source.length > INPUT_LIMITS.source) { inputState.textContent = 'This diagram exceeds 50,000 UTF-16 units. The current source was kept.'; return; }
+  offerSource(block.source, block.line - 1);
+};
+editor.addEventListener('paste', event => {
+  const text = event.clipboardData?.getData('text/plain') ?? '';
+  if (/^ {0,3}(?:`{3,}|~{3,})/mu.test(text)) { event.preventDefault(); inputState.textContent = ''; showBlocks(text); }
+});
+async function openFile(file: File) {
+  const startedAt = revision;
+  inputState.textContent = '';
+  if (!/\.(?:mmd|mermaid|txt)$/iu.test(file.name) || file.size > MAX_FILE_BYTES) {
+    inputState.textContent = 'Choose a .mmd, .mermaid or .txt source file up to 200,000 bytes. The current source was kept.'; return;
+  }
+  try {
+    const source = (await file.text()).replace(/^\uFEFF/u, '');
+    if (disposed || revision !== startedAt) { inputState.textContent = 'The editor changed while reading. Open the file again to replace it.'; return; }
+    if (source.length > INPUT_LIMITS.source) { inputState.textContent = 'Source exceeds 50,000 UTF-16 units. The current source was kept.'; return; }
+    offerSource(source);
+  } catch (reason) { inputState.textContent = `Could not read this file: ${String(reason)}`; }
+}
+document.querySelector<HTMLButtonElement>('[data-open-source]')!.onclick = () => { fileInput.value = ''; fileInput.click(); };
+fileInput.onchange = () => { if (fileInput.files?.[0]) void openFile(fileInput.files[0]); };
+const editorPanel = editor.closest<HTMLElement>('.editor-panel')!;
+editorPanel.addEventListener('dragover', event => {
+  if (event.dataTransfer?.types.some(type => ['Files', 'text/uri-list', 'text/html'].includes(type))) event.preventDefault();
+});
+editorPanel.addEventListener('drop', event => {
+  if (!event.dataTransfer?.files.length) {
+    if (event.dataTransfer?.types.some(type => ['text/uri-list', 'text/html'].includes(type))) {
+      event.preventDefault(); inputState.textContent = 'Drop a Mermaid source file here. Links and HTML are not opened.';
+    }
+    return;
+  }
+  event.preventDefault();
+  if (event.dataTransfer.files.length !== 1) { inputState.textContent = 'Open one source file at a time.'; return; }
+  void openFile(event.dataTransfer.files[0]);
+});
+document.querySelector<HTMLButtonElement>('[data-save-source]')!.onclick = () => {
+  let url: string | undefined;
+  try {
+    url = URL.createObjectURL(new Blob([editor.value], { type: 'text/plain;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = 'seqshow-source.mmd'; link.click();
+    inputState.textContent = 'Source downloaded. Reopen this .mmd to continue editing; HTML export is for playback.';
+  } catch (reason) { inputState.textContent = `Could not save source: ${String(reason)}`; }
+  finally { if (url) { const savedUrl = url; setTimeout(() => URL.revokeObjectURL(savedUrl), 1000); } }
 };
 
 download.onclick = () => {
@@ -144,5 +282,6 @@ download.onclick = () => {
 
 void prepare();
 if (import.meta.hot) import.meta.hot.dispose(() => {
+  clearTimeout(draftTimer); window.removeEventListener('pagehide', saveDraft);
   disposed = true; player?.destroy(); editor.removeEventListener('input', changed);
 });

@@ -66,6 +66,7 @@ kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom
 .player-switch[aria-pressed="true"] .player-switch-track::after { transform: translateX(12px); }
 .player-switch:disabled .player-switch-track { opacity: .45; }
 .path-help { display: flex; align-items: center; gap: 6px; margin: 10px 0 12px; font-size: 12px; }
+[data-loop-notice][hidden] { display: none; }
 .path-help::before { content: "i"; flex: none; width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 50%; font: 700 9px/11px var(--ss-font); text-align: center; }
 
 /* Stage: the SVG keeps its natural width and only this container scrolls */

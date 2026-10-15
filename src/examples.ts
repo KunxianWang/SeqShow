@@ -112,7 +112,7 @@ export const examples = [
     Note right of DB: Rules are local
     Note over API: Both checks complete
     Note over API,DB: Continue with the same rules` },
-  { id: 'chinese', title: '中文订单 · 长文本与别名', source: `sequenceDiagram
+  { id: 'chinese', title: 'Chinese order · long text / aliases', source: `sequenceDiagram
     actor U as 手机用户与订单页面
     participant API as 订单接口服务
     participant DB as 商品与库存数据库

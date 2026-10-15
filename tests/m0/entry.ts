@@ -1,12 +1,13 @@
 import { fixtures as originalFixtures } from './fixtures';
 import { parsedFixtures } from '../fixtures/parsed';
+import { compatibilityFixtures } from '../fixtures/compatibility';
 import { bindSteps, renderSequence, serialize } from '../../src/renderer/mermaid-adapter';
 import { assertSafeSvg } from '../../src/renderer/svg-safety';
 import { mountPlayer } from '../../src/player';
 import { exportHtml, safeJson } from '../../src/export';
 import css from '../../src/player.css';
 
-const fixtures = [...originalFixtures, ...parsedFixtures];
+const fixtures = [...originalFixtures, ...parsedFixtures, ...compatibilityFixtures];
 const root = document.querySelector<HTMLElement>('[data-player]')!;
 const select = document.querySelector<HTMLSelectElement>('[data-fixture]')!;
 const error = document.querySelector<HTMLElement>('[data-error]')!;
@@ -21,6 +22,9 @@ async function render(id: string) {
   if (!current) throw new Error('Unknown fixture');
   select.value = id; error.textContent = '';
   root.querySelector('[data-diagram]')!.replaceChildren(await renderSequence(current.model));
+  if (current.model.title !== undefined && !Array.from(root.querySelectorAll('svg text')).some(text => text.textContent === current.model.title)) {
+    throw new Error('Diagram title was not preserved as plain text');
+  }
   player = mountPlayer(root, current.model);
   document.querySelector('[data-source]')!.textContent = serialize(current.model).source;
   return { id, model: current.model, paths: current.paths, ...player.snapshot() };

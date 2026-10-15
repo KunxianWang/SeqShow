@@ -67,6 +67,11 @@ dialog { max-width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px so
 dialog h2 { margin-bottom: 8px; font-size: 17px; }
 dialog p { margin: 0 0 20px; font-size: 14px; }
 dialog::backdrop { background: rgb(15 23 42 / 40%); }
+.source-tools, .draft-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.draft-tools .help { flex: 1; min-width: 180px; margin: 0; }
+.draft-tools button { font-size: 12px; }
+.source-preview { max-height: 35vh; overflow: auto; padding: 12px; background: var(--ss-bg); white-space: pre-wrap; overflow-wrap: anywhere; }
+[data-error] { max-height: 280px; overflow: auto; }
 .dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 
 /* Two-column desktop: the panel fits the viewport and only the stage shrinks, so long step

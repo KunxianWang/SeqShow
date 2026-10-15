@@ -18,12 +18,15 @@
         <div class="panel-heading"><h2>Source</h2><span class="state-chip" data-source-chip aria-hidden="true"></span></div>
         <label for="example">Example</label>
         <select id="example" data-example></select>
+        <div class="source-tools"><button type="button" data-open-source>Open source</button><button type="button" data-save-source>Save source</button><input type="file" data-source-file accept=".mmd,.mermaid,.txt" hidden></div>
+        <p class="help" data-input-state role="alert"></p>
         <label class="source-label" for="source">Mermaid source</label>
         <textarea id="source" data-source spellcheck="false" aria-describedby="source-help" wrap="off"></textarea>
         <div class="editor-actions"><button class="primary" type="button" data-render>Preparing example…</button><span data-source-state role="status"></span></div>
         <div data-error role="alert"></div>
+        <div class="draft-tools"><p class="help" data-draft-state role="status"></p><button type="button" data-clear-draft>Clear saved draft</button></div>
         <details class="syntax"><summary>Supported syntax</summary>
-          <p>One statement per line, starting with <code>sequenceDiagram</code>. Use ASCII participant IDs; labels and messages can be Chinese.</p>
+          <p>One statement per line, starting with <code>sequenceDiagram</code>. Participant IDs may contain Unicode, dots, spaces or quotes. Labels and messages can be Chinese.</p>
           <pre>actor U as User
 participant API
 U-&gt;&gt;API: Request
@@ -34,11 +37,12 @@ alt success
 else failure
   API--&gt;&gt;U: Error
 end</pre>
-          <p>Also: self calls; Note left of / right of / over one or two participants; multiple top-level alt blocks; whole-line %% comments.</p>
+          <p>Also: self calls; Note variants; br line breaks; multiple alt blocks; loop (shown once); title; autonumber; activation; rect and participant box groups; -&gt; / --&gt;; whole-line %% comments. Frontmatter accepts only a plain title.</p>
           <p>Limits: 50,000 UTF-16 units · 20 participants · 200 messages / Notes across all paths · 10 alt blocks.</p>
+          <p>At most 20 loop / rect blocks, 8 nesting levels and 1,000 statements. Each alt needs exactly two labelled cases; alternatives cannot contain another alt.</p>
         </details>
-        <details class="syntax"><summary>Unsupported syntax</summary><p>Nested alt, opt / loop / par, activation, create / destroy, autonumber, rect, other arrows, multiple statements on one line, HTML / rich text, frontmatter, directives and click / links.</p></details>
-        <p class="help privacy" id="source-help">Processed in your browser. Copy your source to keep it; refreshing this page does not save it.</p>
+        <details class="syntax"><summary>Unsupported syntax</summary><p>Alt inside alt, opt / par, create / destroy, other arrows, joined statements, HTML beyond br, rich text, frontmatter configuration, directives and click / links.</p></details>
+        <p class="help privacy" id="source-help">Processed in your browser. A draft is saved on this browser when storage is available. Save source downloads an editable backup; Export HTML downloads a presentation.</p>
       </section>
       <section class="panel preview-panel" data-player aria-label="Presentation player" tabindex="0">
         <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
@@ -59,8 +63,15 @@ end</pre>
     </div>
     <dialog data-replace aria-labelledby="replace-title">
       <h2 id="replace-title">Replace current source?</h2>
-      <p>You have changed the source. Loading this example will replace your draft.</p>
+      <p>You have changed the source. Replacing it will overwrite the text in the editor.</p>
       <div class="dialog-actions"><button type="button" data-cancel>Cancel</button><button class="primary" type="button" data-confirm>Replace current source</button></div>
+    </dialog>
+    <dialog data-markdown aria-labelledby="markdown-title">
+      <h2 id="markdown-title">Choose a sequence diagram</h2>
+      <p>Only the selected Mermaid source will replace the editor. Other document content is not executed.</p>
+      <label for="markdown-block">Diagram</label><select id="markdown-block" data-markdown-block></select>
+      <pre class="source-preview" data-markdown-preview></pre>
+      <div class="dialog-actions"><button type="button" data-markdown-cancel>Cancel</button><button class="primary" type="button" data-markdown-confirm>Use this diagram</button></div>
     </dialog>
   </main>
   <script type="module" src="/src/main.ts"></script>

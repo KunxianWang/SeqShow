@@ -1,4 +1,4 @@
-import { allSteps, alternatives, type BranchChoices, type SequenceDocument } from './core/model';
+import { allSteps, alternatives, collectNodes, type BranchChoices, type SequenceDocument } from './core/model';
 import { deriveSteps, initialPlayback, transition, type PlaybackAction } from './core/playback';
 
 // Icons are built from local path data: the exported file must not reference resources.
@@ -41,6 +41,10 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
   let timer: ReturnType<typeof setInterval> | undefined;
   const labels = new Map(document.participants.map(actor => [actor.id, actor.label]));
   controls.replaceChildren(); transport.replaceChildren();
+  const loopNotice = element('p', 'path-help', 'Loops are shown once; iterations and conditions are not evaluated.');
+  loopNotice.dataset.loopNotice = '';
+  loopNotice.hidden = !collectNodes(document.nodes).some(node => node.kind === 'loop');
+  controls.after(loopNotice);
   const pause = () => { clearInterval(timer); timer = undefined; };
   const icon = (name: keyof typeof icons) => {
     // Borrow the diagram's namespace: the offline bundle must not contain URL literals.
@@ -128,7 +132,7 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     if (!shape || !box.width) return;
     const target = shape.getBoundingClientRect();
     // Sit just left of the step; clamp so a step at the diagram edge keeps its marker visible.
-    const x = Math.max(12, target.left - box.left - 14), y = target.top - box.top + target.height / 2;
+    const x = Math.max(12, target.left - box.left - (svg.hasAttribute('data-seq-numbered') ? 36 : 14)), y = target.top - box.top + target.height / 2;
     Object.assign(badge.style, { left: `${x / box.width * 100}%`, top: `${y / box.height * 100}%` });
   }
   const resize = new ResizeObserver(() => { layout(); placeBadge(steps[state.index - 1]?.id); fit(); });
@@ -253,6 +257,7 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
       underlay.remove(); overlay.remove(); meta.replaceChildren();
       if (!root.querySelector('[data-step-meta]')) meta.remove();
       controls.replaceChildren(); transport.replaceChildren();
+      loopNotice.remove();
     },
   };
 }

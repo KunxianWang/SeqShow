@@ -1,4 +1,4 @@
-import { alternatives, type BranchChoices, type SequenceDocument, type Step } from './model';
+import { alternatives, type BranchChoices, type SequenceDocument, type SequenceNode, type Step } from './model';
 
 export function defaultChoices(document: SequenceDocument): BranchChoices {
   return Object.fromEntries(alternatives(document).map(node => [node.id, node.cases[0].id]));
@@ -8,12 +8,15 @@ export function deriveSteps(document: SequenceDocument, choices: BranchChoices):
   for (const id of Object.keys(choices)) {
     if (!alternatives(document).some(node => node.id === id)) throw new Error(`Unknown alternative ${id}`);
   }
-  return document.nodes.flatMap(node => {
-    if (node.kind !== 'alternative') return [node];
+  const visit = (nodes: SequenceNode[]): Step[] => nodes.flatMap(node => {
+    if (node.kind === 'message' || node.kind === 'note') return [node];
+    if (node.kind === 'loop' || node.kind === 'rect') return visit(node.nodes);
+    if (node.kind !== 'alternative') return [];
     const branch = node.cases.find(branch => branch.id === choices[node.id]);
     if (!branch) throw new Error(`Unknown branch for ${node.id}`);
-    return branch.steps;
+    return visit(branch.steps);
   });
+  return visit(document.nodes);
 }
 
 export type PlaybackState = { index: number; playing: boolean; choices: BranchChoices };

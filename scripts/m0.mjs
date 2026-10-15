@@ -46,7 +46,9 @@ if (process.argv.includes('--serve')) {
         await page.goto(address);
         await page.waitForFunction(() => window.m0Ready || window.m0Failure, undefined, { timeout: 60000 });
         assert.equal(await page.evaluate(() => window.m0Failure), undefined);
-        const fixtures = await page.evaluate(() => window.m0.fixtures);
+        const filter = process.argv.find(arg => arg.startsWith('--fixtures='))?.split('=')[1].split(',');
+        const fixtures = (await page.evaluate(() => window.m0.fixtures)).filter(fixture => !filter || filter.includes(fixture.id));
+        assert(fixtures.length, 'No matching fixtures');
         const results = [];
         for (const fixture of fixtures) {
           console.log(`  ${fixture.id}`);
@@ -134,7 +136,8 @@ if (process.argv.includes('--serve')) {
         await page.screenshot({ path: resolve(output, `${name}-mobile-notes.png`), fullPage: true });
         assert(await page.locator('[data-diagram]').evaluate(node => node.scrollWidth > node.clientWidth), 'Mobile diagram should scroll');
         assert.deepEqual(errors, [], 'Harness page errors');
-        report.browsers.push({ name, version: browser.version(), fixtures: results, negativeChecks: 14, mobileScroll: 'passed', playback: 'passed' });
+        const checkedLogin = fixtures.some(fixture => fixture.id === 'login');
+        report.browsers.push({ name, version: browser.version(), fixtures: results, negativeChecks: checkedLogin ? 14 : 0, mobileScroll: 'passed', playback: checkedLogin ? 'passed' : 'not-run' });
       } finally { await browser.close(); }
     }
     report.status = 'passed';
@@ -183,7 +186,9 @@ async function svgGeometry(page) {
   }) }));
 }
 async function assertHighlight(page, model, ids, index) {
-  const steps = model.nodes.flatMap(node => node.kind === 'alternative' ? node.cases.flatMap(branch => branch.steps) : [node]);
+  const collect = nodes => nodes.flatMap(node => node.kind === 'alternative' ? node.cases.flatMap(branch => collect(branch.steps))
+    : node.kind === 'loop' || node.kind === 'rect' ? collect(node.nodes) : node.kind === 'message' || node.kind === 'note' ? [node] : []);
+  const steps = collect(model.nodes);
   const current = steps.find(step => step.id === ids[index - 1]);
   const expectedParticipants = current ? [...new Set(current.kind === 'message' ? [current.from, current.to] : current.participants)].sort() : [];
   const actual = await page.locator('[data-diagram] svg').evaluate(svg => ({

@@ -106,22 +106,22 @@ describe('diagnostics distinguish unsupported Mermaid from malformed input', () 
     });
   });
   test.each([
-    'opt optional', 'loop retry', 'par parallel', 'activate A', 'deactivate A',
-    'create participant A', 'destroy A', 'autonumber', 'rect rgb(0,0,0)',
-    'click A "https://x"', 'link A: x@https://x', 'A->B: other arrow', 'A--B: no head',
-    'A-xB: cross', 'A-)B: async', 'A<<->>B: bidirectional', 'A->>+B: activate', 'A-->>-B: deactivate',
+    'opt optional', 'par parallel',
+    'create participant A', 'destroy A',
+    'click A "https://x"', 'link A: x@https://x', 'A--B: no head',
+    'A-xB: cross', 'A-)B: async', 'A<<->>B: bidirectional',
     'participant A; participant B', 'A->>B: one; B->>A: two', 'A->>B: one; end',
     'A->>B: one; B-->>A: two', 'A->>B: one; B->A: two',
     'A->>B: one; B--A: two', 'A->>B: one; B-xA: two', 'A->>B: one; B-)A: two',
     'A->>B: one; B<<->>A: two', 'A->>B: one; B->>+A: two',
-    'participant A as <b>name</b>', 'A->>B: <br/>', 'A->>B: `rich text`',
+    'participant A as <b>name</b>', 'A->>B: <br class="x"/>', 'A->>B: `rich text`',
     '%%{init: {}}%%',
   ])('rejects %s as unsupported', statement => {
     expect(diagnostic(`sequenceDiagram\n${statement}`).code).toBe('UNSUPPORTED');
   });
   test.each(['', '\n %% ordinary', '  \r\n'])('empty input %j', source => expect(diagnostic(source).code).toBe('EMPTY_INPUT'));
   test.each(['flowchart LR\nA-->B', 'A->>B: no header', 'sequenceDiagram; A->>B: one'])('invalid diagram header', source => expect(diagnostic(source).code).toBe('DIAGRAM_TYPE'));
-  test('frontmatter is rejected before diagram checks', () => expect(diagnostic('---\ntitle: title\n---\nsequenceDiagram').code).toBe('UNSUPPORTED'));
+  test('frontmatter configuration is rejected before layout', () => expect(diagnostic('---\nconfig: unsafe\n---\nsequenceDiagram\nA->>B: hello').code).toBe('UNSUPPORTED'));
   test.each(['A->>B', 'participant 123', 'participant A as', 'participant A as    ', 'Note left of A,B: wrong', 'Note over A,B,C: wrong', 'unknown statement'])('malformed %s', statement =>
     expect(diagnostic(`sequenceDiagram\n${statement}`).code).toBe('SYNTAX'));
   test.each(['end', 'else stray', 'alt x\nA->>B: x', 'alt x\nend', 'alt x\nelse y\nelse z\nend', 'alt\nelse y\nend'])('invalid branch structure %s', body =>

@@ -2,6 +2,8 @@
 
 **Present Mermaid sequence diagrams, step by step.**
 
+> Development version: this branch adds broader syntax support, source-file import, Markdown extraction, and local drafts. These changes have not been deployed yet. Run this branch locally to try them; the hosted editor still runs the previous version.
+
 Paste a sequence diagram, choose a presentation path, and explain one interaction at a time. Use Focus to guide your audience, then share a single HTML file they can play offline.
 
 No account, backend, or AI API key is required. Your diagram is processed in your browser.
@@ -32,6 +34,7 @@ You need Git, npm, and a supported Node.js version: Node 22.13+ within the 22.x 
 ```sh
 git clone https://github.com/KunxianWang/SeqShow.git
 cd SeqShow
+git switch ffang/next-compatibility
 ```
 
 ### Step 2 — Install dependencies
@@ -67,15 +70,15 @@ Ports are strict: if 5173 or 4173 is already occupied, stop the previous server 
 
 ### Step 1 — Get the Mermaid source
 
-Open the [live editor](https://kunxianwang.github.io/SeqShow/) in your browser. No setup is required. The local editor works the same way if you prefer to run it yourself.
+Open the locally running editor for this development version. The [hosted editor](https://kunxianwang.github.io/SeqShow/) remains available with the previous feature set until this update is deployed.
 
 SeqShow accepts **Mermaid sequence diagram text**, beginning with `sequenceDiagram`.
 
-- From a Markdown document, copy the contents inside its Mermaid code block, without the opening/closing triple backticks.
-- From a `.mmd` or `.mermaid` file, open it in a text editor and copy the source.
+- From a Markdown document, paste the document or a fenced Mermaid block into the source editor. SeqShow previews the extracted sequence source; if there are multiple diagrams, select one explicitly and click **Use this diagram**. Cancel keeps your current draft.
+- From a `.mmd`, `.mermaid`, or `.txt` file, click **Open source** or drag one file into the editor panel. Files are read locally. Imports are limited to 200,000 bytes and 50,000 UTF-16 units of diagram source.
 - From another Mermaid editor, copy the source text rather than its rendered image.
 
-SeqShow currently uses **copy and paste**, not file upload. It does not import PNG, SVG, PDF, draw.io files, or Mermaid flowcharts. If you only have an image, recreate it as supported Mermaid sequence source first.
+You can still paste plain Mermaid source directly. No source is uploaded to a server. PNG, SVG, PDF, draw.io files, exported HTML, and Mermaid flowcharts cannot be imported as editable sequence source. If you only have an image, recreate it as supported Mermaid sequence source first. Markdown extraction accepts documents up to 500,000 UTF-16 units; only one selected sequence block enters the editor.
 
 ### Step 2 — Paste into Mermaid source
 
@@ -107,13 +110,13 @@ Editing marks the existing preview **Source changed** and disables playback/expo
 
 Click **Render** and wait for **Ready to present**.
 
-The preview starts at **Overview · 0 / N**, where N is the number of messages and Notes on the selected path. Each message or Note becomes one step. Declarations, comments, and alt/else/end do not count.
+The preview starts at **Overview · 0 / N**, where N is the number of messages and Notes on the selected path. Each message or Note becomes one step. Declarations, comments, titles, numbering, activation, and grouping statements do not count.
 
 The example above has six steps on either path: four shared messages, one selected response, and one selected Note.
 
 If rendering fails:
 
-1. Read the diagnostic and the statement shown below the editor.
+1. Read the English diagnostics and statements below the editor. Independently locatable unsupported statements are listed together. A structural error may prevent reliable analysis of later statements.
 2. Click a line/column diagnostic to locate the problem in the source.
 3. Correct the input, then click **Render** again.
 
@@ -121,7 +124,7 @@ Unsupported syntax is rejected rather than silently removed. If you already had 
 
 ### Step 4 — Choose the path you want to explain
 
-For diagrams with alt/else, use the **Path** selectors above the diagram.
+For diagrams with alt/else, use the **Path** selectors above the diagram. Alternatives may appear inside loop/rect wrappers but not inside another alternative.
 
 In the example, select **authenticated** to explain success or **unauthorized** to explain failure. Each top-level alt has its own selector.
 
@@ -131,6 +134,8 @@ In the example, select **authenticated** to explain success or **unauthorized** 
 - Unselected cases remain visible as context, with muted styling and hatching, but are skipped during playback.
 
 The first case is selected by default. Diagrams without branches need no path selection.
+
+**Loops are shown once.** Each message/Note in a loop body is presented once in source order. The loop frame and original label remain visible, and both the editor and exported file show this limitation. SeqShow does not infer iteration counts or evaluate conditions. Per-iteration choices and automatic early termination are not implemented.
 
 ### Step 5 — Present one interaction at a time
 
@@ -166,11 +171,11 @@ The export contains participant names, message text, and Notes. Original Mermaid
 
 ### Step 7 — Keep the editable source
 
-Copy your Mermaid source to a local file or your existing documentation before closing or refreshing the editor.
+Click **Save source** to download `seqshow-source.mmd`. This preserves the editor's source, including comments and invalid syntax, so you can reopen it with **Open source** and keep editing.
 
-**Drafts are not saved across page reloads.** Exported HTML is a presentation, not a Mermaid source backup, and cannot currently be imported back into the editor.
+The current draft is automatically saved in this browser when local storage is available, including edits you have not rendered successfully. On a normal return visit it is restored automatically. An explicit example link preserves an earlier draft and offers **Restore earlier draft** rather than overwriting it. **Clear saved draft** removes the stored copy without deleting text in the editor. New edits can be saved again.
 
-To revise a presentation later, paste your saved source, Render again, and export a new HTML file.
+Check the draft status: storage may be blocked, full, or cleared by your browser. Drafts over 50,000 UTF-16 units cannot be automatically saved. A browser draft is not a durable file backup or cross-device sync. **Save source** creates an editable backup; **Export HTML** creates a presentation and cannot be imported back as source. To revise later, reopen the .mmd, Render, and export a new HTML.
 
 ## Explore the examples and showcase
 
@@ -197,6 +202,10 @@ Chapter switches restore the demo's default paths and chapter starting step. The
 [Overview screenshot](demo/showcase-overview.png) · [Payment recovery screenshot](demo/showcase-recovery.png) · [Offline checkout file](demo/checkout.html)
 
 The showcase itself needs the application's static assets. The downloaded HTML is the self-contained offline presentation.
+
+For the new syntax in this development version, download the [loop and grouped-participant presentation](demo/compatibility.html). It includes numbering, activation, line breaks, and an alternative inside a loop. The loop is shown once; its label is not evaluated.
+
+![Development editor with source-file tools and a loop presentation](demo/compatibility.png)
 
 ## Keyboard and accessibility
 
@@ -230,15 +239,25 @@ SeqShow supports a restricted subset of `sequenceDiagram`, not every Mermaid fea
 | Left / right Note | `Note left of A: Text`, `Note right of A: Text` |
 | Note over one / two participants | `Note over A: Text`, `Note over A,B: Text` |
 | Alternative | `alt success` / `else failure` / `end` |
+| Plain-line message | `A->B: Request`, `B-->A: Response` (no arrowhead) |
+| Label line break | `A->>B: First line<br/>Second line` |
+| Note capitalization | `note over A,B: Text` |
+| Activation | `activate A` / `deactivate A`, or `A->>+B` / `B-->>-A` message shorthand |
+| Numbering | `autonumber`, `autonumber 2 3`, `autonumber off` |
+| Title | `title My presentation`, or a plain `title:` in frontmatter (JSON double quotes or YAML single quotes supported) |
+| Visual groups | `rect rgb(240,250,255)` around interactions; `box Group` around declarations; each ends with `end` |
+| Loop | `loop For each request` / body / `end`, traversed once |
 | Full-line comment | `%% This is a comment` |
 
-Participant IDs begin with an ASCII letter or underscore, followed by letters, digits, underscores, or hyphens. Use aliases for display names with spaces or non-ASCII characters. Chinese labels/messages and long plain-text labels are supported. Notes must reference participants present in the document.
+Participant IDs can contain Unicode, dots, spaces, hyphens, and literal quotes, e.g. `Service.API`, `Model Server`, or `"Web App"`. Use the same ID consistently and `as` for a display label. IDs cannot begin with a digit or contain structural separators such as colons, commas, semicolons, brackets, or angle brackets. Chinese labels/messages and long plain-text labels are supported. Notes must reference participants present in the document.
 
-Multiple independent top-level alt blocks are allowed; each has exactly two cases with nonempty labels. Nested alternatives and a third case are unsupported. A case may be empty, but the diagram must have at least one playable message or Note overall.
+Multiple alt blocks are allowed; each has exactly two cases with nonempty labels. Loop/rect wrappers may nest and contain alt, but alt inside another alt and a third case remain unsupported. A case may be empty, but the whole diagram needs at least one playable message or Note. Boxes contain only explicit participant declarations and cannot nest inside control blocks.
 
-Repeated messages remain separate steps. Wrapping long labels does not add steps. Solid/dashed arrows preserve their visual meaning; SeqShow does not infer business behavior from them.
+Repeated messages remain separate steps. Label wrapping and br breaks do not add steps. Solid/dashed lines and arrowhead presence are preserved. Autonumber is Mermaid's static numbering across the full diagram; it can differ from the selected path's step count. Activation, titles, and groups remain visible without becoming extra steps.
 
-**Unsupported:** nested alt, opt / loop / par, activation/deactivation or +/- shorthand, create / destroy, autonumber, rect, other arrows, semicolon-joined statements, HTML / rich text / line-break markup, frontmatter, configuration directives such as `%%{init: ...}%%`, click / links, and other diagram types.
+Frontmatter accepts one plain `title:` field, optionally quoted; other YAML fields, multiline scalars, and configuration are rejected. No user configuration reaches Mermaid. For rect/box colors, use simple color names or numeric rgb/rgba/hsl/hsla; numeric color forms avoid ambiguity with group labels.
+
+**Unsupported:** alt inside alt, alt without else or with more than two cases, opt / par, create / destroy, arrows other than ->> / -->> / -> / -->, joined statements, HTML beyond attribute-free br, rich text, frontmatter configuration, directives such as `%%{init: ...}%%`, click / links, and other diagram types. Loop iteration settings and parallel execution are not simulated.
 
 Plain URLs in message text are labels, not automatically fetched resources or executable links.
 
@@ -249,7 +268,10 @@ Plain URLs in message text are labels, not automatically fetched resources or ex
 | Source length | 50,000 UTF-16 code units |
 | Participants | 20 |
 | Messages + Notes | 200 across all paths combined |
-| Top-level alt blocks | 10 |
+| Alt blocks | 10 across all wrappers |
+| Loop / rect blocks | 20 combined |
+| Block nesting | 8 levels |
+| Statements | 1,000 (excluding blanks, comments, header, and frontmatter) |
 
 Over-limit input produces a diagnostic; it is not truncated. Large supported diagrams may take longer to render and require more scrolling.
 
@@ -264,11 +286,11 @@ Over-limit input produces a diagnostic; it is not truncated. Large supported dia
 | Downloaded demo opens as text | Download the raw file, keep the .html extension, then open it in a browser |
 | Screenshot or draw.io file will not import | Copy/recreate the Mermaid sequence source instead; image/file conversion is not provided |
 | Local server will not start | Check Node version and whether its port is already occupied |
-| Edits disappear after reload | Draft persistence is not implemented; save source outside the app |
+| Draft was not restored | Check the local draft status and whether you opened an explicit example link; use the restore action if offered. Storage can be unavailable or cleared; reopen a .mmd backup |
 
 The editor is intended for modern browsers, with Chromium as the primary development target. Browser behavior can vary; Playwright WebKit checks are not certification for real Safari or iOS devices.
 
-Some parser diagnostic messages and the Chinese example's title currently remain in Chinese. The showcase and standard playback controls use English.
+Controls, example titles, and diagnostics use English. The Chinese example source intentionally remains Chinese.
 
 The offline guarantee applies to exported HTML. Loading the editor or showcase for the first time requires their static assets. There is no AI generation, business execution, cloud sharing, or GIF/video export feature; the README GIF is a prepared demonstration.
 
