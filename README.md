@@ -2,7 +2,7 @@
 
 **Present Mermaid sequence diagrams, step by step.**
 
-> Development version: this branch adds broader syntax support, source-file import, Markdown extraction, and local drafts. These changes have not been deployed yet. Run this branch locally to try them; the hosted editor still runs the previous version.
+> Deployment status: this repository includes broader syntax support, source-file import, Markdown extraction, and local drafts. These changes have not been deployed yet. Run the app locally to try them; the hosted editor still runs the previous version.
 
 Paste a sequence diagram, choose a presentation path, and explain one interaction at a time. Use Focus to guide your audience, then share a single HTML file they can play offline.
 
@@ -34,7 +34,6 @@ You need Git, npm, and a supported Node.js version: Node 22.13+ within the 22.x 
 ```sh
 git clone https://github.com/KunxianWang/SeqShow.git
 cd SeqShow
-git switch ffang/next-compatibility
 ```
 
 ### Step 2 — Install dependencies
@@ -70,7 +69,7 @@ Ports are strict: if 5173 or 4173 is already occupied, stop the previous server 
 
 ### Step 1 — Get the Mermaid source
 
-Open the locally running editor for this development version. The [hosted editor](https://kunxianwang.github.io/SeqShow/) remains available with the previous feature set until this update is deployed.
+Open the locally running editor to use the current repository version. The [hosted editor](https://kunxianwang.github.io/SeqShow/) remains available with the previous feature set until this update is deployed.
 
 SeqShow accepts **Mermaid sequence diagram text**, beginning with `sequenceDiagram`.
 
@@ -203,7 +202,7 @@ Chapter switches restore the demo's default paths and chapter starting step. The
 
 The showcase itself needs the application's static assets. The downloaded HTML is the self-contained offline presentation.
 
-For the new syntax in this development version, download the [loop and grouped-participant presentation](demo/compatibility.html). It includes numbering, activation, line breaks, and an alternative inside a loop. The loop is shown once; its label is not evaluated.
+For the expanded syntax, download the [loop and grouped-participant presentation](demo/compatibility.html). It includes numbering, activation, line breaks, and an alternative inside a loop. The loop is shown once; its label is not evaluated.
 
 ![Development editor with source-file tools and a loop presentation](demo/compatibility.png)
 
