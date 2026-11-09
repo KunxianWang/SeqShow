@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SeqShow — State diagram prototype</title>
+</head>
+<body data-graph-preview="state">
+  <main class="app">
+    <header class="app-header">
+      <h1 class="brand">SeqShow · State diagram prototype</h1>
+      <nav class="app-links" aria-label="Other diagrams">
+        <a href="./" target="_blank" rel="noopener">Sequence</a>
+        <a href="mindmap.html" target="_blank" rel="noopener">Mindmap</a>
+        <a href="flowchart.html" target="_blank" rel="noopener">Flowchart</a>
+      </nav>
+    </header>
+    <div class="workspace">
+      <section class="panel editor-panel">
+        <label for="state-source">Mermaid state diagram source</label>
+        <textarea id="state-source" data-graph-source spellcheck="false" wrap="off" aria-describedby="state-syntax">stateDiagram-v2
+    direction LR
+    Draft: Draft release
+    state "Waiting for review" as Review
+    state "Approved" as Approved
+    [*] --&gt; Draft
+    Draft --&gt; Review: Submit
+    Review --&gt; Draft: Revise
+    Review --&gt; Approved: Approve
+    Approved --&gt; [*]</textarea>
+        <div class="editor-actions"><button class="primary" type="button" data-render>Render</button></div>
+        <div data-error role="alert"></div>
+        <p class="help" id="state-syntax">Use stateDiagram-v2 and one transition per line, such as Draft --&gt; Review: Submit. Use [*] for start or end. Copy your source before closing this tab.</p>
+      </section>
+      <section class="panel preview-panel" data-player aria-label="State diagram presentation" tabindex="0">
+        <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
+        <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
+        <div data-controls></div>
+        <div class="stage"><div data-diagram></div></div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite"></div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p></div>
+        </div>
+        <p data-export-error role="alert"></p>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/src/graph-preview.ts"></script>
+</body>
+</html>

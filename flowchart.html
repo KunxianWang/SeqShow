@@ -5,16 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SeqShow — Flowchart prototype</title>
 </head>
-<body>
+<body data-graph-preview="flowchart">
   <main class="app">
     <header class="app-header">
       <h1 class="brand">SeqShow · Flowchart prototype</h1>
-      <a href="./">Sequence editor</a>
+      <nav class="app-links" aria-label="Other diagrams">
+        <a href="./" target="_blank" rel="noopener">Sequence</a>
+        <a href="mindmap.html" target="_blank" rel="noopener">Mindmap</a>
+        <a href="state.html" target="_blank" rel="noopener">State</a>
+      </nav>
     </header>
     <div class="workspace">
       <section class="panel editor-panel">
         <label for="flow-source">Mermaid flowchart source</label>
-        <textarea id="flow-source" spellcheck="false" wrap="off" aria-describedby="flow-syntax">flowchart TD
+        <textarea id="flow-source" data-graph-source spellcheck="false" wrap="off" aria-describedby="flow-syntax">flowchart TD
     A(Open pull request)
     B{Checks passed?}
     C[Request changes]
@@ -50,6 +54,6 @@
       </section>
     </div>
   </main>
-  <script type="module" src="/src/flowchart.ts"></script>
+  <script type="module" src="/src/graph-preview.ts"></script>
 </body>
 </html>

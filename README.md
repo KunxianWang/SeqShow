@@ -20,6 +20,7 @@ The showcase uses a real six-service flow with inventory reservation, payment re
 - **Want to use your own diagram?** Open the [live editor](https://kunxianwang.github.io/SeqShow/), then follow the [step-by-step guide](#use-your-own-diagram-step-by-step).
 - **Want to work locally?** Follow [Run the app locally](#run-the-app-locally) below.
 - **Want to try flowcharts?** See the [local flowchart prototype](#flowchart-prototype).
+- **Want to present a mindmap or state diagram?** See the [local Mindmap and State prototypes](#mindmap-and-state-prototypes).
 - **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 The hosted editor requires no installation or sign-in. Exported presentations work without the editor or a running server. Diagram source stays in your browser.
@@ -209,7 +210,7 @@ For the expanded syntax, download the [loop and grouped-participant presentation
 
 ## Flowchart prototype
 
-Check out `ffang/flowchart-prototype`, start the app locally, and open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
+Run this development branch locally and open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
 
 1. Try the pull request example, or paste a small `flowchart` or `graph` with direction `TD`, `TB`, `BT`, `LR`, or `RL`.
 2. Click **Render**, then **Next** or **Play**. By default, each edge is a step in source order. To choose which edges to present and in what order, give them IDs and step numbers as shown below. Conditions are not evaluated.
@@ -227,6 +228,20 @@ flowchart LR
 ```
 
 In this example, the player shows **Request → Cache hit?** first, then **Miss**, even though the miss edge appears first in the source. The hit edge stays in the diagram without taking a step. Use a distinct number from 1 to 60 for each selected edge; gaps are allowed. The exported file keeps this order. Grouping several edges into one step is not supported in the prototype.
+
+## Mindmap and State prototypes
+
+Run the `ffang/mindmap-state` branch locally. Open [Mindmap](http://127.0.0.1:5173/mindmap.html) or [State](http://127.0.0.1:5173/state.html) in the dev server. With production preview, use [Mindmap on port 4173](http://127.0.0.1:4173/mindmap.html) or [State on port 4173](http://127.0.0.1:4173/state.html).
+
+1. Try the built-in example or paste your source into the matching editor.
+2. Click **Render**, then **Next** or **Play**. The layout stays fixed as the highlight moves.
+3. Click **Export HTML** to share the same presentation offline. Copy your source before closing the tab.
+
+**Mindmap:** use `mindmap`, one root, and space indentation. Plain topics use boxes; `id[Box]`, `id(Rounded)`, and `id((Circle))` are also supported. Each step highlights one topic and its incoming line in outline order. Matching labels remain separate topics. Limits: 30 topics and 8 levels. Icons, CSS classes, and rich labels are out of scope.
+
+**State:** use `stateDiagram-v2` or `stateDiagram`, flat states, and `A --> B: Event`. Name states with `state "Waiting" as A` or `A: Waiting`. `[*]` marks start or end depending on the arrow direction. Each transition is shown once in source order, including self loops and repeated state pairs; guards and events are text. Limits: 30 states including start/end and 60 transitions. Composite states, choice/fork/join, notes, and styles are out of scope.
+
+Both prototypes accept plain labels up to 120 UTF-16 units and source up to 20,000 units. Configuration, HTML, links, and executable content are not supported. These are separate prototypes; the hosted Sequence editor is unchanged.
 
 ## Keyboard and accessibility
 
@@ -247,7 +262,7 @@ On narrow screens, the editor and preview stack vertically; the diagram scrolls 
 
 ## Supported Mermaid syntax
 
-SeqShow supports a restricted subset of `sequenceDiagram`, not every Mermaid feature.
+The Sequence editor supports a restricted subset of `sequenceDiagram`, not every Mermaid feature.
 
 | Syntax | Example |
 | --- | --- |

@@ -11,7 +11,8 @@ const placements = { over: 'Over', left: 'Left of', right: 'Right of' };
 export function mountPlayer(root: HTMLElement, document: SequenceDocument, initialChoices?: BranchChoices) {
   const page = window.document;
   const svg = root.querySelector<SVGSVGElement>('[data-diagram] svg')!;
-  const flowchart = svg.hasAttribute('data-flowchart');
+  const graph = svg.dataset.diagramKind;
+  const graphStep = graph === 'mindmap' ? 'Topic' : graph === 'state' ? 'Transition' : graph === 'flowchart' ? 'Edge' : undefined;
   const diagram = svg.parentElement!;
   const controls = root.querySelector<HTMLElement>('[data-controls]')!;
   // Hosts without a dedicated dock (e.g. the M0 harness) keep every control together.
@@ -42,12 +43,14 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
   let timer: ReturnType<typeof setInterval> | undefined;
   const labels = new Map(document.participants.map(actor => [actor.id, actor.label]));
   controls.replaceChildren(); transport.replaceChildren();
-  const diagramNotice = element('p', 'path-help', flowchart
-    ? svg.hasAttribute('data-flowchart-ordered')
-      ? 'Numbered edges play in step order. Unnumbered edges stay visible. Conditions are not evaluated.'
-      : 'Edges are shown in source order; conditions are not evaluated.'
-    : 'Loops are shown once; iterations and conditions are not evaluated.');
-  if (flowchart) diagramNotice.dataset.flowchartNotice = '';
+  const guidance = graph === 'mindmap' ? 'Topics are shown in outline order, starting at the root.'
+    : graph === 'state' ? 'Transitions are shown in source order; events and guards are not evaluated.'
+      : graph === 'flowchart' ? svg.hasAttribute('data-flowchart-ordered')
+        ? 'Numbered edges play in step order. Unnumbered edges stay visible. Conditions are not evaluated.'
+        : 'Edges are shown in source order; conditions are not evaluated.'
+        : 'Loops are shown once; iterations and conditions are not evaluated.';
+  const diagramNotice = element('p', 'path-help', guidance);
+  if (graphStep) diagramNotice.dataset.graphNotice = '';
   else {
     diagramNotice.dataset.loopNotice = '';
     diagramNotice.hidden = !collectNodes(document.nodes).some(node => node.kind === 'loop');
@@ -203,8 +206,9 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     status.toggleAttribute('data-overview', !current);
     status.setAttribute('aria-live', state.playing ? 'off' : 'polite');
     kind.hidden = !current;
-    kind.textContent = !current ? '' : flowchart ? 'Edge' : current.kind === 'note' ? 'Note' : current.from === current.to ? 'Self call' : 'Message';
-    if (!current) details.textContent = flowchart ? 'No current edge · diagram overview.' : 'No current step · all paths keep their original layout.';
+    kind.textContent = !current ? '' : graphStep ?? (current.kind === 'note' ? 'Note' : current.from === current.to ? 'Self call' : 'Message');
+    if (!current) details.textContent = graphStep ? 'No current step · diagram overview.' : 'No current step · all paths keep their original layout.';
+    else if (graph === 'mindmap') details.textContent = 'Outline order';
     else if (current.kind === 'message') details.replaceChildren(chip(current.from), ' → ', chip(current.to));
     else details.replaceChildren(`${placements[current.placement]} `, ...current.participants.flatMap((id, n) => n ? [', ', chip(id)] : [chip(id)]));
     previous.disabled = !enabled || index === 0; next.disabled = !enabled || index === steps.length;

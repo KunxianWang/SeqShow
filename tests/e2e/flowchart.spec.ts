@@ -13,7 +13,7 @@ const geometry = (page: Page) => page.locator('[data-diagram] svg').evaluate(svg
 test('flowchart presents decision exits and the return edge in source order without moving the diagram', async ({ page }) => {
   await page.goto('/flowchart.html'); await ready(page);
   await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 4');
-  await expect(page.locator('[data-flowchart-notice]')).toContainText('source order');
+  await expect(page.locator('[data-graph-notice]')).toContainText('source order');
   const baseline = await geometry(page);
   const labels = ['Open pull request → Checks passed?', 'Needs work', 'Push a fix', 'Ready'];
   for (const [i, label] of labels.entries()) {
@@ -59,7 +59,7 @@ test('numbered parallel edges play in number order and retain unnumbered context
     offline.on('websocket', socket => remote.push(socket.url()));
     await offline.goto(pathToFileURL(file).href);
     await expect(offline.locator('[data-status]')).toHaveText('Overview · 0 / 2');
-    await expect(offline.locator('[data-flowchart-notice]')).toContainText('Unnumbered edges stay visible');
+    await expect(offline.locator('[data-graph-notice]')).toContainText('Unnumbered edges stay visible');
     await expect(offline.locator('path[data-et="edge"]:not([data-seq-step])')).toBeVisible();
     await offline.locator('[data-action="next"]').click();
     await expect(offline.locator('path.edge-pattern-dotted[data-phase="current"]')).toHaveAttribute('data-seq-step', 'step:2');

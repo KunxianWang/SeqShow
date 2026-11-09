@@ -24,7 +24,7 @@ export function exportHtml(svg: SVGSVGElement, model: SequenceDocument, choices:
 <title>SeqShow — Offline presentation</title><style>${css}</style></head><body class="export-page">
 <header class="export-bar"><h1>${logo}SeqShow</h1><span class="offline-pill">Offline presentation</span></header>
 <main class="export-panel" data-player aria-label="Presentation player">
-<div data-controls></div>${svg.hasAttribute('data-flowchart') ? '' : '<p class="path-help">This is a presentation path; conditions are not evaluated.</p>'}
+<div data-controls></div>${svg.hasAttribute('data-diagram-kind') ? '' : '<p class="path-help">This is a presentation path; conditions are not evaluated.</p>'}
 <div data-diagram>${new XMLSerializer().serializeToString(svg)}</div>
 <div class="player-dock"><p class="step-meta" data-step-meta></p><div data-status role="status" aria-live="polite"></div>
 <div class="player-dock-row"><div data-transport></div>${keys}</div></div></main>

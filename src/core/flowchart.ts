@@ -1,4 +1,4 @@
-export const FLOW_LIMITS = { source: 20_000, nodes: 30, edges: 60, label: 120 } as const;
+import { GRAPH_LIMITS as FLOW_LIMITS, plainLabel, type DiagramResult } from './diagram-input';
 
 type Shape = 'rectangle' | 'rounded' | 'decision';
 type NodeLabel = { label: string; shape: Shape };
@@ -7,17 +7,12 @@ export type FlowchartDocument = {
   nodes: (NodeLabel & { id: string })[];
   edges: { from: string; to: string; label: string; line: number; dotted?: true; step?: number }[];
 };
-type Result = { ok: true; document: FlowchartDocument } | { ok: false; line: number; message: string };
+type Result = DiagramResult<FlowchartDocument>;
 
 const node = /^([A-Za-z_]\w*)(?:[ \t]*(?:\[([^[\]]*)\]|\(([^()]*)\)|\{([^{}]*)\}))?$/u;
 const edge = /^(.+?)(?:[ \t]+([A-Za-z_]\w*)@)?(-->|-\.->)[ \t]*(?:\|([^|]*)\|[ \t]*)?(.+)$/u;
 const stepDirective = /^([A-Za-z_]\w*)[ \t]*@\{[ \t]*step[ \t]*:[ \t]*([1-9]\d*)[ \t]*\}$/u;
 const reserved = /^(?:subgraph|end|direction|click|class|classDef|style|linkStyle|accTitle|accDescr)(?=[ \t:]|$)/u;
-const labelText = (value: string) => {
-  const label = value.trim().replace(/^"([^"]*)"$/u, '$1').trim();
-  // These characters delimit Mermaid syntax or invoke entity/HTML/math handling.
-  return label && label.length <= FLOW_LIMITS.label && !/[\p{Cc}"<>\x60#&;\\|$]/u.test(label) ? label : undefined;
-};
 const error = (line: number, message: string): Result => ({ ok: false, line, message });
 
 /** A bounded Flowchart subset. Original source is never passed to Mermaid. */
@@ -60,7 +55,7 @@ export function parseFlowchart(source: string): Result {
       const value = rectangle ?? rounded ?? decision;
       if (value !== undefined) {
         if (/^[([{/\\]/u.test(value.trimStart())) return error(number, 'Unsupported node shape. Quote labels that start with shape punctuation.');
-        const label = labelText(value);
+        const label = plainLabel(value);
         if (!label) return error(number, 'Use a plain label of 1–120 characters without markup or Mermaid delimiters.');
         const shape = rounded !== undefined ? 'rounded' : decision !== undefined ? 'decision' : 'rectangle';
         const previous = nodes.get(id);
@@ -71,7 +66,7 @@ export function parseFlowchart(source: string): Result {
     }
     if (connection) {
       const [, , id, arrow, value] = connection;
-      const label = value === undefined ? '' : labelText(value);
+      const label = value === undefined ? '' : plainLabel(value);
       if (label === undefined) return error(number, 'Use a plain edge label of 1–120 characters without markup or Mermaid delimiters.');
       const item: FlowchartDocument['edges'][number] = {
         from: endpoints[0]![1], to: endpoints[1]![1], label, line: number, ...(arrow === '-.->' ? { dotted: true } : {}),
