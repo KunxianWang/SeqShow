@@ -73,6 +73,7 @@ kbd { padding: 1px 6px; border: 1px solid var(--ss-border-strong); border-bottom
 /* Desktop panels cap this with flex layout instead (see .export-panel and the Web .preview-panel). */
 [data-diagram] { position: relative; max-height: clamp(240px, 70vh, 720px); overflow: auto; padding: 20px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: #fff; }
 [data-diagram] > svg { position: relative; z-index: 1; display: block; min-width: 600px; width: 100%; height: auto; }
+[data-diagram] > svg[data-flowchart] { min-width: 360px; margin-inline: auto; }
 .diagram-underlay, .diagram-overlay { position: absolute; pointer-events: none; }
 .diagram-underlay { z-index: 0; }
 .diagram-overlay { z-index: 2; }
@@ -107,6 +108,7 @@ svg g[data-seq-participant][data-active="true"] line, svg g[data-seq-participant
 svg g[data-seq-participant][data-active="true"] path { stroke: var(--ss-d-current) !important; }
 svg g[data-seq-participant][data-active="true"] text, svg g[data-seq-participant][data-active="true"] tspan { fill: var(--ss-accent-strong) !important; }
 svg line[data-seq-participant][data-active="true"] { stroke: #93c5fd !important; stroke-width: 2px !important; }
+svg[data-flowchart] [data-active="true"] [data-flow-shape] { fill: var(--ss-accent-soft) !important; stroke: var(--ss-d-current) !important; stroke-width: 2px !important; }
 
 /* Presenter dock: step meta, live status and transport */
 .player-dock { display: grid; gap: 10px; margin-top: 12px; padding: 14px 16px; border: 1px solid var(--ss-border); border-radius: var(--ss-radius-md); background: #fff; }

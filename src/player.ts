@@ -11,6 +11,7 @@ const placements = { over: 'Over', left: 'Left of', right: 'Right of' };
 export function mountPlayer(root: HTMLElement, document: SequenceDocument, initialChoices?: BranchChoices) {
   const page = window.document;
   const svg = root.querySelector<SVGSVGElement>('[data-diagram] svg')!;
+  const flowchart = svg.hasAttribute('data-flowchart');
   const diagram = svg.parentElement!;
   const controls = root.querySelector<HTMLElement>('[data-controls]')!;
   // Hosts without a dedicated dock (e.g. the M0 harness) keep every control together.
@@ -195,8 +196,8 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
     status.toggleAttribute('data-overview', !current);
     status.setAttribute('aria-live', state.playing ? 'off' : 'polite');
     kind.hidden = !current;
-    kind.textContent = !current ? '' : current.kind === 'note' ? 'Note' : current.from === current.to ? 'Self call' : 'Message';
-    if (!current) details.textContent = 'No current step · all paths keep their original layout.';
+    kind.textContent = !current ? '' : flowchart ? 'Edge' : current.kind === 'note' ? 'Note' : current.from === current.to ? 'Self call' : 'Message';
+    if (!current) details.textContent = flowchart ? 'No current edge · diagram overview.' : 'No current step · all paths keep their original layout.';
     else if (current.kind === 'message') details.replaceChildren(chip(current.from), ' → ', chip(current.to));
     else details.replaceChildren(`${placements[current.placement]} `, ...current.participants.flatMap((id, n) => n ? [', ', chip(id)] : [chip(id)]));
     previous.disabled = !enabled || index === 0; next.disabled = !enabled || index === steps.length;

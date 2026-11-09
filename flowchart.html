@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SeqShow — Flowchart prototype</title>
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1 class="brand">SeqShow · Flowchart prototype</h1>
+      <a href="./">Sequence editor</a>
+    </header>
+    <div class="workspace">
+      <section class="panel editor-panel">
+        <label for="flow-source">Mermaid flowchart source</label>
+        <textarea id="flow-source" spellcheck="false" wrap="off" aria-describedby="flow-syntax">flowchart TD
+    A(Open pull request)
+    B{Checks passed?}
+    C[Request changes]
+    D[Review and merge]
+    A --> B
+    B -->|Needs work| C
+    C -->|Push a fix| B
+    B -->|Ready| D</textarea>
+        <div class="editor-actions"><button class="primary" type="button" data-render>Render</button></div>
+        <div data-error role="alert"></div>
+        <p class="help" id="flow-syntax">Use one node or directed edge per line. Supported: A[Box], A(Rounded), A{Decision}, A --&gt; B, and A --&gt;|label| B. The prototype keeps text in this tab; copy your source before closing it.</p>
+      </section>
+      <section class="panel preview-panel" data-player aria-label="Flowchart presentation" tabindex="0">
+        <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
+        <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
+        <div data-controls></div>
+        <p class="path-help">Edges are shown in source order; conditions are not evaluated.</p>
+        <div class="stage"><div data-diagram></div></div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite"></div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p></div>
+        </div>
+        <p data-export-error role="alert"></p>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/src/flowchart.ts"></script>
+</body>
+</html>

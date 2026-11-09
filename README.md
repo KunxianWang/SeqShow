@@ -19,6 +19,7 @@ The showcase uses a real six-service flow with inventory reservation, payment re
 - **Just want to see what it does?** Open the [interactive tour](https://kunxianwang.github.io/SeqShow/showcase.html). You can also download the [checkout presentation](demo/checkout.html) or [login presentation](demo/login.html) and open it locally.
 - **Want to use your own diagram?** Open the [live editor](https://kunxianwang.github.io/SeqShow/), then follow the [step-by-step guide](#use-your-own-diagram-step-by-step).
 - **Want to work locally?** Follow [Run the app locally](#run-the-app-locally) below.
+- **Want to try flowcharts?** See the [local flowchart prototype](#flowchart-prototype).
 - **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 The hosted editor requires no installation or sign-in. Exported presentations work without the editor or a running server. Diagram source stays in your browser.
@@ -205,6 +206,16 @@ The showcase itself needs the application's static assets. The downloaded HTML i
 For the expanded syntax, download the [loop and grouped-participant presentation](demo/compatibility.html). It includes numbering, activation, line breaks, and an alternative inside a loop. The loop is shown once; its label is not evaluated.
 
 ![Development editor with source-file tools and a loop presentation](demo/compatibility.png)
+
+## Flowchart prototype
+
+Check out `ffang/flowchart-prototype`, start the app locally, and open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
+
+1. Try the pull request example, or paste a small `flowchart` or `graph` with direction `TD`, `TB`, `BT`, `LR`, or `RL`.
+2. Click **Render**, then **Next** or **Play**. Every directed edge is a step in source order. Repeated edges and both exits of a decision remain distinct; the player does not evaluate conditions.
+3. Click **Export HTML** to download the same presentation for offline playback. Copy the source separately before closing the tab.
+
+Use one node or `-->` edge per line, with optional `|label|` text. Node IDs use ASCII letters, digits, and underscores, beginning with a letter or underscore. Supported shapes are `A[Box]`, `A(Rounded)`, and `A{Decision}`. Labels are plain text (outer quotes are optional); HTML, entities, Mermaid directives, subgraphs, styles, user-supplied edge IDs, and chained edges are out of scope. Limits are 30 nodes, 60 edges, 120 UTF-16 units per ID or label, and 20,000 UTF-16 units of source.
 
 ## Keyboard and accessibility
 
