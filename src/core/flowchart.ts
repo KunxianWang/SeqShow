@@ -5,12 +5,13 @@ type NodeLabel = { label: string; shape: Shape };
 export type FlowchartDocument = {
   direction: 'TD' | 'TB' | 'BT' | 'LR' | 'RL';
   nodes: (NodeLabel & { id: string })[];
-  edges: { from: string; to: string; label: string; line: number }[];
+  edges: { from: string; to: string; label: string; line: number; dotted?: true; step?: number }[];
 };
 type Result = { ok: true; document: FlowchartDocument } | { ok: false; line: number; message: string };
 
 const node = /^([A-Za-z_]\w*)(?:[ \t]*(?:\[([^[\]]*)\]|\(([^()]*)\)|\{([^{}]*)\}))?$/u;
-const edge = /^(.+?)-->[ \t]*(?:\|([^|]*)\|[ \t]*)?(.+)$/u;
+const edge = /^(.+?)(?:[ \t]+([A-Za-z_]\w*)@)?(-->|-\.->)[ \t]*(?:\|([^|]*)\|[ \t]*)?(.+)$/u;
+const stepDirective = /^([A-Za-z_]\w*)[ \t]*@\{[ \t]*step[ \t]*:[ \t]*([1-9]\d*)[ \t]*\}$/u;
 const reserved = /^(?:subgraph|end|direction|click|class|classDef|style|linkStyle|accTitle|accDescr)(?=[ \t:]|$)/u;
 const labelText = (value: string) => {
   const label = value.trim().replace(/^"([^"]*)"$/u, '$1').trim();
@@ -24,6 +25,9 @@ export function parseFlowchart(source: string): Result {
   if (source.length > FLOW_LIMITS.source) return error(1, 'Flowchart source exceeds 20,000 characters.');
   const nodes = new Map<string, NodeLabel | undefined>();
   const edges: FlowchartDocument['edges'] = [];
+  const edgeIds = new Map<string, FlowchartDocument['edges'][number]>();
+  const numbered = new Map<string, { step: number; line: number }>();
+  const steps = new Set<number>();
   let direction: FlowchartDocument['direction'] | undefined;
   for (const [index, raw] of source.split(/\r\n|\n|\r/u).entries()) {
     const line = raw.trim();
@@ -37,10 +41,20 @@ export function parseFlowchart(source: string): Result {
       continue;
     }
     if (reserved.test(line)) return error(number, 'Styles, links, subgraphs, and other directives are not supported.');
+    const directive = stepDirective.exec(line);
+    if (directive) {
+      const [, id, value] = directive;
+      const step = Number(value);
+      if (step > FLOW_LIMITS.edges) return error(number, 'Step numbers must be between 1 and 60.');
+      if (numbered.has(id) || steps.has(step)) return error(number, 'Each numbered edge needs its own ID and step number.');
+      numbered.set(id, { step, line: number }); steps.add(step);
+      continue;
+    }
+    if (/^\w+[ \t]*@\{/u.test(line)) return error(number, 'Use only edgeId@{ step: N } with a positive whole number.');
     const connection = edge.exec(line);
-    const endpoints = (connection ? [connection[1], connection[3]] : [line]).map(value => node.exec(value.trim()));
+    const endpoints = (connection ? [connection[1], connection[5]] : [line]).map(value => node.exec(value.trim()));
     for (const endpoint of endpoints) {
-      if (!endpoint) return error(number, 'Use a node or one directed edge (A --> B or A -->|label| B) per line.');
+      if (!endpoint) return error(number, 'Use a node or one directed edge (-->, -.->) per line.');
       const [, id, rectangle, rounded, decision] = endpoint;
       if (id.length > FLOW_LIMITS.label) return error(number, 'Node IDs are limited to 120 characters.');
       const value = rectangle ?? rounded ?? decision;
@@ -56,11 +70,24 @@ export function parseFlowchart(source: string): Result {
       if (nodes.size > FLOW_LIMITS.nodes) return error(number, 'Flowcharts are limited to 30 nodes.');
     }
     if (connection) {
-      const label = connection[2] === undefined ? '' : labelText(connection[2]);
+      const [, , id, arrow, value] = connection;
+      const label = value === undefined ? '' : labelText(value);
       if (label === undefined) return error(number, 'Use a plain edge label of 1–120 characters without markup or Mermaid delimiters.');
-      edges.push({ from: endpoints[0]![1], to: endpoints[1]![1], label, line: number });
+      const item: FlowchartDocument['edges'][number] = {
+        from: endpoints[0]![1], to: endpoints[1]![1], label, line: number, ...(arrow === '-.->' ? { dotted: true } : {}),
+      };
+      if (id) {
+        if (id.length > FLOW_LIMITS.label || edgeIds.has(id)) return error(number, 'Use a unique edge ID of at most 120 characters.');
+        edgeIds.set(id, item);
+      }
+      edges.push(item);
       if (edges.length > FLOW_LIMITS.edges) return error(number, 'Flowcharts are limited to 60 edges.');
     }
+  }
+  for (const [id, { step, line }] of numbered) {
+    const item = edgeIds.get(id);
+    if (!item) return error(line, 'Step references an unknown edge ID.');
+    item.step = step;
   }
   if (!direction || !edges.length) return error(1, 'Add at least one directed edge to a flowchart.');
   return { ok: true, document: {

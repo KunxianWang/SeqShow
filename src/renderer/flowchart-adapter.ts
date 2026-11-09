@@ -1,6 +1,6 @@
 import mermaid from 'mermaid';
 import type { FlowchartDocument } from '../core/flowchart';
-import type { SequenceDocument } from '../core/model';
+import type { Message, SequenceDocument } from '../core/model';
 import { assertSafeSvg } from './svg-safety';
 
 let nextRenderId = 0;
@@ -18,7 +18,7 @@ export async function renderFlowchart(document: FlowchartDocument) {
       const [open, close] = shapes[node.shape];
       return `${ids.get(node.id)}${open}"${node.label}"${close}`;
     }),
-    ...document.edges.map(({ from, to, label }, index) => `${ids.get(from)} ${edgeId(index)}@-->${label ? `|"${label}"|` : ''} ${ids.get(to)}`),
+    ...document.edges.map(({ from, to, label, dotted }, index) => `${ids.get(from)} ${edgeId(index)}@${dotted ? '-.->' : '-->'}${label ? `|"${label}"|` : ''} ${ids.get(to)}`),
   ].join('\n');
   mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'base', look: 'classic',
     htmlLabels: false, fontFamily: 'Arial, sans-serif', flowchart: { htmlLabels: false, padding: 12 },
@@ -49,22 +49,27 @@ export async function renderFlowchart(document: FlowchartDocument) {
     shape.setAttribute('data-flow-shape', '');
   }
   const labels = new Map(document.nodes.map(node => [node.id, node.label]));
+  const numbered = document.edges.some(edge => edge.step !== undefined);
   const model: SequenceDocument = {
     participants: document.nodes.map(({ id, label }) => ({ id, label, kind: 'participant' })),
-    nodes: document.edges.map(({ from, to, label, line }, index) => {
+    nodes: document.edges.flatMap(({ from, to, label, line, dotted, step: order }, index) => {
       const edges = svg.querySelectorAll(`path[data-et="edge"][data-id="${edgeId(index)}"]`);
       const captions = svg.querySelectorAll(`g.edgeLabel g[data-id="${edgeId(index)}"]`);
       if (edges.length !== 1 || !edges[0].hasAttribute('marker-end') || captions.length !== Number(Boolean(label))
+        || edges[0].classList.contains('edge-pattern-dotted') !== Boolean(dotted)
         || normalized(captions[0]?.textContent ?? '') !== normalized(label)) throw new Error(`Flowchart edge mismatch on line ${line}.`);
+      if (numbered && order === undefined) return [];
       const step = `step:${index + 1}`;
       edges[0].setAttribute('data-seq-step', step);
       edges[0].setAttribute('data-seq-shape', step);
       captions[0]?.setAttribute('data-seq-step', step);
-      return { kind: 'message', id: step, from, to, arrow: 'solid', text: label || `${labels.get(from)} → ${labels.get(to)}`,
+      const message: Message = { kind: 'message', id: step, from, to, arrow: dotted ? 'dashed' : 'solid', text: label || `${labels.get(from)} → ${labels.get(to)}`,
         source: { line, column: 1 } };
-    }),
+      return [{ order: order ?? index + 1, message }];
+    }).sort((a, b) => a.order - b.order).map(({ message }) => message),
   };
   svg.setAttribute('data-flowchart', '');
+  svg.toggleAttribute('data-flowchart-ordered', numbered);
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', 'Flowchart');
   return { svg, model };

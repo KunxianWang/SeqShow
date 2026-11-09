@@ -212,10 +212,21 @@ For the expanded syntax, download the [loop and grouped-participant presentation
 Check out `ffang/flowchart-prototype`, start the app locally, and open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
 
 1. Try the pull request example, or paste a small `flowchart` or `graph` with direction `TD`, `TB`, `BT`, `LR`, or `RL`.
-2. Click **Render**, then **Next** or **Play**. Every directed edge is a step in source order. Repeated edges and both exits of a decision remain distinct; the player does not evaluate conditions.
+2. Click **Render**, then **Next** or **Play**. By default, each edge is a step in source order. To choose which edges to present and in what order, give them IDs and step numbers as shown below. Conditions are not evaluated.
 3. Click **Export HTML** to download the same presentation for offline playback. Copy the source separately before closing the tab.
 
-Use one node or `-->` edge per line, with optional `|label|` text. Node IDs use ASCII letters, digits, and underscores, beginning with a letter or underscore. Supported shapes are `A[Box]`, `A(Rounded)`, and `A{Decision}`. Labels are plain text (outer quotes are optional); HTML, entities, Mermaid directives, subgraphs, styles, user-supplied edge IDs, and chained edges are out of scope. Limits are 30 nodes, 60 edges, 120 UTF-16 units per ID or label, and 20,000 UTF-16 units of source.
+Use one node or directed edge (`-->` or `-.->`) per line, with optional `|label|` text. Node and edge IDs use ASCII letters, digits, and underscores, beginning with a letter or underscore. Supported shapes are `A[Box]`, `A(Rounded)`, and `A{Decision}`. Labels are plain text (outer quotes are optional). HTML, entities, Mermaid configuration directives, subgraphs, styles, and chained edges are out of scope. Limits are 30 nodes, 60 edges, 120 UTF-16 units per ID or label, and 20,000 UTF-16 units of source.
+
+```text
+flowchart LR
+    B{Cache hit?} fetch@-.->|Miss| C[Read database]
+    B -->|Hit| D[Use cached value]
+    A[Request] check@--> B
+    check@{ step: 1 }
+    fetch@{ step: 2 }
+```
+
+In this example, the player shows **Request → Cache hit?** first, then **Miss**, even though the miss edge appears first in the source. The hit edge stays in the diagram without taking a step. Use a distinct number from 1 to 60 for each selected edge; gaps are allowed. The exported file keeps this order. Grouping several edges into one step is not supported in the prototype.
 
 ## Keyboard and accessibility
 

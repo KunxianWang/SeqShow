@@ -42,10 +42,17 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
   let timer: ReturnType<typeof setInterval> | undefined;
   const labels = new Map(document.participants.map(actor => [actor.id, actor.label]));
   controls.replaceChildren(); transport.replaceChildren();
-  const loopNotice = element('p', 'path-help', 'Loops are shown once; iterations and conditions are not evaluated.');
-  loopNotice.dataset.loopNotice = '';
-  loopNotice.hidden = !collectNodes(document.nodes).some(node => node.kind === 'loop');
-  controls.after(loopNotice);
+  const diagramNotice = element('p', 'path-help', flowchart
+    ? svg.hasAttribute('data-flowchart-ordered')
+      ? 'Numbered edges play in step order. Unnumbered edges stay visible. Conditions are not evaluated.'
+      : 'Edges are shown in source order; conditions are not evaluated.'
+    : 'Loops are shown once; iterations and conditions are not evaluated.');
+  if (flowchart) diagramNotice.dataset.flowchartNotice = '';
+  else {
+    diagramNotice.dataset.loopNotice = '';
+    diagramNotice.hidden = !collectNodes(document.nodes).some(node => node.kind === 'loop');
+  }
+  controls.after(diagramNotice);
   const pause = () => { clearInterval(timer); timer = undefined; };
   const icon = (name: keyof typeof icons) => {
     // Borrow the diagram's namespace: the offline bundle must not contain URL literals.
@@ -258,7 +265,7 @@ export function mountPlayer(root: HTMLElement, document: SequenceDocument, initi
       underlay.remove(); overlay.remove(); meta.replaceChildren();
       if (!root.querySelector('[data-step-meta]')) meta.remove();
       controls.replaceChildren(); transport.replaceChildren();
-      loopNotice.remove();
+      diagramNotice.remove();
     },
   };
 }

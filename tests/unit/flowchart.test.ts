@@ -16,11 +16,11 @@ test('flowchart retains declaration shapes, labels and repeated edges in source 
 
 test.each([
   'A --> B --> C',
-  'A e1@--> B',
+  'A e1@==> B',
   'A[[Subroutine]] --> B',
   'A([Stadium]) --> B',
   'A[(Database)] --> B',
-  'A -.-> B',
+  'A -. link .- B',
   'subgraph internal',
   'classDef external fill:url(https://bad.invalid/x)',
   'click A "https://bad.invalid/"',
@@ -36,6 +36,28 @@ test('conflicting declarations report the later source line', () => {
   expect(parseFlowchart('flowchart TB\nA[First] --> B\nA{Second}')).toMatchObject({
     ok: false, line: 3, message: 'A node cannot have conflicting labels or shapes.',
   });
+});
+
+test('step numbers are attached to their named edges without changing source order', () => {
+  expect(parseFlowchart('flowchart LR\nsecond@{ step: 2 }\nA first@--> B\nA second@-.->|Retry| B\nB --> A\nfirst@{ step: 7 }')).toMatchObject({
+    ok: true, document: { edges: [
+      { from: 'A', to: 'B', step: 7 },
+      { from: 'A', to: 'B', label: 'Retry', dotted: true, step: 2 },
+      { from: 'B', to: 'A', label: '' },
+    ] },
+  });
+});
+
+test.each([
+  ['A e1@--> B\ne2@{ step: 1 }', 3, 'unknown edge'],
+  ['A e1@--> B\nB e1@--> C', 3, 'unique edge ID'],
+  ['A e1@--> B\nA e2@--> B\ne1@{ step: 1 }\ne2@{ step: 1 }', 5, 'step number'],
+  ['A e1@--> B\ne1@{ step: 1 }\ne1@{ step: 2 }', 4, 'step number'],
+  ['A e1@--> B\ne1@{ step: 61 }', 3, 'between 1 and 60'],
+  ['A e1@--> B\ne1@{ step: 1, animate: true }', 3, 'Use only'],
+])('rejects invalid edge numbering: %s', (body, line, message) => {
+  const result = parseFlowchart('flowchart LR\n' + body);
+  expect(result).toMatchObject({ ok: false, line, message: expect.stringContaining(message) });
 });
 
 test('flowchart does not silently truncate edges or nodes', () => {

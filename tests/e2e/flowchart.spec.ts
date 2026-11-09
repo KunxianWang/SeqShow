@@ -13,6 +13,7 @@ const geometry = (page: Page) => page.locator('[data-diagram] svg').evaluate(svg
 test('flowchart presents decision exits and the return edge in source order without moving the diagram', async ({ page }) => {
   await page.goto('/flowchart.html'); await ready(page);
   await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 4');
+  await expect(page.locator('[data-flowchart-notice]')).toContainText('source order');
   const baseline = await geometry(page);
   const labels = ['Open pull request → Checks passed?', 'Needs work', 'Push a fix', 'Ready'];
   for (const [i, label] of labels.entries()) {
@@ -31,12 +32,16 @@ test('flowchart presents decision exits and the return edge in source order with
   await expect(page.locator('[data-status]')).toHaveText('Overview · 0 / 4');
 });
 
-test('parallel edges stay distinct in a downloaded offline flowchart', async ({ page, browser, browserName }, testInfo) => {
+test('numbered parallel edges play in number order and retain unnumbered context offline', async ({ page, browser, browserName }, testInfo) => {
   await page.goto('/flowchart.html'); await ready(page);
-  await page.locator('#flow-source').fill('flowchart LR\nA[请求] -->|First| B{Ready?}\nA -->|Second| B\nB --> A');
+  await page.locator('#flow-source').fill('flowchart LR\nA[请求] first@-->|First| B{Ready?}\nA second@-.->|Second| B\nB --> A\nfirst@{ step: 7 }\nsecond@{ step: 2 }');
   await expect(page.locator('[data-export]')).toBeDisabled();
   await page.locator('[data-render]').click(); await ready(page);
-  await expect(page.locator('path[data-seq-step]')).toHaveCount(3);
+  await expect(page.locator('path[data-et="edge"]')).toHaveCount(3);
+  await expect(page.locator('path[data-seq-step]')).toHaveCount(2);
+  await page.locator('[data-action="next"]').click();
+  await expect(page.locator('[data-status]')).toHaveText('1 / 2 — Second');
+  await expect(page.locator('path.edge-pattern-dotted[data-phase="current"]')).toHaveCount(1);
   const waiting = page.waitForEvent('download');
   await page.locator('[data-export]').click();
   const file = testInfo.outputPath('flowchart.html');
@@ -53,16 +58,16 @@ test('parallel edges stay distinct in a downloaded offline flowchart', async ({ 
     offline.on('pageerror', error => errors.push(error.message));
     offline.on('websocket', socket => remote.push(socket.url()));
     await offline.goto(pathToFileURL(file).href);
-    await expect(offline.locator('[data-status]')).toHaveText('Overview · 0 / 3');
-    await expect(offline.getByText('Edges are shown in source order; conditions are not evaluated.', { exact: true })).toBeVisible();
+    await expect(offline.locator('[data-status]')).toHaveText('Overview · 0 / 2');
+    await expect(offline.locator('[data-flowchart-notice]')).toContainText('Unnumbered edges stay visible');
+    await expect(offline.locator('path[data-et="edge"]:not([data-seq-step])')).toBeVisible();
+    await offline.locator('[data-action="next"]').click();
+    await expect(offline.locator('path.edge-pattern-dotted[data-phase="current"]')).toHaveAttribute('data-seq-step', 'step:2');
+    await expect(offline.locator('[data-status]')).toHaveText('1 / 2 — Second');
     await offline.locator('[data-action="next"]').click();
     await expect(offline.locator('path[data-phase="current"]')).toHaveAttribute('data-seq-step', 'step:1');
-    await expect(offline.locator('[data-status]')).toHaveText('1 / 3 — First');
-    await offline.locator('[data-action="next"]').click();
-    await expect(offline.locator('path[data-phase="current"]')).toHaveAttribute('data-seq-step', 'step:2');
-    await expect(offline.locator('[data-status]')).toHaveText('2 / 3 — Second');
-    await offline.locator('[data-action="next"]').click();
-    await expect(offline.locator('[data-status]')).toHaveText('3 / 3 — Ready? → 请求');
+    await expect(offline.locator('[data-status]')).toHaveText('2 / 2 — First');
+    await expect(offline.locator('[data-action="next"]')).toBeDisabled();
     expect(remote).toEqual([]); expect(errors).toEqual([]);
   } finally { await context.close(); }
 });
