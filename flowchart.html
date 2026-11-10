@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SeqShow — Flowchart prototype</title>
+  <script type="module" crossorigin src="./assets/chunk-Y2CYZVJY-DsF7k-Jl.js"></script>
+  <script type="module" crossorigin src="./assets/src-D_iIdUkB.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-VPRB5NB3-emkGCb0e.js"></script>
+  <script type="module" crossorigin src="./assets/dist-Bfr8PhAA.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-3YJQHVM4-CWrEFjSx.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-DUW6YSOI-Dgx8z5s3.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-4EA7E6EY-BCSoSPNR.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-HJ2JQQFS-DcR9rzRI.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-E2ZNV5FY-C-mO2qdQ.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-J5ZVWO5B-oDCd-gWO.js"></script>
+  <script type="module" crossorigin src="./assets/rough.esm-Dy-Kn_BL.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-XC4XBNZT-DjKMrokD.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-DBDB3WZW-txWxTYTD.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-NTY3LDVX-BTBScR-c.js"></script>
+  <script type="module" crossorigin src="./assets/path-fybaL0A-.js"></script>
+  <script type="module" crossorigin src="./assets/array-BifhSqXX.js"></script>
+  <script type="module" crossorigin src="./assets/line-B228uXr7.js"></script>
+  <script type="module" crossorigin src="./assets/chunk-2BW5OAIV-CPXfiDm6.js"></script>
+  <script type="module" crossorigin src="./assets/export-D1DrhdWz.js"></script>
+  <script type="module" crossorigin src="./assets/graph-preview-CoiRqGsV.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/export-CTZwAHkQ.css">
+  <link rel="stylesheet" crossorigin href="./assets/styles-DPD8GKiM.css">
+</head>
+<body data-graph-preview="flowchart">
+  <main class="app">
+    <header class="app-header">
+      <h1 class="brand">SeqShow · Flowchart prototype</h1>
+      <nav class="app-links" aria-label="Other diagrams">
+        <a href="./" target="_blank" rel="noopener">Sequence</a>
+        <a href="mindmap.html" target="_blank" rel="noopener">Mindmap</a>
+        <a href="state.html" target="_blank" rel="noopener">State</a>
+      </nav>
+    </header>
+    <div class="workspace">
+      <section class="panel editor-panel">
+        <label for="flow-source">Mermaid flowchart source</label>
+        <textarea id="flow-source" data-graph-source spellcheck="false" wrap="off" aria-describedby="flow-syntax">flowchart TD
+    A(Open pull request)
+    B{Checks passed?}
+    C[Request changes]
+    D[Review and merge]
+    A --> B
+    B -->|Needs work| C
+    C -->|Push a fix| B
+    B -->|Ready| D</textarea>
+        <div class="editor-actions"><button class="primary" type="button" data-render>Render</button></div>
+        <div data-error role="alert"></div>
+        <p class="help" id="flow-syntax">Use one node or directed edge per line: A[Box], A(Rounded), A{Decision}, A --&gt; B, or A -.-&gt;|label| B. Copy your source before closing this tab.</p>
+        <details class="syntax"><summary>Number the steps</summary>
+          <p>Give an edge an ID, then assign it a step number. When steps are numbered, only those edges play. Other edges stay visible for context.</p>
+          <pre>flowchart LR
+    B{Cache hit?} fetch@-.-&gt;|Miss| C[Read database]
+    B --&gt;|Hit| D[Use cached value]
+    A[Request] check@--&gt; B
+    check@{ step: 1 }
+    fetch@{ step: 2 }</pre>
+        </details>
+      </section>
+      <section class="panel preview-panel" data-player aria-label="Flowchart presentation" tabindex="0">
+        <div class="panel-heading"><h2>Preview</h2><button type="button" data-export disabled>Export HTML</button></div>
+        <p class="preview-notice" data-preview-state role="status">Preparing example…</p>
+        <div data-controls></div>
+        <div class="stage"><div data-diagram></div></div>
+        <div class="player-dock">
+          <p class="step-meta" data-step-meta></p>
+          <div data-status role="status" aria-live="polite"></div>
+          <div class="player-dock-row"><div data-transport></div><p class="player-help"><kbd>←</kbd> <kbd>→</kbd> step · <kbd>Space</kbd> play / pause · <kbd>Home</kbd> reset</p></div>
+        </div>
+        <p data-export-error role="alert"></p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
