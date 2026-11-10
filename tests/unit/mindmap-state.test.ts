@@ -74,6 +74,36 @@ test('keyword-like names remain valid in ordinary state descriptions', () => {
   });
 });
 
+// Each case below was checked against Mermaid 12.1.0: rejected there, or
+// parsed but drawn without the line's state or transition.
+test.each([
+  'A --> note', 'Note --> A', 'A -->class', 'style --> A: go', 'A --> SCALE : go', 'stateDiagram --> A',
+  'click-->A', 'A-->HREF: go', 'default --> A',
+  'A --> state', 'A -->State', 'A --> state : go', 'state --> A', 'state\t--> A',
+  'A --> accTitle: go', 'A --> accDescr : go',
+  'note : Explain', 'CLASS\t: Group', 'state : Waiting', 'click: Open',
+  'state as', 'state AS',
+])('state rejects IDs that Mermaid reads as keywords: %j', statement => {
+  expect(parseStateDiagram('stateDiagram-v2\nA --> B\n' + statement)).toMatchObject({ ok: false, line: 3 });
+});
+
+test.each([
+  'note-->A', 'A --> note: go', 'class-->A:go', 'A-->style:go', 'A --> state: go', 'state-->A',
+  'A --> accTitle', 'accDescr --> A', 'hide --> direction', 'end --> A', 'A --> notes',
+])('state keeps keyword-like IDs that Mermaid draws as states: %j', statement => {
+  expect(parseStateDiagram('stateDiagram-v2\n' + statement)).toMatchObject({ ok: true });
+});
+
+test('a bare state declaration is drawn only once a transition uses it, as in Mermaid', () => {
+  const ids = (source: string) => {
+    const result = parseStateDiagram('stateDiagram-v2\n' + source);
+    return result.ok ? result.document.states.map(state => state.id) : result;
+  };
+  expect(ids('state Unused\nA --> B')).toEqual(['A', 'B']);
+  expect(ids('state Later\nA --> Later')).toEqual(['A', 'Later']);
+  expect(ids('state Named\nNamed: Shown\nA --> B')).toEqual(['Named', 'A', 'B']);
+});
+
 test('state rejects conflicting labels and transition overflow', () => {
   expect(parseStateDiagram('stateDiagram\nA --> B\nA: First\nstate "Second" as A')).toMatchObject({ ok: false, line: 4 });
   expect(parseStateDiagram('stateDiagram\n' + 'A --> B\n'.repeat(61))).toMatchObject({ ok: false, line: 62 });

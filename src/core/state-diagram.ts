@@ -5,13 +5,31 @@ export type StateDiagram = {
   states: { id: string; label: string; marker?: 'start' | 'end' }[];
   transitions: { from: string; to: string; label: string; line: number }[];
 };
-const transition = /^(\[\*\]|[A-Za-z_]\w*)[ \t]*-->[ \t]*(\[\*\]|[A-Za-z_]\w*)(?:[ \t]*:[ \t]*(.*))?$/u;
+// The gaps after IDs are captured because Mermaid 12.1's lexer treats some
+// words as keywords only when whitespace or the line end follows them.
+const transition = /^(\[\*\]|[A-Za-z_]\w*)([ \t]*)-->[ \t]*(\[\*\]|[A-Za-z_]\w*)([ \t]*)(?::[ \t]*(.*))?$/u;
 const alias = /^state[ \t]+"([^"]*)"[ \t]+as[ \t]+([A-Za-z_]\w*)$/u;
-const description = /^([A-Za-z_]\w*)[ \t]*:[ \t]*(.*)$/u;
+const description = /^([A-Za-z_]\w*)([ \t]*):[ \t]*(.*)$/u;
 // Match metadata syntax before interpreting the colon as a state label.
 const accessibility = /^acc(?:Title|Descr)\s*:/iu;
-// Mermaid reserves these tokens even when followed by a colon.
-const reservedDescription = /^(?:click|href|default)$/iu;
+// Rejected by Mermaid as a state ID in transitions and descriptions.
+const reserved = /^(?:click|href|default)$/iu;
+// Rejected by Mermaid when followed by whitespace or the line end.
+const spacedKeyword = /^(?:note|class|classDef|style|scale|stateDiagram)$/iu;
+
+/**
+ * Mirrors Mermaid 12.1.0's lexer for IDs used in transitions or `id: text`.
+ * Mermaid silently reads a line such as `state --> A` or `state : Text` as a
+ * declaration and draws nothing, so `state` followed by whitespace is
+ * rejected here rather than shown as something Mermaid would not draw.
+ */
+function keywordError(id: string, spaced: boolean, position: 'from' | 'to' | 'description', labelled = false) {
+  if (reserved.test(id) || (spaced && spacedKeyword.test(id)) || (spaced && /^state$/iu.test(id))) {
+    return `Mermaid reads "${id}" here as a keyword. Use a different state ID.`;
+  }
+  if (position === 'to' && labelled && /^acc(?:Title|Descr)$/iu.test(id)) return `Mermaid reads "${id}:" as accessibility metadata. Use a different state ID.`;
+  return undefined;
+}
 
 export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
   const fail = (line: number, message: string) => ({ ok: false as const, line, message });
@@ -36,11 +54,12 @@ export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
     const edge = transition.exec(text);
     const named = alias.exec(text), described = description.exec(text);
     const declared = /^state[ \t]+([A-Za-z_]\w*)$/u.exec(text);
-    if (described && reservedDescription.test(described[1])) {
-      return fail(line, 'Use a state ID other than click, href, or default for this description.');
-    }
+    if (declared && /^as$/iu.test(declared[1])) return fail(line, 'Mermaid reads "as" after state as a keyword. Use a different state ID.');
     if (edge) {
-      const [, sender, receiver, value] = edge;
+      const [, sender, senderGap, receiver, receiverGap, value] = edge;
+      const keyword = keywordError(sender, Boolean(senderGap), 'from')
+        ?? keywordError(receiver, Boolean(receiverGap) || value === undefined, 'to', value !== undefined);
+      if (keyword) return fail(line, keyword);
       if (sender === '[*]' && receiver === '[*]') return fail(line, 'Connect a start or end marker to a named state.');
       const label = value === undefined ? '' : plainLabel(value);
       if (label === undefined) return fail(line, 'Use a plain transition label of 1–120 characters.');
@@ -49,12 +68,16 @@ export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
       transitions.push({ from, to, label, line });
       if (transitions.length > GRAPH_LIMITS.edges) return fail(line, 'State diagrams are limited to 60 transitions.');
     } else if (named || described || declared) {
+      const keyword = described && keywordError(described[1], Boolean(described[2]), 'description');
+      if (keyword) return fail(line, keyword);
       const id = named?.[2] ?? described?.[1] ?? declared![1];
-      const value = named?.[1] ?? described?.[2];
+      const value = named?.[1] ?? described?.[3];
       const label = value === undefined ? undefined : plainLabel(value);
       if (value !== undefined && !label) return fail(line, 'Use a plain state label of 1–120 characters.');
       if (label && states.get(id) && states.get(id) !== label) return fail(line, 'A state cannot have conflicting labels.');
-      if (label || !states.has(id)) states.set(id, label);
+      // Mermaid does not register a bare `state X`; it appears once a
+      // transition or description uses it, in that position.
+      if (label) states.set(id, label);
     } else return fail(line, 'Use a state declaration or one transition per line. Composite states, notes and styling are not supported.');
     if (states.size > GRAPH_LIMITS.nodes) return fail(line, 'State diagrams are limited to 30 states, including start and end.');
     if ([...states.keys()].some(id => id.length > GRAPH_LIMITS.label)) return fail(line, 'State IDs are limited to 120 characters.');
