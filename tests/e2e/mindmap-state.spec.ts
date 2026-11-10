@@ -21,12 +21,12 @@ const diagrams = [
   },
   {
     kind: 'state', stepKind: 'Transition', notice: 'events and guards are not evaluated',
-    source: 'stateDiagram-v2\ndirection LR\n[*] --> A\nA --> B: accepted\nA --> B: cached\nB --> B: retry [online]\nB --> [*]\nstate "Waiting for review" as A\nB: Ready',
+    source: 'stateDiagram-v2\ndirection LR\n[*] --> direction\ndirection --> hide: accepted\ndirection --> hide: cached\nhide --> hide: retry [online]\nhide --> [*]\ndirection: Waiting for review\nhide: Ready',
     unsafe: 'stateDiagram-v2\n  A --> B: <img src=https://bad.invalid/image>',
     steps: [
-      { label: 'Start → Waiting for review', active: ['@start', 'A'] }, { label: 'accepted', active: ['A', 'B'] },
-      { label: 'cached', active: ['A', 'B'] }, { label: 'retry [online]', active: ['B'] },
-      { label: 'Ready → End', active: ['@end', 'B'] },
+      { label: 'Start → Waiting for review', active: ['@start', 'direction'] }, { label: 'accepted', active: ['direction', 'hide'] },
+      { label: 'cached', active: ['direction', 'hide'] }, { label: 'retry [online]', active: ['hide'] },
+      { label: 'Ready → End', active: ['@end', 'hide'] },
     ],
   },
 ];

@@ -8,8 +8,10 @@ export type StateDiagram = {
 const transition = /^(\[\*\]|[A-Za-z_]\w*)[ \t]*-->[ \t]*(\[\*\]|[A-Za-z_]\w*)(?:[ \t]*:[ \t]*(.*))?$/u;
 const alias = /^state[ \t]+"([^"]*)"[ \t]+as[ \t]+([A-Za-z_]\w*)$/u;
 const description = /^([A-Za-z_]\w*)[ \t]*:[ \t]*(.*)$/u;
-// Mermaid statements that share the `id: text` shape must not become states.
-const keyword = /^(?:accTitle|accDescr|state|note|direction|classDef|class|style|click|hide|scale)$/u;
+// Match metadata syntax before interpreting the colon as a state label.
+const accessibility = /^acc(?:Title|Descr)\s*:/iu;
+// Mermaid reserves these tokens even when followed by a colon.
+const reservedDescription = /^(?:click|href|default)$/iu;
 
 export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
   const fail = (line: number, message: string) => ({ ok: false as const, line, message });
@@ -25,6 +27,7 @@ export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
       if (!/^stateDiagram(?:-v2)?$/u.test(text)) return fail(line, 'Start with stateDiagram-v2.');
       header = true; continue;
     }
+    if (accessibility.test(text)) return fail(line, 'Accessibility titles and descriptions are not supported.');
     const orientation = /^direction[ \t]+(TB|BT|LR|RL)$/u.exec(text);
     if (orientation) {
       if (direction) return fail(line, 'Set direction only once.');
@@ -33,9 +36,8 @@ export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
     const edge = transition.exec(text);
     const named = alias.exec(text), described = description.exec(text);
     const declared = /^state[ \t]+([A-Za-z_]\w*)$/u.exec(text);
-    if (described && keyword.test(described[1])) {
-      return fail(line, /^acc/u.test(described[1]) ? 'Accessibility titles and descriptions are not supported.'
-        : `${described[1]} is a Mermaid keyword and cannot be used as a state description.`);
+    if (described && reservedDescription.test(described[1])) {
+      return fail(line, 'Use a state ID other than click, href, or default for this description.');
     }
     if (edge) {
       const [, sender, receiver, value] = edge;

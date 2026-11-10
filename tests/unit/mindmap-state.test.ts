@@ -53,19 +53,25 @@ test.each([
   'A --> B: <img src=https://bad.invalid/x>',
   '[*] --> [*]',
   'A --> B --> C',
-  'accTitle: Order lifecycle',
-  'accDescr: Paid orders ship once',
-  'state: Waiting',
-  'note: Explain',
+  'click: Open',
+  'HREF: Link',
+  'default: Style',
 ])('state rejects unsupported syntax without a partial diagram: %s', statement => {
   expect(parseStateDiagram('stateDiagram-v2\nA --> B\n' + statement)).toMatchObject({ ok: false, line: 3 });
 });
 
-test('state accessibility statements fail before Mermaid instead of adding a state', () => {
-  expect(parseStateDiagram('stateDiagram-v2\naccTitle: Order lifecycle\n[*] --> Paid')).toEqual({
+test.each(['accTitle', 'ACCTITLE', 'acctitle', 'accDescr', 'ACCDESCR', 'AccDescr'])('state rejects accessibility declaration %s regardless of case', keyword => {
+  expect(parseStateDiagram('stateDiagram-v2\n' + keyword + ' : Order lifecycle\n[*] --> Paid')).toEqual({
     ok: false, line: 2, message: 'Accessibility titles and descriptions are not supported.' });
-  // Keyword-like IDs remain ordinary states.
-  expect(parseStateDiagram('stateDiagram-v2\nnotes: Notes\nstates --> notes')).toMatchObject({ ok: true });
+});
+
+test('keyword-like names remain valid in ordinary state descriptions', () => {
+  expect(parseStateDiagram('stateDiagram-v2\ndirection LR\nhide: Paused\ndirection: Routing\nstate: Waiting\nnote: Explain\naccTitleHint: Hint\n[*] --> hide\nhide --> direction')).toMatchObject({
+    ok: true, document: { direction: 'LR', states: [
+      { id: 'hide', label: 'Paused' }, { id: 'direction', label: 'Routing' }, { id: 'state', label: 'Waiting' },
+      { id: 'note', label: 'Explain' }, { id: 'accTitleHint', label: 'Hint' }, { id: '@start', label: 'Start' },
+    ] },
+  });
 });
 
 test('state rejects conflicting labels and transition overflow', () => {
