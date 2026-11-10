@@ -210,7 +210,7 @@ For the expanded syntax, download the [loop and grouped-participant presentation
 
 ## Flowchart prototype
 
-Run this development branch locally and open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
+[Run the app locally](#run-the-app-locally), then open [the flowchart prototype](http://127.0.0.1:5173/flowchart.html). With the production preview, use [port 4173](http://127.0.0.1:4173/flowchart.html). The hosted editor does not include this prototype.
 
 1. Try the pull request example, or paste a small `flowchart` or `graph` with direction `TD`, `TB`, `BT`, `LR`, or `RL`.
 2. Click **Render**, then **Next** or **Play**. By default, each edge is a step in source order. To choose which edges to present and in what order, give them IDs and step numbers as shown below. Conditions are not evaluated.
@@ -231,7 +231,7 @@ In this example, the player shows **Request → Cache hit?** first, then **Miss*
 
 ## Mindmap and State prototypes
 
-Run the `ffang/mindmap-state` branch locally. Open [Mindmap](http://127.0.0.1:5173/mindmap.html) or [State](http://127.0.0.1:5173/state.html) in the dev server. With production preview, use [Mindmap on port 4173](http://127.0.0.1:4173/mindmap.html) or [State on port 4173](http://127.0.0.1:4173/state.html).
+[Run the app locally](#run-the-app-locally), then open [Mindmap](http://127.0.0.1:5173/mindmap.html) or [State](http://127.0.0.1:5173/state.html) in the dev server. With production preview, use [Mindmap on port 4173](http://127.0.0.1:4173/mindmap.html) or [State on port 4173](http://127.0.0.1:4173/state.html).
 
 1. Try the built-in example or paste your source into the matching editor.
 2. Click **Render**, then **Next** or **Play**. The layout stays fixed as the highlight moves.

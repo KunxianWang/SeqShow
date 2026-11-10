@@ -8,6 +8,8 @@ export type StateDiagram = {
 const transition = /^(\[\*\]|[A-Za-z_]\w*)[ \t]*-->[ \t]*(\[\*\]|[A-Za-z_]\w*)(?:[ \t]*:[ \t]*(.*))?$/u;
 const alias = /^state[ \t]+"([^"]*)"[ \t]+as[ \t]+([A-Za-z_]\w*)$/u;
 const description = /^([A-Za-z_]\w*)[ \t]*:[ \t]*(.*)$/u;
+// Mermaid statements that share the `id: text` shape must not become states.
+const keyword = /^(?:accTitle|accDescr|state|note|direction|classDef|class|style|click|hide|scale)$/u;
 
 export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
   const fail = (line: number, message: string) => ({ ok: false as const, line, message });
@@ -31,6 +33,10 @@ export function parseStateDiagram(source: string): DiagramResult<StateDiagram> {
     const edge = transition.exec(text);
     const named = alias.exec(text), described = description.exec(text);
     const declared = /^state[ \t]+([A-Za-z_]\w*)$/u.exec(text);
+    if (described && keyword.test(described[1])) {
+      return fail(line, /^acc/u.test(described[1]) ? 'Accessibility titles and descriptions are not supported.'
+        : `${described[1]} is a Mermaid keyword and cannot be used as a state description.`);
+    }
     if (edge) {
       const [, sender, receiver, value] = edge;
       if (sender === '[*]' && receiver === '[*]') return fail(line, 'Connect a start or end marker to a named state.');

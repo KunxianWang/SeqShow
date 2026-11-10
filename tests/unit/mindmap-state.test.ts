@@ -53,8 +53,19 @@ test.each([
   'A --> B: <img src=https://bad.invalid/x>',
   '[*] --> [*]',
   'A --> B --> C',
+  'accTitle: Order lifecycle',
+  'accDescr: Paid orders ship once',
+  'state: Waiting',
+  'note: Explain',
 ])('state rejects unsupported syntax without a partial diagram: %s', statement => {
   expect(parseStateDiagram('stateDiagram-v2\nA --> B\n' + statement)).toMatchObject({ ok: false, line: 3 });
+});
+
+test('state accessibility statements fail before Mermaid instead of adding a state', () => {
+  expect(parseStateDiagram('stateDiagram-v2\naccTitle: Order lifecycle\n[*] --> Paid')).toEqual({
+    ok: false, line: 2, message: 'Accessibility titles and descriptions are not supported.' });
+  // Keyword-like IDs remain ordinary states.
+  expect(parseStateDiagram('stateDiagram-v2\nnotes: Notes\nstates --> notes')).toMatchObject({ ok: true });
 });
 
 test('state rejects conflicting labels and transition overflow', () => {
